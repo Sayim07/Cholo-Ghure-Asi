@@ -1,0 +1,173 @@
+/* ==========================================================================
+   Cholo Ghure Asssiii — Leaflet Map & Interactive Cartography (map.css)
+   ========================================================================== */
+
+#map-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: #f4efe6;
+}
+
+/* Seasonal Tile Filters for OpenStreetMap */
+.season-summer #map-container .leaflet-tile-pane {
+  filter: contrast(105%) saturate(110%) sepia(8%);
+}
+
+.season-monsoon #map-container .leaflet-tile-pane {
+  filter: contrast(108%) saturate(125%) hue-rotate(5deg);
+}
+
+.season-autumn #map-container .leaflet-tile-pane {
+  filter: contrast(105%) saturate(115%) sepia(20%);
+}
+
+.season-winter #map-container .leaflet-tile-pane {
+  filter: contrast(98%) saturate(85%) hue-rotate(185deg) brightness(103%);
+}
+
+/* Custom Marker Pins */
+.cga-marker-pin {
+  width: 38px;
+  height: 38px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(17, 28, 20, 0.25);
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cga-marker-pin:hover {
+  transform: rotate(-45deg) scale(1.15);
+}
+
+.cga-marker-pin.start-pin {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: 2px solid #ffffff;
+}
+
+.cga-marker-pin.stop-pin {
+  background: linear-gradient(135deg, var(--cga-primary-route), #0369a1);
+  border: 2px solid #ffffff;
+}
+
+.cga-marker-pin.dest-pin {
+  background: linear-gradient(135deg, var(--cga-gold-accent), var(--cga-terracotta));
+  border: 2px solid #ffffff;
+}
+
+.cga-marker-inner {
+  transform: rotate(45deg);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--cga-font-sans);
+}
+
+/* Pulsing radar ripple around active destination */
+.cga-marker-pulse {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--cga-gold-glow);
+  top: -3px;
+  left: -3px;
+  animation: markerPulse 2s infinite ease-out;
+  pointer-events: none;
+}
+
+@keyframes markerPulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* Custom Leaflet Popup Styling */
+.leaflet-popup-content-wrapper {
+  background: var(--cga-bg-glass) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid var(--cga-border-glass) !important;
+  border-radius: var(--cga-radius-md) !important;
+  box-shadow: var(--cga-shadow-elevated) !important;
+  padding: 4px;
+  color: var(--cga-text-primary) !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--cga-bg-surface) !important;
+}
+
+.cga-popup-card {
+  padding: 10px 14px;
+  min-width: 200px;
+}
+
+.cga-popup-title {
+  font-family: var(--cga-font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--cga-text-primary);
+  margin-bottom: 4px;
+}
+
+.cga-popup-meta {
+  font-family: var(--cga-font-mono);
+  font-size: 11px;
+  color: var(--cga-text-muted);
+  margin-bottom: 10px;
+}
+
+.cga-popup-btn {
+  width: 100%;
+  padding: 6px 12px;
+  background: var(--cga-forest-contrast);
+  color: #ffffff;
+  border-radius: var(--cga-radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  transition: background 0.2s ease;
+}
+
+.cga-popup-btn:hover {
+  background: #1f3726;
+}
+
+/* Map Controls Clean Positioning */
+.leaflet-top.leaflet-right {
+  top: 96px;
+  right: 24px;
+}
+
+.leaflet-bar {
+  border: none !important;
+  box-shadow: var(--cga-shadow-ambient) !important;
+  border-radius: var(--cga-radius-md) !important;
+  overflow: hidden;
+}
+
+.leaflet-bar a {
+  background-color: var(--cga-bg-surface) !important;
+  color: var(--cga-text-primary) !important;
+  border-bottom: 1px solid var(--cga-border-subtle) !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+}
+
+.leaflet-bar a:hover {
+  background-color: var(--cga-bg-subtle) !important;
+  color: var(--cga-gold-accent) !important;
+}

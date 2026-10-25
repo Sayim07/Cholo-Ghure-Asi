@@ -1,0 +1,244 @@
+/* ==========================================================================
+   Cholo Ghure Asssiii — Global Styles & Layout Shell (main.css)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--cga-bg-base);
+  color: var(--cga-text-primary);
+  font-family: var(--cga-font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+button {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* App Shell Wrapper */
+#app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Seasonal Atmospheric Filter Overlay */
+.season-ambient-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  transition: background-color var(--cga-transition-cinematic), backdrop-filter var(--cga-transition-cinematic);
+}
+
+.season-ambient-overlay.season-summer {
+  background: radial-gradient(circle at 80% 20%, rgba(251, 191, 36, 0.12), transparent 70%);
+}
+
+.season-ambient-overlay.season-monsoon {
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(14, 165, 233, 0.1) 100%);
+}
+
+.season-ambient-overlay.season-autumn {
+  background: radial-gradient(circle at 50% 50%, rgba(217, 119, 6, 0.12), rgba(180, 83, 9, 0.06) 100%);
+}
+
+.season-ambient-overlay.season-winter {
+  background: radial-gradient(circle at 50% 10%, rgba(56, 189, 248, 0.12), rgba(224, 242, 254, 0.05) 100%);
+}
+
+/* Ambient Canvas for Particles (Rain, Leaves, Snow, Sun Glow) */
+#season-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 11;
+  width: 100%;
+  height: 100%;
+}
+
+/* Top Luxury Header & Brand Bar */
+.cga-navbar {
+  position: absolute;
+  top: 18px;
+  left: 24px;
+  right: 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: var(--cga-bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--cga-border-glass);
+  border-radius: var(--cga-radius-full);
+  box-shadow: var(--cga-shadow-ambient);
+  z-index: 100;
+  transition: all var(--cga-transition-smooth);
+}
+
+.cga-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.cga-brand-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cga-gold-accent), #dfa75d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 18px;
+  box-shadow: 0 4px 14px var(--cga-gold-glow);
+}
+
+.cga-brand-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cga-brand-title {
+  font-family: var(--cga-font-serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--cga-text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.cga-brand-tagline {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--cga-gold-accent);
+}
+
+/* Navigation Actions & Controls */
+.cga-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Season Selector Capsule Pill */
+.season-selector {
+  display: flex;
+  align-items: center;
+  background: var(--cga-bg-subtle);
+  padding: 4px;
+  border-radius: var(--cga-radius-full);
+  border: 1px solid var(--cga-border-subtle);
+}
+
+.season-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--cga-radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cga-text-secondary);
+  transition: all var(--cga-transition-fast);
+}
+
+.season-btn:hover {
+  color: var(--cga-text-primary);
+}
+
+.season-btn.active {
+  background: var(--cga-bg-surface);
+  color: var(--cga-text-primary);
+  box-shadow: 0 2px 8px rgba(17, 28, 20, 0.08);
+}
+
+/* Quick Action Buttons */
+.cga-btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: var(--cga-radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all var(--cga-transition-smooth);
+}
+
+.cga-btn-primary {
+  background: var(--cga-forest-contrast);
+  color: var(--cga-text-light);
+  box-shadow: 0 4px 16px rgba(17, 28, 20, 0.15);
+}
+
+.cga-btn-primary:hover {
+  background: #1e3324;
+  transform: translateY(-1px);
+}
+
+.cga-btn-secondary {
+  background: var(--cga-bg-surface);
+  color: var(--cga-text-primary);
+  border: 1px solid var(--cga-border-subtle);
+}
+
+.cga-btn-secondary:hover {
+  border-color: var(--cga-gold-accent);
+  color: var(--cga-gold-accent);
+}
+
+/* Main Viewport Container */
+.cga-main-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(17, 28, 20, 0.12);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(17, 28, 20, 0.25);
+}

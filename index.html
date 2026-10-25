@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cholo Ghure Asssiii — A luxury, award-winning travel and itinerary planner combining interactive 3D globe discovery, Leaflet cartography, real-time weather analytics, and smart multi-day road routing.">
+  <title>Cholo Ghure Asssiii — Wanderlust Travel & Trip Planner</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Leaflet.js v1.9.4 CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <!-- Application Modular Stylesheets -->
+  <link rel="stylesheet" href="./styles/variables.css">
+  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="stylesheet" href="./styles/globe.css">
+  <link rel="stylesheet" href="./styles/map.css">
+  <link rel="stylesheet" href="./styles/gate.css">
+  <link rel="stylesheet" href="./styles/components.css">
+  <link rel="stylesheet" href="./styles/itinerary.css">
+</head>
+<body class="season-summer">
+
+  <!-- Atmospheric Ambient Seasonal Filter Overlay -->
+  <div class="season-ambient-overlay season-summer"></div>
+
+  <!-- Ambient Particle Canvas for 4-Season Weather Dynamics -->
+  <canvas id="season-canvas"></canvas>
+
+  <div id="app">
+
+    <!-- Top Luxury Header & Brand Bar -->
+    <header class="cga-navbar">
+      <div class="cga-brand">
+        <div class="cga-brand-icon">✈️</div>
+        <div class="cga-brand-info">
+          <span class="cga-brand-title">Cholo Ghure Asssiii</span>
+          <span class="cga-brand-tagline">Explore • Route • Journey</span>
+        </div>
+      </div>
+
+      <!-- 4-Season Ambient Switcher (Inspired by Primland) -->
+      <div class="season-selector">
+        <button class="season-btn active" data-season="summer" title="Summer Atmosphere">☀️ Summer</button>
+        <button class="season-btn" data-season="monsoon" title="Monsoon Rain Atmosphere">🌧️ Monsoon</button>
+        <button class="season-btn" data-season="autumn" title="Autumn Golden Foliage">🍂 Autumn</button>
+        <button class="season-btn" data-season="winter" title="Winter Alpine Frost">❄️ Winter</button>
+      </div>
+
+      <!-- Action Navigation Buttons -->
+      <div class="cga-nav-actions">
+        <button id="btn-world-view" class="cga-btn-pill cga-btn-secondary" title="Return to 3D Globe Explorer">
+          <span>🌍 Globe View</span>
+        </button>
+        <button id="btn-saved-trips" class="cga-btn-pill cga-btn-secondary" title="View Cloud Saved Trips">
+          <span>📁 Saved Trips</span>
+        </button>
+        <button id="btn-toggle-itinerary" class="cga-btn-pill cga-btn-primary" title="Open Multi-Day Itinerary">
+          <span>📋 Itinerary</span>
+        </button>
+        <button id="btn-export-trip" class="cga-btn-pill cga-btn-secondary" title="Print or Export Trip">
+          <span>📥 Export</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- SECTION 1: 3D Voyager Globe Onboarding (Continent & Country Discovery) -->
+    <section id="voyager-globe-section" class="voyager-globe-section">
+      <div class="globe-header-overlay">
+        <span class="globe-eyebrow">Interactive Global Voyager</span>
+        <h1 class="globe-main-title">Where shall your journey begin?</h1>
+        <p class="globe-subtitle">Rotate the globe, select a continent, and dive directly into immersive territory maps and live atmospheric weather.</p>
+      </div>
+
+      <!-- WebGL Three.js Container -->
+      <div id="globe-canvas-container"></div>
+
+      <!-- Continent Selector Dock -->
+      <div class="globe-control-dock">
+        <div class="continent-pill-dock">
+          <button class="continent-chip active" data-continent="asia">Asia</button>
+          <button class="continent-chip" data-continent="europe">Europe</button>
+          <button class="continent-chip" data-continent="americas">Americas</button>
+          <button class="continent-chip" data-continent="africa">Africa</button>
+          <button class="continent-chip" data-continent="oceania">Oceania</button>
+        </div>
+
+        <div class="country-selection-bar">
+          <span style="font-size: 13px; font-weight: 700; color: var(--cga-text-muted);">SELECT COUNTRY:</span>
+          <select id="globe-country-select" class="country-select-dropdown"></select>
+          <button id="btn-dive-into-map" class="dive-into-map-btn">
+            <span>Dive into Map &rarr;</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Main Interactive Cartography & Planning Canvas -->
+    <main class="cga-main-viewport">
+
+      <!-- Fullscreen Leaflet Interactive Map -->
+      <div id="map-container"></div>
+
+      <!-- Floating Destination Search Bar -->
+      <div class="cga-search-container">
+        <div class="cga-search-bar">
+          <span class="cga-search-icon">🔍</span>
+          <input type="text" id="input-search" class="cga-search-input" placeholder="Search city, hill station, or landmark..." autocomplete="off">
+          <button id="btn-search" class="cga-search-submit">Search</button>
+        </div>
+        <div id="search-dropdown-results" class="cga-search-results"></div>
+      </div>
+
+      <!-- Lightship RV Inspired Floating Telemetry HUD -->
+      <div id="telemetry-hud" class="cga-telemetry-hud">
+        <div class="telemetry-item">
+          <span class="telemetry-icon">🚗</span>
+          <div class="telemetry-data">
+            <span class="telemetry-label">Route Distance</span>
+            <span id="hud-distance" class="telemetry-value">0 km</span>
+          </div>
+        </div>
+        <div class="telemetry-divider"></div>
+        <div class="telemetry-item">
+          <span class="telemetry-icon">⏱</span>
+          <div class="telemetry-data">
+            <span class="telemetry-label">Driving Time</span>
+            <span id="hud-time" class="telemetry-value">0m</span>
+          </div>
+        </div>
+        <div class="telemetry-divider"></div>
+        <div class="telemetry-item">
+          <span class="telemetry-icon">📍</span>
+          <div class="telemetry-data">
+            <span class="telemetry-label">Planned Stops</span>
+            <span id="hud-stops" class="telemetry-value">0 stops</span>
+          </div>
+        </div>
+        <div class="telemetry-divider"></div>
+        <div class="telemetry-item">
+          <span class="telemetry-icon">💰</span>
+          <div class="telemetry-data">
+            <span class="telemetry-label">Est. Budget</span>
+            <span id="hud-budget" class="telemetry-value">₹ 0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Multi-Day Itinerary Side Drawer -->
+      <aside id="itinerary-drawer" class="cga-itinerary-drawer">
+        <div class="drawer-header">
+          <div class="drawer-title-group">
+            <h2 class="drawer-title">Trip Itinerary</h2>
+            <span class="drawer-subtitle">Personalized Multi-Day Schedule</span>
+          </div>
+          <button id="close-drawer-btn" style="font-size: 18px; color: var(--cga-text-muted); padding: 4px;">✕</button>
+        </div>
+
+        <!-- Day Selector Tabs -->
+        <div id="itinerary-day-tabs" class="day-tabs-bar"></div>
+
+        <!-- Ordered Waypoint Stops List -->
+        <div id="itinerary-stops-list" class="stops-list-container"></div>
+
+        <!-- Budget Summary & Cloud Sync Footer -->
+        <div class="drawer-footer">
+          <div class="drawer-budget-col">
+            <span class="budget-label">Total Estimate</span>
+            <span id="itinerary-budget-total" class="budget-val">₹ 0</span>
+          </div>
+          <button id="btn-save-cloud-trip" class="save-cloud-btn">
+            <span>☁️ Sync to Cloud</span>
+          </button>
+        </div>
+      </aside>
+
+    </main>
+
+    <!-- SECTION 3: ERA Residence Thematic Gate Opening Reveal Modal -->
+    <div id="portal-overlay" class="cga-portal-overlay">
+      <div class="cga-portal-backdrop"></div>
+
+      <!-- Luxury Gate Parting Doors -->
+      <div class="cga-gate-doors-container">
+        <div class="cga-gate-door left">
+          <div class="cga-gate-ornament">
+            <span class="cga-gate-symbol">চলো</span>
+          </div>
+        </div>
+        <div class="cga-gate-door right">
+          <div class="cga-gate-ornament">
+            <span class="cga-gate-symbol">আসি</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revealed Destination Card Content -->
+      <div id="portal-content" class="cga-portal-content">
+        <button id="portal-close-btn" class="cga-portal-close" title="Close Destination Gate">✕</button>
+        <div id="portal-destination-details"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CDN Dependencies: Three.js (3D Globe) + GSAP 3 (Cinematic Animations) + Leaflet (Maps) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Application Bootstrap Entry Point (Vanilla ES6 Modules) -->
+  <script type="module" src="./scripts/main.js"></script>
+</body>
+</html>

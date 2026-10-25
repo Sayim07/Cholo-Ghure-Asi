@@ -1,0 +1,318 @@
+/* ==========================================================================
+   Cholo Ghure Asssiii — Core UI Components (components.css)
+   Includes: Search Bar, Destination Card, Weather Badge, Telemetry HUD, Toasts
+   ========================================================================== */
+
+/* Floating Search Bar (Centered Under Navbar) */
+.cga-search-container {
+  position: absolute;
+  top: 96px;
+  left: 24px;
+  width: 440px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cga-search-bar {
+  display: flex;
+  align-items: center;
+  background: var(--cga-bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--cga-border-glass);
+  border-radius: var(--cga-radius-full);
+  box-shadow: var(--cga-shadow-elevated);
+  padding: 6px 8px 6px 20px;
+  transition: all var(--cga-transition-smooth);
+}
+
+.cga-search-bar:focus-within {
+  border-color: var(--cga-gold-accent);
+  box-shadow: var(--cga-shadow-gold), var(--cga-shadow-elevated);
+  background: #ffffff;
+}
+
+.cga-search-icon {
+  color: var(--cga-gold-accent);
+  margin-right: 12px;
+  font-size: 16px;
+}
+
+.cga-search-input {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cga-text-primary);
+}
+
+.cga-search-input::placeholder {
+  color: var(--cga-text-muted);
+}
+
+.cga-search-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0 18px;
+  background: var(--cga-forest-contrast);
+  color: #ffffff;
+  border-radius: var(--cga-radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all var(--cga-transition-fast);
+}
+
+.cga-search-submit:hover {
+  background: var(--cga-gold-accent);
+  transform: scale(1.02);
+}
+
+/* Search Dropdown Results */
+.cga-search-results {
+  background: var(--cga-bg-surface);
+  border-radius: var(--cga-radius-md);
+  border: 1px solid var(--cga-border-subtle);
+  box-shadow: var(--cga-shadow-elevated);
+  overflow: hidden;
+  max-height: 280px;
+  overflow-y: auto;
+  display: none;
+}
+
+.cga-search-results.active {
+  display: block;
+}
+
+.cga-search-item {
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--cga-border-subtle);
+  cursor: pointer;
+  transition: background var(--cga-transition-fast);
+}
+
+.cga-search-item:last-child {
+  border-bottom: none;
+}
+
+.cga-search-item:hover {
+  background: var(--cga-bg-subtle);
+}
+
+.cga-search-item-title {
+  font-weight: 600;
+  color: var(--cga-text-primary);
+  font-size: 13px;
+}
+
+.cga-search-item-sub {
+  font-size: 11px;
+  color: var(--cga-text-muted);
+}
+
+/* Telemetry HUD (Lightship RV Inspired Floating Telemetry Bar) */
+.cga-telemetry-hud {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 24px;
+  background: var(--cga-bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--cga-border-glass);
+  border-radius: var(--cga-radius-full);
+  box-shadow: var(--cga-shadow-elevated);
+  z-index: 90;
+}
+
+.telemetry-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.telemetry-icon {
+  font-size: 18px;
+  color: var(--cga-gold-accent);
+}
+
+.telemetry-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.telemetry-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cga-text-muted);
+}
+
+.telemetry-value {
+  font-family: var(--cga-font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cga-forest-contrast);
+}
+
+.telemetry-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--cga-border-subtle);
+}
+
+/* Destination Card & Weather Anatomy */
+.destination-modal-header {
+  margin-bottom: 20px;
+}
+
+.dest-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--cga-gold-accent);
+  margin-bottom: 4px;
+}
+
+.dest-title {
+  font-family: var(--cga-font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--cga-forest-contrast);
+  letter-spacing: -0.02em;
+}
+
+.dest-coords {
+  font-family: var(--cga-font-mono);
+  font-size: 12px;
+  color: var(--cga-text-muted);
+  margin-top: 4px;
+}
+
+/* Weather Highlight Container */
+.weather-card-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  background: var(--cga-bg-subtle);
+  border-radius: var(--cga-radius-md);
+  padding: 18px;
+  margin-bottom: 24px;
+  border: 1px solid var(--cga-border-subtle);
+}
+
+.weather-primary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.weather-icon-large {
+  font-size: 38px;
+}
+
+.weather-temp-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.weather-temp-number {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--cga-forest-contrast);
+  line-height: 1;
+}
+
+.weather-condition-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cga-gold-accent);
+}
+
+.weather-metrics-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--cga-text-secondary);
+  border-left: 1px solid rgba(17, 28, 20, 0.08);
+  padding-left: 16px;
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.metric-val {
+  font-family: var(--cga-font-mono);
+  font-weight: 600;
+  color: var(--cga-text-primary);
+}
+
+/* Toast Notifications */
+.cga-toast-container {
+  position: fixed;
+  bottom: 88px;
+  right: 24px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.cga-toast {
+  pointer-events: auto;
+  min-width: 280px;
+  max-width: 380px;
+  background: var(--cga-bg-surface);
+  border-radius: var(--cga-radius-md);
+  border: 1px solid var(--cga-border-glass);
+  box-shadow: var(--cga-shadow-elevated);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cga-text-primary);
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cga-toast.toast-success {
+  border-left: 4px solid var(--cga-emerald-success);
+}
+
+.cga-toast.toast-error {
+  border-left: 4px solid var(--cga-danger);
+}
+
+.cga-toast.toast-info {
+  border-left: 4px solid var(--cga-gold-accent);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,63 @@
+/* ==========================================================================
+   Cholo Ghure Asssiii — Design Tokens & Variables (variables.css)
+   Aesthetic: Bright Champagne Luxury Editorial (Inspired by Primland & ERA)
+   ========================================================================== */
+
+:root {
+  /* Surface Layers (Bright & Warm Champagne Aesthetic) */
+  --cga-bg-base: #fbf9f4;                 /* Warm Champagne Silk */
+  --cga-bg-subtle: #f5efe6;               /* Soft Sand Taupe */
+  --cga-bg-surface: #ffffff;              /* Pure Crisp Elevated Surface */
+  --cga-bg-glass: rgba(255, 255, 255, 0.88);
+  --cga-bg-glass-subtle: rgba(245, 239, 230, 0.72);
+  --cga-bg-glass-dark: rgba(17, 28, 20, 0.85);
+
+  /* Hairlines & Borders */
+  --cga-border-glass: rgba(212, 175, 55, 0.25); /* Soft Antique Gold Hairline */
+  --cga-border-subtle: rgba(17, 28, 20, 0.08);
+  --cga-border-strong: rgba(17, 28, 20, 0.16);
+  --cga-border-active: #c6924b;
+
+  /* Brand Accents */
+  --cga-gold-accent: #c6924b;             /* Antique Luxury Gold */
+  --cga-gold-hover: #b07e3a;
+  --cga-gold-glow: rgba(198, 146, 75, 0.35);
+  --cga-primary-route: #0284c7;           /* Mediterranean Azure Route Polyline */
+  --cga-route-glow: rgba(2, 132, 199, 0.4);
+  --cga-forest-contrast: #111c14;         /* Deep Forest Espresso */
+  --cga-terracotta: #e27238;              /* Warm Terracotta Action */
+  --cga-emerald-success: #10b981;
+  --cga-danger: #ef4444;
+
+  /* Typography Colors */
+  --cga-text-primary: #111c14;            /* Deepest legible forest espresso */
+  --cga-text-secondary: #576356;          /* Muted organic sage */
+  --cga-text-muted: #8b998a;              /* Light stone */
+  --cga-text-light: #fffdf5;              /* Off-white for dark button fills */
+
+  /* Seasonal Hue Tokens (Used for map tile filters & atmospheric glows) */
+  --cga-season-summer: rgba(251, 191, 36, 0.14);
+  --cga-season-monsoon: rgba(16, 185, 129, 0.14);
+  --cga-season-autumn: rgba(217, 119, 6, 0.16);
+  --cga-season-winter: rgba(56, 189, 248, 0.14);
+
+  /* Elevation & Shadows */
+  --cga-shadow-sm: 0 2px 8px rgba(17, 28, 20, 0.04);
+  --cga-shadow-ambient: 0 16px 40px -8px rgba(17, 28, 20, 0.08);
+  --cga-shadow-elevated: 0 24px 60px -12px rgba(17, 28, 20, 0.16);
+  --cga-shadow-gold: 0 8px 30px var(--cga-gold-glow);
+
+  /* Typography Families */
+  --cga-font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --cga-font-serif: 'Playfair Display', Georgia, serif;
+  --cga-font-mono: 'JetBrains Mono', monospace;
+
+  /* Transitions & Radii */
+  --cga-radius-sm: 8px;
+  --cga-radius-md: 14px;
+  --cga-radius-lg: 22px;
+  --cga-radius-full: 9999px;
+  --cga-transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --cga-transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --cga-transition-cinematic: 0.75s cubic-bezier(0.25, 1, 0.5, 1);
+}

@@ -1,0 +1,192 @@
+/* ==========================================================================
+   Cholo Ghure Asssiii — 3D Voyager Globe & World Selection (globe.css)
+   ========================================================================== */
+
+.voyager-globe-section {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f7f3eb 50%, var(--cga-bg-base) 85%, #e8dfd1 100%);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.voyager-globe-section.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.3);
+}
+
+/* 3D WebGL Canvas Container */
+#globe-canvas-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+#globe-canvas-container:active {
+  cursor: grabbing;
+}
+
+/* Luxury Editorial Title Overlay */
+.globe-header-overlay {
+  position: absolute;
+  top: 96px;
+  text-align: center;
+  pointer-events: none;
+  z-index: 55;
+  max-width: 720px;
+  padding: 0 20px;
+}
+
+.globe-eyebrow {
+  display: inline-block;
+  font-family: var(--cga-font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cga-gold-accent);
+  margin-bottom: 6px;
+}
+
+.globe-main-title {
+  font-family: var(--cga-font-serif);
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--cga-forest-contrast);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.globe-subtitle {
+  font-size: 14.5px;
+  color: var(--cga-text-secondary);
+  line-height: 1.6;
+}
+
+/* Floating Selector Carousel for Continents */
+.globe-control-dock {
+  position: absolute;
+  bottom: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  z-index: 60;
+  pointer-events: auto;
+}
+
+.continent-pill-dock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  background: var(--cga-bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--cga-border-glass);
+  border-radius: var(--cga-radius-full);
+  box-shadow: var(--cga-shadow-elevated);
+}
+
+.continent-chip {
+  padding: 8px 18px;
+  border-radius: var(--cga-radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cga-text-secondary);
+  transition: all var(--cga-transition-fast);
+}
+
+.continent-chip:hover {
+  color: var(--cga-text-primary);
+  background: rgba(198, 146, 75, 0.08);
+}
+
+.continent-chip.active {
+  background: var(--cga-forest-contrast);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(17, 28, 20, 0.2);
+}
+
+/* Country Selector Drawer / Modal */
+.country-selection-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  padding: 8px 16px;
+  border-radius: var(--cga-radius-full);
+  box-shadow: var(--cga-shadow-ambient);
+  border: 1px solid var(--cga-border-subtle);
+  animation: floatUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.country-select-dropdown {
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cga-text-primary);
+  cursor: pointer;
+}
+
+.dive-into-map-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--cga-gold-accent), #db9a44);
+  color: #ffffff;
+  padding: 10px 22px;
+  border-radius: var(--cga-radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 16px var(--cga-gold-glow);
+  transition: all var(--cga-transition-smooth);
+}
+
+.dive-into-map-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px var(--cga-gold-glow);
+}
+
+/* Pin Hover Tooltip */
+.globe-pin-tooltip {
+  position: fixed;
+  display: none;
+  z-index: 100;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--cga-border-glass);
+  box-shadow: var(--cga-shadow-elevated);
+  border-radius: var(--cga-radius-md);
+  padding: 8px 14px;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes floatUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
