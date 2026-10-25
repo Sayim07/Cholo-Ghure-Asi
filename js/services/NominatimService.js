@@ -6,28 +6,35 @@
 import { APP_CONSTANTS } from "../config/constants.js";
 
 let lastRequestTime = 0;
+let currentAbortController = null;
 
 export async function searchDestination(query) {
   if (!query || typeof query !== "string" || query.trim().length === 0) {
     return [];
   }
 
-  // Enforce respectful Nominatim rate limit (1 request per second max)
+  // Cancel any prior in-flight query
+  if (currentAbortController) {
+    currentAbortController.abort();
+  }
+
+  // Enforce respectful Nominatim rate limit (minimum delay between calls)
   const now = Date.now();
   const timeSinceLast = now - lastRequestTime;
-  if (timeSinceLast < APP_CONSTANTS.NOMINATIM_DEBOUNCE_MS) {
-    await new Promise(res => setTimeout(res, APP_CONSTANTS.NOMINATIM_DEBOUNCE_MS - timeSinceLast));
+  const minInterval = 400; // Snappy 400ms interval for interactive typing
+  if (timeSinceLast < minInterval) {
+    await new Promise(res => setTimeout(res, minInterval - timeSinceLast));
   }
   lastRequestTime = Date.now();
 
-  const endpoint = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query.trim())}&format=json&addressdetails=1&limit=5`;
+  const endpoint = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query.trim())}&format=json&addressdetails=1&limit=8`;
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), APP_CONSTANTS.HTTP_TIMEOUT_MS);
+  currentAbortController = new AbortController();
+  const timeoutId = setTimeout(() => currentAbortController && currentAbortController.abort(), APP_CONSTANTS.HTTP_TIMEOUT_MS);
 
   try {
     const response = await fetch(endpoint, {
-      signal: controller.signal,
+      signal: currentAbortController.signal,
       headers: {
         "Accept": "application/json"
       }
@@ -52,6 +59,9 @@ export async function searchDestination(query) {
     }));
   } catch (err) {
     clearTimeout(timeoutId);
+    if (err.name === "AbortError") {
+      return []; // Intentionally superseded by newer keystroke
+    }
     console.error("[NominatimService] Geocoding request failed:", err);
     throw err;
   }
