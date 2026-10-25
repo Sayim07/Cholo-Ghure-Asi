@@ -52,6 +52,27 @@
   color: var(--cga-text-muted);
 }
 
+.cga-search-clear {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(17, 28, 20, 0.08);
+  color: var(--cga-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  margin-right: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all var(--cga-transition-fast);
+}
+
+.cga-search-clear:hover {
+  background: rgba(17, 28, 20, 0.16);
+  color: var(--cga-text-primary);
+}
+
 .cga-search-submit {
   display: flex;
   align-items: center;
@@ -73,14 +94,15 @@
 
 /* Search Dropdown Results */
 .cga-search-results {
-  background: var(--cga-bg-surface);
+  background: #ffffff;
   border-radius: var(--cga-radius-md);
   border: 1px solid var(--cga-border-subtle);
-  box-shadow: var(--cga-shadow-elevated);
+  box-shadow: 0 16px 36px rgba(17, 28, 20, 0.14), 0 4px 12px rgba(17, 28, 20, 0.06);
   overflow: hidden;
-  max-height: 280px;
+  max-height: 360px;
   overflow-y: auto;
   display: none;
+  z-index: 100;
 }
 
 .cga-search-results.active {
@@ -88,32 +110,78 @@
 }
 
 .cga-search-item {
-  padding: 12px 18px;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   border-bottom: 1px solid var(--cga-border-subtle);
   cursor: pointer;
-  transition: background var(--cga-transition-fast);
+  transition: all var(--cga-transition-fast);
 }
 
 .cga-search-item:last-child {
   border-bottom: none;
 }
 
-.cga-search-item:hover {
+.cga-search-item:hover,
+.cga-search-item.highlighted {
+  background: #fbf6ec;
+}
+
+.cga-search-item-icon {
+  font-size: 17px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--cga-bg-subtle);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.cga-search-item-info {
+  flex: 1;
+  overflow: hidden;
 }
 
 .cga-search-item-title {
   font-weight: 600;
   color: var(--cga-text-primary);
-  font-size: 13px;
+  font-size: 13.5px;
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cga-search-item-title mark {
+  background: transparent;
+  color: var(--cga-gold-accent);
+  font-weight: 800;
+  padding: 0;
 }
 
 .cga-search-item-sub {
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--cga-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin-top: 1px;
+}
+
+.cga-search-item-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: var(--cga-radius-full);
+  background: var(--cga-bg-subtle);
+  color: var(--cga-text-secondary);
+  border: 1px solid var(--cga-border-subtle);
+  flex-shrink: 0;
 }
 
 /* Telemetry HUD (Lightship RV Inspired Floating Telemetry Bar) */
