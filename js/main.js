@@ -5,16 +5,16 @@
 
 import { APP_CONSTANTS } from "./config/constants.js";
 import { tripStore } from "./state/TripStore.js";
-import { SeasonEngine } from "./components/SeasonEngine.js";
-import { VoyagerGlobe } from "./components/VoyagerGlobe.js";
-import { PortalGate } from "./components/PortalGate.js";
-import { MapManager } from "./components/MapManager.js";
-import { SearchBar } from "./components/SearchBar.js";
-import { ItineraryView } from "./components/ItineraryView.js";
-import { TelemetryHUD } from "./components/TelemetryHUD.js";
-import { SavedTripsModal } from "./components/SavedTripsModal.js";
+import { SeasonEngine } from "./ui/SeasonEngine.js";
+import { VoyagerGlobe } from "./scenes/VoyagerGlobe.js";
+import { PortalGate } from "./ui/PortalGate.js";
+import { MapManager } from "./ui/MapManager.js";
+import { SearchBar } from "./ui/SearchBar.js";
+import { ItineraryView } from "./ui/ItineraryView.js";
+import { TelemetryHUD } from "./ui/TelemetryHUD.js";
+import { SavedTripsModal } from "./ui/SavedTripsModal.js";
 import { FirebaseService } from "./services/FirebaseService.js";
-import { toast } from "./components/Toast.js";
+import { toast } from "./ui/Toast.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log(`%c${APP_CONSTANTS.APP_NAME} %cInitialized`, "color: #c6924b; font-weight: 800; font-size: 16px;", "color: #0284c7;");

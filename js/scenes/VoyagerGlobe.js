@@ -9,7 +9,7 @@
 
 import { APP_CONSTANTS } from "../config/constants.js";
 import { tripStore } from "../state/TripStore.js";
-import { toast } from "./Toast.js";
+import { toast } from "../ui/Toast.js";
 
 // Top Curated Wonder Destinations with exact coordinates
 export const GLOBE_DESTINATIONS = [
