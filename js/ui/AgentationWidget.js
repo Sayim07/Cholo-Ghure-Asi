@@ -6,6 +6,14 @@
 
 class AgentationWidget {
   constructor(endpoint = 'http://localhost:4747') {
+    const isLocalhost = typeof window !== 'undefined' && Boolean(
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname === '[::1]' ||
+      window.location.hostname.endsWith('.local')
+    );
+    if (!isLocalhost) return;
+
     this.endpoint = endpoint;
     this.inspecting = false;
     this.hoveredElement = null;
@@ -597,18 +605,27 @@ class AgentationWidget {
   }
 }
 
-// Auto-initialize when loaded
+// Auto-initialize ONLY when running locally on localhost
 if (typeof window !== 'undefined') {
+  const isLocalhost = Boolean(
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1' ||
+    window.location.hostname === '[::1]' ||
+    window.location.hostname.endsWith('.local')
+  );
+
   window.AgentationWidget = AgentationWidget;
-  const mount = () => {
-    if (!window.agentationWidget) {
-      window.agentationWidget = new AgentationWidget();
+  if (isLocalhost) {
+    const mount = () => {
+      if (!window.agentationWidget) {
+        window.agentationWidget = new AgentationWidget();
+      }
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', mount);
+    } else {
+      mount();
     }
-  };
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mount);
-  } else {
-    mount();
   }
 }
 
