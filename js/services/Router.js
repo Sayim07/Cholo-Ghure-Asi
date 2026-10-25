@@ -42,6 +42,11 @@ export class AppRouter {
     const rawHash = window.location.hash || "#/globe";
     const path = rawHash.split("?")[0];
 
+    // Ignore in-page section anchor links (e.g., #section-attractions, #section-culture)
+    if (!path.startsWith("#/")) {
+      return;
+    }
+
     // Update active state on navigation pills
     this.navLinks.forEach(link => {
       const href = link.getAttribute("href");
@@ -58,6 +63,9 @@ export class AppRouter {
 
   showGlobeView() {
     this.previousRoute = "#/globe";
+
+    const hud = document.getElementById("telemetry-hud");
+    if (hud) hud.classList.add("hidden");
 
     if (this.savedTripsModal && this.savedTripsModal.modal) {
       this.savedTripsModal.close();
@@ -76,6 +84,9 @@ export class AppRouter {
   showMapView() {
     this.previousRoute = "#/map";
 
+    const hud = document.getElementById("telemetry-hud");
+    if (hud) hud.classList.remove("hidden");
+
     if (this.savedTripsModal && this.savedTripsModal.modal) {
       this.savedTripsModal.close();
     }
@@ -91,6 +102,9 @@ export class AppRouter {
   }
 
   showItineraryView() {
+    const hud = document.getElementById("telemetry-hud");
+    if (hud) hud.classList.remove("hidden");
+
     if (this.savedTripsModal && this.savedTripsModal.modal) {
       this.savedTripsModal.close();
     }

@@ -201,6 +201,13 @@
   border-radius: var(--cga-radius-full);
   box-shadow: var(--cga-shadow-elevated);
   z-index: 90;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.cga-telemetry-hud.hidden {
+  display: none !important;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .telemetry-item {
@@ -385,3 +392,287 @@
     transform: translateX(0);
   }
 }
+
+/* ==========================================================================
+   Smart Dynamic Trip & Budget Planner (Real-Time Distance & Cost Engine)
+   ========================================================================== */
+.trip-planner-box {
+  background: var(--cga-bg-surface);
+  border: 1px solid var(--cga-border-subtle);
+  border-radius: var(--cga-radius-lg);
+  padding: 20px;
+  margin: 18px 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.planner-section-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cga-gold-accent);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.planner-origin-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--cga-bg-subtle);
+  padding: 8px 12px;
+  border-radius: var(--cga-radius-md);
+  margin-bottom: 16px;
+  border: 1px solid var(--cga-border-subtle);
+}
+
+.planner-origin-select {
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cga-forest-contrast);
+  outline: none;
+  cursor: pointer;
+  flex: 1;
+}
+
+.planner-distance-badge {
+  font-family: var(--cga-font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--cga-forest-contrast);
+  background: var(--cga-bg-glass);
+  padding: 3px 8px;
+  border-radius: var(--cga-radius-full);
+  border: 1px solid var(--cga-border-subtle);
+  white-space: nowrap;
+}
+
+/* Mode & Stay Cards Grid */
+.planner-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.planner-choice-card {
+  background: var(--cga-bg-subtle);
+  border: 1.5px solid var(--cga-border-subtle);
+  border-radius: var(--cga-radius-md);
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+}
+
+.planner-choice-card:hover {
+  border-color: var(--cga-gold-accent);
+  transform: translateY(-2px);
+}
+
+.planner-choice-card.active {
+  background: rgba(200, 150, 62, 0.08);
+  border-color: var(--cga-gold-accent);
+  box-shadow: 0 4px 12px rgba(200, 150, 62, 0.15);
+}
+
+.planner-card-icon {
+  font-size: 20px;
+}
+
+.planner-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cga-forest-contrast);
+}
+
+.planner-card-sub {
+  font-size: 10.5px;
+  color: var(--cga-text-muted);
+}
+
+/* Counters Row */
+.planner-counters-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.planner-counter-box {
+  background: var(--cga-bg-subtle);
+  border: 1px solid var(--cga-border-subtle);
+  border-radius: var(--cga-radius-md);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.counter-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.counter-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--cga-border-subtle);
+  background: var(--cga-bg-surface);
+  color: var(--cga-forest-contrast);
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.counter-btn:hover {
+  background: var(--cga-forest-contrast);
+  color: #fff;
+}
+
+.counter-val {
+  font-family: var(--cga-font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cga-forest-contrast);
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Custom Budget Input Bar */
+.user-budget-input-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--cga-bg-subtle);
+  border: 1.5px solid var(--cga-border-subtle);
+  border-radius: var(--cga-radius-md);
+  padding: 8px 12px;
+  gap: 8px;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+
+.user-budget-input-wrap:focus-within {
+  border-color: var(--cga-gold-accent);
+}
+
+.budget-currency-symbol {
+  font-weight: 800;
+  color: var(--cga-gold-accent);
+  font-size: 15px;
+}
+
+.user-budget-field {
+  background: transparent;
+  border: none;
+  font-family: var(--cga-font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--cga-forest-contrast);
+  width: 100%;
+  outline: none;
+}
+
+/* Budget Comparison Banner */
+.budget-status-banner {
+  border-radius: var(--cga-radius-md);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.budget-status-banner.fits {
+  background: rgba(46, 204, 113, 0.1);
+  border: 1px solid rgba(46, 204, 113, 0.3);
+  color: #1e824c;
+}
+
+.budget-status-banner.over {
+  background: rgba(231, 76, 60, 0.08);
+  border: 1px solid rgba(231, 76, 60, 0.25);
+  color: #c0392b;
+}
+
+.autofit-btn {
+  background: var(--cga-forest-contrast);
+  color: #fff;
+  border: none;
+  padding: 5px 12px;
+  border-radius: var(--cga-radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-top: 4px;
+  transition: transform 0.15s;
+}
+
+.autofit-btn:hover {
+  transform: scale(1.03);
+}
+
+/* Live Total Breakdown Banner */
+.cost-breakdown-banner {
+  background: var(--cga-bg-glass);
+  border: 1px dashed var(--cga-border-glass);
+  border-radius: var(--cga-radius-md);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.breakdown-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.breakdown-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--cga-text-muted);
+}
+
+.breakdown-val {
+  font-family: var(--cga-font-mono);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--cga-forest-contrast);
+}
+
+.budget-chip-btn {
+  background: var(--cga-bg-subtle);
+  border: 1px solid var(--cga-border-subtle);
+  color: var(--cga-forest-contrast);
+  padding: 6px 12px;
+  border-radius: var(--cga-radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.budget-chip-btn:hover {
+  background: var(--cga-gold-accent);
+  color: #111;
+  border-color: var(--cga-gold-accent);
+}
+

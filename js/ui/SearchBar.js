@@ -214,12 +214,11 @@ export class SearchBar {
         return;
       }
 
-      // If single high-confidence match or exact query, dive directly
-      if (places.length === 1) {
-        await this.selectPlace(places[0]);
-      } else {
-        this.renderResults(places, query);
-      }
+      // Automatically select and dive into the top destination match!
+      const target = (this.selectedIndex >= 0 && this.cachedResults[this.selectedIndex])
+        ? this.cachedResults[this.selectedIndex]
+        : places[0];
+      await this.selectPlace(target);
     } catch (err) {
       toast.error("Search temporarily unavailable. Please try again.");
     } finally {
