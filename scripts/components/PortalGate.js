@@ -182,6 +182,14 @@ export class PortalGate {
         </div>
       </div>
 
+      <!-- Nearby Attractions Section (Core Requirement) -->
+      <div class="nearby-attractions-section" style="margin-bottom: 20px;">
+        <span class="travel-mode-label">NEARBY ATTRACTIONS & EXPERIENCES:</span>
+        <div id="nearby-attractions-list" class="nearby-attractions-list" style="display: flex; gap: 10px; overflow-x: auto; padding: 6px 0;">
+          <span style="font-size: 12px; color: var(--cga-text-muted);">Finding nearby attractions...</span>
+        </div>
+      </div>
+
       <!-- Action Buttons: Add to Trip, Open in Google Maps, Focus -->
       <div class="dest-action-row">
         <button id="modal-add-to-trip-btn" class="cga-btn-pill cga-btn-primary" style="flex: 1.2; justify-content: center; height: 46px; font-size: 14px;">
@@ -195,6 +203,40 @@ export class PortalGate {
         </button>
       </div>
     `;
+
+    // Asynchronously fetch and populate nearby attractions
+    import("../services/AttractionsService.js").then(({ AttractionsService }) => {
+      AttractionsService.fetchNearbyAttractions(dest.latitude, dest.longitude).then(attractions => {
+        const attContainer = document.getElementById("nearby-attractions-list");
+        if (!attContainer) return;
+        attContainer.innerHTML = "";
+
+        attractions.forEach(att => {
+          const chip = document.createElement("div");
+          chip.className = "attraction-chip";
+          chip.style.cssText = "display: flex; align-items: center; gap: 6px; background: var(--cga-bg-subtle); border: 1px solid var(--cga-border-subtle); padding: 6px 12px; border-radius: var(--cga-radius-full); font-size: 12px; white-space: nowrap; cursor: pointer; transition: all 0.2s;";
+          chip.innerHTML = `
+            <span>${att.icon}</span>
+            <span style="font-weight: 600; color: var(--cga-text-primary);">${escapeHTML(att.name)}</span>
+            <span style="color: var(--cga-gold-accent); font-weight: 700; margin-left: 4px;">+</span>
+          `;
+
+          chip.addEventListener("click", () => {
+            const attPlace = {
+              name: `${att.name} (${dest.shortName || dest.name})`,
+              shortName: att.name,
+              latitude: att.latitude,
+              longitude: att.longitude,
+              type: att.type
+            };
+            tripStore.addStop(attPlace, weather);
+            toast.success(`Added "${att.name}" to Itinerary!`);
+          });
+
+          attContainer.appendChild(chip);
+        });
+      });
+    });
 
     // Travel mode buttons
     const modePills = container.querySelectorAll(".mode-pill");

@@ -8,7 +8,8 @@
   position: absolute;
   top: 96px;
   left: 24px;
-  width: 440px;
+  width: calc(100% - 48px);
+  max-width: 440px;
   z-index: 90;
   display: flex;
   flex-direction: column;

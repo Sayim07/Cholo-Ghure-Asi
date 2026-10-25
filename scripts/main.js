@@ -12,6 +12,7 @@ import { MapManager } from "./components/MapManager.js";
 import { SearchBar } from "./components/SearchBar.js";
 import { ItineraryView } from "./components/ItineraryView.js";
 import { TelemetryHUD } from "./components/TelemetryHUD.js";
+import { SavedTripsModal } from "./components/SavedTripsModal.js";
 import { FirebaseService } from "./services/FirebaseService.js";
 import { toast } from "./components/Toast.js";
 
@@ -44,7 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // 7. Initialize Lightship Telemetry HUD
   const telemetryHUD = new TelemetryHUD("#telemetry-hud");
 
-  // 8. Bind Navbar Seasonal Buttons
+  // 8. Initialize Saved Trips Modal Drawer
+  const savedTripsModal = new SavedTripsModal("#btn-saved-trips");
+
+  // 9. Bind Navbar Seasonal Buttons
   const seasonButtons = document.querySelectorAll(".season-btn");
   seasonButtons.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -55,22 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
       toast.info(`Switched to ${season.toUpperCase()} atmosphere 🍂`);
     });
   });
-
-  // 9. Bind Saved Trips Archive Loader
-  const savedTripsBtn = document.getElementById("btn-saved-trips");
-  if (savedTripsBtn) {
-    savedTripsBtn.addEventListener("click", async () => {
-      const trips = await FirebaseService.getSavedTrips();
-      if (trips.length === 0) {
-        toast.info("No saved trips yet. Plan an itinerary and click 'Sync to Cloud'!");
-        return;
-      }
-
-      // Load most recent trip
-      tripStore.loadSavedTrip(trips[0]);
-      toast.success(`Loaded "${trips[0].title}" from travel archive!`);
-    });
-  }
 
   // 10. Bind Export / Print Travel Plan
   const exportBtn = document.getElementById("btn-export-trip");

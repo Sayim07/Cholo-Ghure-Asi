@@ -117,8 +117,11 @@ export class ItineraryView {
         <div class="stop-badge-number">${index + 1}</div>
         <div class="stop-details">
           <div class="stop-name">${escapeHTML(stop.name)}</div>
-          <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap;">
             ${weatherTag}
+            <button class="stop-budget-pill btn-edit-budget" title="Edit Budget for this stop" style="font-size: 11px; font-weight: 700; color: var(--cga-text-primary); background: var(--cga-bg-subtle); border: 1px solid var(--cga-border-subtle); padding: 2px 8px; border-radius: var(--cga-radius-full); cursor: pointer;">
+              💰 ${formatCurrency((stop.budget?.stay || 0) + (stop.budget?.food || 0) + (stop.budget?.transport || 0) + (stop.budget?.tickets || 0))}
+            </button>
             <span style="font-size: 11px; color: var(--cga-text-muted); font-family: var(--cga-font-mono);">
               ${stop.latitude.toFixed(2)}°, ${stop.longitude.toFixed(2)}°
             </span>
@@ -145,7 +148,69 @@ export class ItineraryView {
         toast.info(`"${stop.name}" removed.`);
       });
 
+      card.querySelector(".btn-edit-budget")?.addEventListener("click", () => {
+        this.openBudgetEditor(stop);
+      });
+
       this.stopsList.appendChild(card);
+    });
+  }
+
+  openBudgetEditor(stop) {
+    const budget = stop.budget || { stay: 1500, food: 800, transport: 500, tickets: 200 };
+
+    // Create lightweight budget editor modal
+    const modal = document.createElement("div");
+    modal.className = "cga-modal-backdrop";
+    modal.style.cssText = "position: fixed; inset: 0; background: rgba(17, 28, 20, 0.65); backdrop-filter: blur(8px); z-index: 300; display: flex; align-items: center; justify-content: center;";
+
+    modal.innerHTML = `
+      <div style="background: #ffffff; width: 90%; max-width: 380px; border-radius: var(--cga-radius-lg); border: 1px solid var(--cga-border-glass); box-shadow: var(--cga-shadow-elevated); padding: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 style="font-family: var(--cga-font-serif); font-size: 18px; font-weight: 700; color: var(--cga-forest-contrast);">Budget: ${escapeHTML(stop.name)}</h3>
+          <button id="close-budget-modal" style="font-size: 16px; color: var(--cga-text-muted);">✕</button>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+          <label style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+            <span>🏨 Accommodation (₹)</span>
+            <input type="number" id="inp-stay" value="${budget.stay || 0}" style="width: 100px; text-align: right; background: var(--cga-bg-subtle); padding: 6px 10px; border-radius: var(--cga-radius-sm); border: 1px solid var(--cga-border-subtle); font-family: var(--cga-font-mono);">
+          </label>
+          <label style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+            <span>🍽️ Food & Dining (₹)</span>
+            <input type="number" id="inp-food" value="${budget.food || 0}" style="width: 100px; text-align: right; background: var(--cga-bg-subtle); padding: 6px 10px; border-radius: var(--cga-radius-sm); border: 1px solid var(--cga-border-subtle); font-family: var(--cga-font-mono);">
+          </label>
+          <label style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+            <span>🚗 Travel & Fuel (₹)</span>
+            <input type="number" id="inp-transport" value="${budget.transport || 0}" style="width: 100px; text-align: right; background: var(--cga-bg-subtle); padding: 6px 10px; border-radius: var(--cga-radius-sm); border: 1px solid var(--cga-border-subtle); font-family: var(--cga-font-mono);">
+          </label>
+          <label style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+            <span>🎟️ Entry Tickets (₹)</span>
+            <input type="number" id="inp-tickets" value="${budget.tickets || 0}" style="width: 100px; text-align: right; background: var(--cga-bg-subtle); padding: 6px 10px; border-radius: var(--cga-radius-sm); border: 1px solid var(--cga-border-subtle); font-family: var(--cga-font-mono);">
+          </label>
+        </div>
+
+        <button id="save-budget-modal" class="cga-btn-pill cga-btn-primary" style="width: 100%; justify-content: center; height: 42px;">
+          <span>Save Expenses</span>
+        </button>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    modal.querySelector("#close-budget-modal").addEventListener("click", () => modal.remove());
+    modal.querySelector("#save-budget-modal").addEventListener("click", () => {
+      stop.budget = {
+        stay: Number(modal.querySelector("#inp-stay").value) || 0,
+        food: Number(modal.querySelector("#inp-food").value) || 0,
+        transport: Number(modal.querySelector("#inp-transport").value) || 0,
+        tickets: Number(modal.querySelector("#inp-tickets").value) || 0
+      };
+      tripStore.recalculateBudget();
+      tripStore.persistTrip();
+      toast.success("Budget updated!");
+      modal.remove();
+      this.render();
     });
   }
 

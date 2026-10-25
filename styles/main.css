@@ -242,3 +242,53 @@ button {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(17, 28, 20, 0.25);
 }
+
+/* Mobile & Tablet Responsive Media Queries */
+@media (max-width: 900px) {
+  .cga-navbar {
+    left: 12px;
+    right: 12px;
+    top: 12px;
+    padding: 0 16px;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: var(--cga-radius-md);
+  }
+
+  .season-selector {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cga-nav-actions {
+    gap: 8px;
+  }
+
+  .cga-btn-pill {
+    height: 34px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .cga-telemetry-hud {
+    bottom: 14px;
+    padding: 8px 16px;
+    gap: 10px;
+    max-width: calc(100% - 24px);
+    overflow-x: auto;
+  }
+
+  .globe-main-title {
+    font-size: 28px !important;
+  }
+
+  .continent-pill-dock {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+

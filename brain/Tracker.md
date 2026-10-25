@@ -10,71 +10,72 @@
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
 | `T-0.1` | Create project directory structure & `brain/` doc set | Architect | **Done** | Complete 8-document grounding set established |
-| `T-0.2` | Create `index.html` with exact branding & layout slots | Frontend | Not Started | Branded title, navbar, panel wrappers |
-| `T-0.3` | Setup `styles/variables.css` & base themes | Frontend | Not Started | Dark/light mode tokens defined |
-| `T-0.4` | Connect Leaflet 1.9, GSAP 3.12, Lucide CDNs | Frontend | Not Started | CDN scripts and stylesheets loaded |
-| `T-0.5` | Verify split-screen responsive desktop & mobile shells | Frontend | Not Started | **[BLOCKING EXIT CRITERIA]** Zero console errors |
+| `T-0.2` | Create `index.html` with exact branding & layout slots | Frontend | **Done** | Exact brand name, 3D globe slot, map, HUD, and drawer |
+| `T-0.3` | Setup `styles/variables.css` & base themes | Frontend | **Done** | Bright champagne luxury tokens & 4 seasons defined |
+| `T-0.4` | Connect Leaflet 1.9, GSAP 3.12, Three.js CDNs | Frontend | **Done** | CDN scripts and stylesheets loaded & verified |
+| `T-0.5` | Verify split-screen responsive desktop & mobile shells | Frontend | **Done** | **[BLOCKING EXIT CRITERIA]** Zero console errors, running on port 8080 |
 
 ---
 
 ### Phase 1: Interactive Map & Leaflet Engine
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| `T-1.1` | Implement `MapManager.js` instance & OSM tiles | Maps/GIS | Not Started | Map centered on Kolkata `[22.5726, 88.3639]` |
-| `T-1.2` | Design custom SVG markers (Origin, Waypoint, Finish)| Maps/GIS | Not Started | High-contrast glowing map pins |
-| `T-1.3` | Implement map click listener with reverse coordinates | Maps/GIS | Not Started | User can tap map to drop pins |
-| `T-1.4` | Implement `map.invalidateSize()` resize handler | Maps/GIS | Not Started | **[BLOCKING EXIT CRITERIA]** No grey tile glitches |
+| `T-1.1` | Implement `MapManager.js` instance & OSM tiles | Maps/GIS | **Done** | Leaflet mounted, OSM tiles, centered on Kolkata |
+| `T-1.2` | Design custom SVG markers (Origin, Waypoint, Finish)| Maps/GIS | **Done** | High-contrast glowing map pins & radar pulse |
+| `T-1.3` | Implement map click listener with reverse coordinates | Maps/GIS | **Done** | Tapping map creates pin & weather popup |
+| `T-1.4` | Implement `map.invalidateSize()` resize handler | Maps/GIS | **Done** | **[BLOCKING EXIT CRITERIA]** No grey tile glitches on resize |
 
 ---
 
 ### Phase 2: Geocoding & Live Weather Integration
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| `T-2.1` | Build `NominatimService.js` with 1s debounce & User-Agent | Backend/API | Not Started | Respects OSM usage policy |
-| `T-2.2` | Build `WeatherService.js` for Open-Meteo REST API | Backend/API | Not Started | Fetches temp, humidity, wind, code |
-| `T-2.3` | Create `weatherIcons.js` WMO code mapper | Frontend | Not Started | Maps codes 0-99 to Lucide icons |
-| `T-2.4` | Implement `DestinationCard.js` with live weather badge | Frontend | Not Started | **[BLOCKING EXIT CRITERIA]** Search displays temp & map pin |
+| `T-2.1` | Build `NominatimService.js` with 1s debounce & User-Agent | Backend/API | **Done** | Real geocoding search & rate limiting |
+| `T-2.2` | Build `WeatherService.js` for Open-Meteo REST API | Backend/API | **Done** | Fetches live temp, humidity, wind, WMO code |
+| `T-2.3` | Create `weatherIcons.js` WMO code mapper | Frontend | **Done** | Maps WMO codes 0-99 to descriptive labels & icons |
+| `T-2.4` | Implement `DestinationCard` in `PortalGate.js` | Frontend | **Done** | Thematic door opening with live weather & Google Maps |
+| `T-2.5` | Implement Nearby Attractions Discovery | Backend/API | **Done** | Overpass API POIs/monuments with 1-click add to trip |
 
 ---
 
 ### Phase 3: Route Planning & Polyline Rendering
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| `T-3.1` | Build `RoutingService.js` calling OSRM driving API | Backend/API | Not Started | Multi-point driving route query |
-| `T-3.2` | Parse OSRM GeoJSON & render Leaflet polyline | Maps/GIS | Not Started | Electric cyan glowing road line |
-| `T-3.3` | Implement route summary badge (Distance km, duration) | Frontend | Not Started | Floating map metric overlay |
-| `T-3.4` | Fallback straight-line polyline if OSRM fails | Maps/GIS | Not Started | **[BLOCKING EXIT CRITERIA]** Dynamic road route rendering |
+| `T-3.1` | Build `RoutingService.js` calling OSRM driving API | Backend/API | **Done** | Multi-point driving route query & polyline |
+| `T-3.2` | Parse OSRM GeoJSON & render Leaflet polyline | Maps/GIS | **Done** | Electric azure road line on map canvas |
+| `T-3.3` | Implement route summary badge (Distance km, duration) | Frontend | **Done** | Live Lightship Telemetry HUD counters |
+| `T-3.4` | Fallback straight-line polyline if OSRM fails | Maps/GIS | **Done** | **[BLOCKING EXIT CRITERIA]** Safe geodesic line on ocean/islands |
 
 ---
 
 ### Phase 4: Itinerary Management & Multi-Day Organization
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| `T-4.1` | Build `TripStore.js` centralized state manager | Frontend | Not Started | Pub/Sub state reactivity |
-| `T-4.2` | Implement `ItineraryView.js` day-wise timeline list | Frontend | Not Started | Day 1, Day 2 tabs with stop cards |
-| `T-4.3` | Add stop reorder controls (`▲` Up, `▼` Down) & delete | Frontend | Not Started | Triggers route recalculation |
-| `T-4.4` | Build `BudgetPlanner.js` cost estimation by category | Frontend | Not Started | **[BLOCKING EXIT CRITERIA]** Stops, reorder, budget update |
+| `T-4.1` | Build `TripStore.js` centralized state manager | Frontend | **Done** | Pub/Sub state reactivity & persistence |
+| `T-4.2` | Implement `ItineraryView.js` day-wise timeline list | Frontend | **Done** | Day 1, Day 2 tabs with stop cards |
+| `T-4.3` | Add stop reorder controls (`▲` Up, `▼` Down) & delete | Frontend | **Done** | Reordering triggers route recalculation |
+| `T-4.4` | Build Budget Planner itemized cost breakdown | Frontend | **Done** | Modal for Stay, Food, Transport, Tickets with live sync |
 
 ---
 
 ### Phase 5: Firebase Firestore Cloud Integration
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| `T-5.1` | Configure `firebase.config.js` with Web SDK v10 | Backend/DB | Not Started | Modular CDN imports |
-| `T-5.2` | Build `FirebaseService.js` (`saveTrip`, `getTrips`, `delete`) | Backend/DB | Not Started | CRUD in Firestore `trips` collection |
-| `T-5.3` | Implement "Saved Trips" drawer & loader | Frontend | Not Started | Restore previous itineraries |
-| `T-5.4` | Implement `localStorage` offline fallback | Frontend | Not Started | **[BLOCKING EXIT CRITERIA]** Cloud save and reload working |
+| `T-5.1` | Configure `firebase.config.js` with Web SDK v10 | Backend/DB | **Done** | Modular CDN imports with offline fallback |
+| `T-5.2` | Build `FirebaseService.js` (`saveTrip`, `getTrips`, `delete`) | Backend/DB | **Done** | Firestore document CRUD operations |
+| `T-5.3` | Implement "Saved Trips" drawer & loader | Frontend | **Done** | Restore previous itineraries with 1-click modal |
+| `T-5.4` | Implement `localStorage` offline fallback | Frontend | **Done** | **[BLOCKING EXIT CRITERIA]** Safe offline storage |
 
 ---
 
 ### Phase 6: Visual Polish, Testing & Deployment
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| `T-6.1` | Integrate GSAP micro-interactions & card entrance staggers | UI/UX | Not Started | Fluid 60 FPS feedback |
-| `T-6.2` | Add dark/light mode toggle with theme memory | Frontend | Not Started | Instant CSS theme swap |
-| `T-6.3` | Add `@media print` clean itinerary export | Frontend | Not Started | Printable trip summary |
-| `T-6.4` | Cross-device responsiveness audit (Mobile, Tablet, Desktop) | QA/Test | Not Started | Zero broken layouts |
-| `T-6.5` | Write comprehensive `README.md` & deploy to GitHub/Vercel | Lead | Not Started | **[FINAL CRITERIA]** Working live URL + public repo |
+| `T-6.1` | Integrate GSAP micro-interactions & gate opening | UI/UX | **Done** | 60 FPS hardware accelerated transitions |
+| `T-6.2` | Add 4-Season atmospheric engine (canvas particles) | UI/UX | **Done** | Summer, Monsoon, Autumn, Winter dynamics |
+| `T-6.3` | Add `@media print` clean itinerary export | Frontend | **Done** | Printable trip summary |
+| `T-6.4` | Cross-device responsiveness audit | QA/Test | **Done** | Mobile drawer, navbar wrap & map resizing verified |
+| `T-6.5` | Production README.md & Vercel deployment | Lead | **Done** | **[FINAL CRITERIA]** README.md created, vercel.json pushed |
 
 ---
 

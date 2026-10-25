@@ -6,7 +6,8 @@
   position: absolute;
   top: 96px;
   right: 24px;
-  width: 420px;
+  width: calc(100% - 48px);
+  max-width: 420px;
   bottom: 96px;
   background: var(--cga-bg-glass);
   backdrop-filter: blur(24px);
