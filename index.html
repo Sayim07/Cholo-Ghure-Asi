@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="description" content="Cholo Ghure Asssiii — A luxury, award-winning travel and itinerary planner combining interactive 3D globe discovery, Leaflet cartography, real-time weather analytics, and smart multi-day road routing.">
   <title>Cholo Ghure Asssiii — Wanderlust Travel & Trip Planner</title>
 
@@ -14,14 +17,14 @@
   <!-- Leaflet.js v1.9.4 CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-  <!-- Application Modular Stylesheets -->
-  <link rel="stylesheet" href="./css/variables.css">
-  <link rel="stylesheet" href="./css/main.css">
-  <link rel="stylesheet" href="./css/globe.css">
-  <link rel="stylesheet" href="./css/map.css">
-  <link rel="stylesheet" href="./css/gate.css">
-  <link rel="stylesheet" href="./css/components.css">
-  <link rel="stylesheet" href="./css/itinerary.css">
+  <!-- Application Modular Stylesheets (with cache busters) -->
+  <link rel="stylesheet" href="./css/variables.css?v=3.5">
+  <link rel="stylesheet" href="./css/main.css?v=3.5">
+  <link rel="stylesheet" href="./css/globe.css?v=3.5">
+  <link rel="stylesheet" href="./css/map.css?v=3.5">
+  <link rel="stylesheet" href="./css/gate.css?v=3.5">
+  <link rel="stylesheet" href="./css/components.css?v=3.5">
+  <link rel="stylesheet" href="./css/itinerary.css?v=3.5">
 </head>
 <body class="season-summer">
 
@@ -204,7 +207,16 @@
         <div id="search-dropdown-results" class="cga-search-results"></div>
       </div>
 
-
+      <!-- Floating Map Route Control Bar (Visible when stops > 0) -->
+      <div id="map-route-bar" class="cga-map-route-bar hidden">
+        <div class="map-route-info">
+          <span class="map-route-badge" id="map-route-stops-badge">📍 0 Stops</span>
+          <span class="map-route-distance" id="map-route-distance-badge">🚗 0 km</span>
+        </div>
+        <button id="btn-clear-map-route" class="map-route-clear-btn" title="Clear all stops from route">
+          🗑️ Clear Route
+        </button>
+      </div>
 
       <!-- Multi-Day Itinerary Side Drawer -->
       <aside id="itinerary-drawer" class="cga-itinerary-drawer">
@@ -269,7 +281,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <!-- Application Bootstrap Entry Point (Vanilla ES6 Modules) -->
-  <script type="module" src="./js/main.js"></script>
+  <script type="module" src="./js/main.js?v=3.5"></script>
 
   <!-- Agentation Visual Feedback Toolbar (Auto-disabled on production/Vercel, active only on localhost) -->
   <script type="module" src="./js/ui/AgentationWidget.js?v=2.1"></script>

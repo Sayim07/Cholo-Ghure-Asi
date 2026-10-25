@@ -188,6 +188,17 @@ class TripStore {
     this.emit("trip:loaded", trip);
     this.emit("stops:changed", trip.stops);
   }
+
+  clearAllStops() {
+    this.state.activeTrip.stops = [];
+    this.state.activeTrip.totalDistanceKm = 0;
+    this.state.activeTrip.totalDurationMins = 0;
+    this.state.activeTrip.totalBudget = 0;
+    this.state.currentRoute = null;
+    this.persistTrip();
+    this.emit("stops:changed", []);
+    this.emit("route:updated", { distanceKm: 0, durationMins: 0, geoJson: null });
+  }
 }
 
 export const tripStore = new TripStore();

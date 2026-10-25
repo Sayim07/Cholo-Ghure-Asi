@@ -237,3 +237,95 @@ function mergeAndDeduplicate(listA, listB) {
 
   return merged.slice(0, 8);
 }
+
+/**
+ * Reverse geocode latitude and longitude to an authentic human-readable city/location
+ */
+export async function reverseGeocode(lat, lon) {
+  const cacheKey = `rev_${lat.toFixed(3)}_${lon.toFixed(3)}`;
+  if (searchCache.has(cacheKey)) {
+    return searchCache.get(cacheKey);
+  }
+
+  // 1. Primary: OpenStreetMap Nominatim Reverse API
+  try {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=14&addressdetails=1`;
+    const res = await fetch(url, {
+      headers: { "Accept-Language": "en" },
+      signal: AbortSignal.timeout(4000)
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.address) {
+        const addr = data.address;
+        const shortName = addr.city || addr.town || addr.village || addr.municipality || addr.county || addr.state_district || data.name || "Scenic Spot";
+        const parts = [];
+        if (addr.state && addr.state !== shortName) parts.push(addr.state);
+        if (addr.country && addr.country !== shortName) parts.push(addr.country);
+        const subText = parts.join(", ") || addr.country || "Earth Location";
+        const countryCode = (addr.country_code || "").toUpperCase();
+        const flag = getCountryFlag(countryCode);
+
+        const result = {
+          name: data.display_name || `${shortName}, ${subText}`,
+          shortName,
+          subText,
+          latitude: lat,
+          longitude: lon,
+          countryCode,
+          flag,
+          type: data.type || "place"
+        };
+        searchCache.set(cacheKey, result);
+        return result;
+      }
+    }
+  } catch (e) {
+    // Fallback to Photon
+  }
+
+  // 2. Fallback: Photon Komoot Reverse API
+  try {
+    const photonUrl = `https://photon.komoot.io/reverse?lat=${lat}&lon=${lon}`;
+    const res = await fetch(photonUrl, { signal: AbortSignal.timeout(3000) });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.features && data.features.length > 0) {
+        const props = data.features[0].properties;
+        const shortName = props.name || props.city || props.town || props.state || "Scenic Spot";
+        const parts = [];
+        if (props.state && props.state !== shortName) parts.push(props.state);
+        if (props.country && props.country !== shortName) parts.push(props.country);
+        const subText = parts.join(", ") || props.country || "Earth Location";
+        const countryCode = (props.countrycode || "").toUpperCase();
+        const flag = getCountryFlag(countryCode);
+
+        const result = {
+          name: `${shortName}, ${subText}`,
+          shortName,
+          subText,
+          latitude: lat,
+          longitude: lon,
+          countryCode,
+          flag,
+          type: props.type || "place"
+        };
+        searchCache.set(cacheKey, result);
+        return result;
+      }
+    }
+  } catch (e) {}
+
+  // 3. Fallback coordinate descriptor
+  return {
+    name: `Location [${lat.toFixed(3)}°, ${lon.toFixed(3)}°]`,
+    shortName: `Spot @ ${lat.toFixed(2)}°, ${lon.toFixed(2)}°`,
+    subText: "Global Waypoint",
+    latitude: lat,
+    longitude: lon,
+    countryCode: "",
+    flag: "📍",
+    type: "pin"
+  };
+}

@@ -1,13 +1,19 @@
 /* ==========================================================================
    Cholo Ghure Asssiii — Leaflet Map Engine & Cartography (MapManager.js)
    Conforms to TRD.md §2 & ImplementationPlan.md §2.1
+   Features:
+   - Live Reverse-Geocoding (Real City/Town/Region names on map click)
+   - 1-Click Exploration with Thematic Gate Reveal Dossier (Wikipedia photos, history, budget)
+   - Interactive Stop Management with "Remove Stop" & "View Guide"
+   - Floating Route Control Bar with Live Distance and "Clear Route"
    ========================================================================== */
 
-import { APP_CONSTANTS } from "../config/constants.js";
-import { tripStore } from "../state/TripStore.js";
-import { calculateRoute } from "../services/RoutingService.js";
-import { fetchWeather } from "../services/WeatherService.js";
-import { toast } from "./Toast.js";
+import { APP_CONSTANTS } from "../config/constants.js?v=3.5";
+import { tripStore } from "../state/TripStore.js?v=3.5";
+import { calculateRoute } from "../services/RoutingService.js?v=3.5";
+import { fetchWeather } from "../services/WeatherService.js?v=3.5";
+import { reverseGeocode } from "../services/NominatimService.js?v=3.5";
+import { toast } from "./Toast.js?v=3.5";
 
 export class MapManager {
   constructor(containerId) {
@@ -15,6 +21,7 @@ export class MapManager {
     this.map = null;
     this.markersLayer = null;
     this.routeLayer = null;
+    this.tempExploreMarker = null;
 
     this.initMap();
     this.bindStoreEvents();
@@ -48,6 +55,15 @@ export class MapManager {
     this.markersLayer = L.layerGroup().addTo(this.map);
     this.routeLayer = L.layerGroup().addTo(this.map);
 
+    // Bind Floating Route Clear Button
+    const clearBtn = document.getElementById("btn-clear-map-route");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        tripStore.clearAllStops();
+        toast.info("All stops and route cleared");
+      });
+    }
+
     // Handle map resize / tab invalidation
     window.addEventListener("resize", () => {
       setTimeout(() => this.map.invalidateSize(), 150);
@@ -75,45 +91,101 @@ export class MapManager {
   }
 
   async handleMapClick(lat, lon) {
-    try {
-      const weather = await fetchWeather(lat, lon);
-      const clickedPlace = {
-        name: `Location [${lat.toFixed(3)}, ${lon.toFixed(3)}]`,
-        shortName: `Pin @ ${lat.toFixed(2)}°, ${lon.toFixed(2)}°`,
-        latitude: lat,
-        longitude: lon,
-        type: "pin"
-      };
+    const L = window.L;
+    if (!L || !this.map) return;
 
-      // Drop temporary interactive popup pin
-      const L = window.L;
-      const marker = L.marker([lat, lon], {
-        icon: this.createMarkerIcon(0, "dest-pin", "📍")
-      }).addTo(this.markersLayer);
+    // Remove any previous temporary exploration pin
+    if (this.tempExploreMarker) {
+      this.markersLayer.removeLayer(this.tempExploreMarker);
+      this.tempExploreMarker = null;
+    }
+
+    // Drop new exploration pin with loading state
+    this.tempExploreMarker = L.marker([lat, lon], {
+      icon: this.createMarkerIcon(0, "dest-pin", "📍")
+    }).addTo(this.markersLayer);
+
+    const loadingHtml = `
+      <div class="cga-popup-card">
+        <div class="cga-popup-loading">
+          <span>🔍</span> Identifying location & weather...
+        </div>
+      </div>
+    `;
+    this.tempExploreMarker.bindPopup(loadingHtml).openPopup();
+
+    try {
+      // 1. In parallel: Reverse geocode real place name & fetch live weather
+      const [placeInfo, weather] = await Promise.all([
+        reverseGeocode(lat, lon),
+        fetchWeather(lat, lon)
+      ]);
 
       const popupContent = `
         <div class="cga-popup-card">
-          <div class="cga-popup-title">Explored Spot</div>
-          <div class="cga-popup-meta">Coords: ${lat.toFixed(3)}°, ${lon.toFixed(3)}°</div>
-          <div style="font-size: 13px; font-weight: 700; color: var(--cga-gold-accent); margin-bottom: 8px;">
+          <div class="cga-popup-title">${placeInfo.flag || "📍"} ${placeInfo.shortName}</div>
+          <div class="cga-popup-meta">${placeInfo.subText} • ${lat.toFixed(3)}°, ${lon.toFixed(3)}°</div>
+          <div class="cga-popup-weather">
             ${weather.icon} ${weather.temperature}°C • ${weather.condition}
           </div>
-          <button id="popup-add-btn" class="cga-popup-btn">➕ Add to Itinerary</button>
+          <div class="cga-popup-actions">
+            <button id="popup-explore-dossier" class="cga-popup-btn cga-popup-btn-primary" title="Open full guide with photos, history and budget planner">
+              🌟 Explore Full Dossier & Budget
+            </button>
+            <button id="popup-add-itinerary" class="cga-popup-btn cga-popup-btn-secondary" title="Add directly to itinerary and route">
+              ➕ Quick Add to Route
+            </button>
+          </div>
         </div>
       `;
 
-      marker.bindPopup(popupContent).openPopup();
+      this.tempExploreMarker.setPopupContent(popupContent);
 
+      // Attach button event listeners
       setTimeout(() => {
-        document.getElementById("popup-add-btn")?.addEventListener("click", () => {
-          tripStore.addStop(clickedPlace, weather);
-          toast.success("Spot added to itinerary!");
-          marker.closePopup();
-        });
-      }, 50);
+        const exploreBtn = document.getElementById("popup-explore-dossier");
+        const addBtn = document.getElementById("popup-add-itinerary");
+
+        if (exploreBtn) {
+          exploreBtn.addEventListener("click", () => {
+            if (this.tempExploreMarker) {
+              this.markersLayer.removeLayer(this.tempExploreMarker);
+              this.tempExploreMarker = null;
+            }
+            if (window.portalGateInstance) {
+              window.portalGateInstance.openGate(placeInfo, weather);
+            }
+          });
+        }
+
+        if (addBtn) {
+          addBtn.addEventListener("click", () => {
+            tripStore.addStop(placeInfo, weather);
+            const totalStops = tripStore.state.activeTrip.stops.length;
+            if (totalStops === 1) {
+              toast.success(`📍 ${placeInfo.shortName} added as Stop #1! Click another city on the map to connect the route 🚗`, 4500);
+            } else {
+              toast.success(`🚗 Route connected to ${placeInfo.shortName}! (${totalStops} stops planned)`, 3500);
+            }
+            if (this.tempExploreMarker) {
+              this.markersLayer.removeLayer(this.tempExploreMarker);
+              this.tempExploreMarker = null;
+            }
+          });
+        }
+      }, 60);
 
     } catch (e) {
       console.warn("Map click lookup error:", e);
+      if (this.tempExploreMarker) {
+        this.tempExploreMarker.setPopupContent(`
+          <div class="cga-popup-card">
+            <div class="cga-popup-title">Location Pin</div>
+            <div class="cga-popup-meta">${lat.toFixed(3)}°, ${lon.toFixed(3)}°</div>
+            <button id="popup-fallback-add" class="cga-popup-btn cga-popup-btn-secondary">➕ Add to Route</button>
+          </div>
+        `);
+      }
     }
   }
 
@@ -123,6 +195,29 @@ export class MapManager {
 
     this.markersLayer.clearLayers();
     this.routeLayer.clearLayers();
+    this.tempExploreMarker = null;
+
+    // Update Floating Map Route Bar
+    const routeBar = document.getElementById("map-route-bar");
+    const stopsBadge = document.getElementById("map-route-stops-badge");
+    const distanceBadge = document.getElementById("map-route-distance-badge");
+
+    if (routeBar) {
+      if (!stops || stops.length === 0) {
+        routeBar.classList.add("hidden");
+        if (distanceBadge) distanceBadge.textContent = "🚗 0 km";
+        return;
+      } else {
+        routeBar.classList.remove("hidden");
+        if (stopsBadge) {
+          if (stops.length === 1) {
+            stopsBadge.textContent = `📍 Stop #1: ${stops[0].name}`;
+          } else {
+            stopsBadge.textContent = `📍 ${stops.length} Stops Planned`;
+          }
+        }
+      }
+    }
 
     if (!stops || stops.length === 0) return;
 
@@ -138,17 +233,50 @@ export class MapManager {
         icon: this.createMarkerIcon(index, pinType, iconLabel)
       }).addTo(this.markersLayer);
 
-      marker.bindPopup(`
+      const popupHtml = `
         <div class="cga-popup-card">
           <div class="cga-popup-title">${stop.name}</div>
           <div class="cga-popup-meta">Stop #${index + 1} • Day ${stop.dayNumber}</div>
           ${stop.weatherSnapshot ? `
-            <div style="font-size: 12px; color: var(--cga-gold-accent); font-weight: 600; margin-bottom: 4px;">
-              ${stop.weatherSnapshot.icon} ${stop.weatherSnapshot.temperature}°C (${stop.weatherSnapshot.condition})
+            <div class="cga-popup-weather">
+              ${stop.weatherSnapshot.icon} ${stop.weatherSnapshot.temperature}°C • ${stop.weatherSnapshot.condition}
             </div>
           ` : ""}
+          <div class="cga-popup-actions" style="margin-top: 10px;">
+            <button class="cga-popup-btn cga-popup-btn-primary stop-view-dossier-btn" data-stop-id="${stop.stopId}">
+              🌟 View Full Dossier
+            </button>
+            <button class="cga-popup-btn cga-popup-btn-danger stop-remove-btn" data-stop-id="${stop.stopId}">
+              🗑️ Remove Stop
+            </button>
+          </div>
         </div>
-      `);
+      `;
+
+      marker.bindPopup(popupHtml);
+
+      // Wire up buttons when this marker's popup opens
+      marker.on("popupopen", () => {
+        const viewBtn = document.querySelector(`.stop-view-dossier-btn[data-stop-id="${stop.stopId}"]`);
+        const removeBtn = document.querySelector(`.stop-remove-btn[data-stop-id="${stop.stopId}"]`);
+
+        if (viewBtn) {
+          viewBtn.addEventListener("click", () => {
+            marker.closePopup();
+            if (window.portalGateInstance) {
+              window.portalGateInstance.openGate(stop, stop.weatherSnapshot);
+            }
+          });
+        }
+
+        if (removeBtn) {
+          removeBtn.addEventListener("click", () => {
+            tripStore.removeStop(stop.stopId);
+            toast.info(`Removed ${stop.name} from route`);
+            marker.closePopup();
+          });
+        }
+      });
 
       latLngs.push([stop.latitude, stop.longitude]);
     });
@@ -158,13 +286,16 @@ export class MapManager {
       try {
         const routeData = await calculateRoute(latLngs);
         if (routeData && routeData.geoJsonGeometry) {
-          // Draw Polyline with electric azure styling
+          const isFlight = routeData.isFlight;
+          const isFallback = routeData.isFallback;
+
+          // Draw Polyline: Solid azure for road trips, dashed gold/amber for flights
           const polyline = L.geoJSON(routeData.geoJsonGeometry, {
             style: {
-              color: "#0284c7",
-              weight: 5,
+              color: isFlight ? "#f59e0b" : "#0284c7",
+              weight: isFlight ? 3.5 : 5,
               opacity: 0.9,
-              dashArray: routeData.isFallback ? "6, 8" : null
+              dashArray: (isFlight || isFallback) ? "8, 8" : null
             }
           }).addTo(this.routeLayer);
 
@@ -175,12 +306,28 @@ export class MapManager {
             routeData.durationMins,
             routeData.geoJsonGeometry
           );
+
+          if (distanceBadge) {
+            const icon = isFlight ? "✈️ Flight" : "🚗 Road";
+            const hours = Math.floor(routeData.durationMins / 60);
+            const mins = routeData.durationMins % 60;
+            const timeStr = hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+            distanceBadge.textContent = `${icon}: ${routeData.distanceKm} km (${timeStr})`;
+          }
         }
       } catch (err) {
         console.error("Route polyline error:", err);
       }
     } else if (latLngs.length === 1) {
-      this.map.flyTo(latLngs[0], 12);
+      // Don't over-zoom to level 12 so user can easily see surrounding map and click Stop #2
+      if (this.map.getZoom() > 9) {
+        this.map.panTo(latLngs[0]);
+      } else {
+        this.map.panTo(latLngs[0]);
+      }
+      if (distanceBadge) {
+        distanceBadge.textContent = "👉 Click 2nd city on map to connect route 🚗";
+      }
     }
   }
 

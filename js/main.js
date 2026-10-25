@@ -3,18 +3,18 @@
    Integrates VoyagerGlobe, SeasonEngine, PortalGate, MapManager, and Itinerary
    ========================================================================== */
 
-import { APP_CONSTANTS } from "./config/constants.js";
-import { tripStore } from "./state/TripStore.js";
-import { SeasonEngine } from "./ui/SeasonEngine.js";
-import { VoyagerGlobe } from "./scenes/VoyagerGlobe.js";
-import { PortalGate } from "./ui/PortalGate.js";
-import { MapManager } from "./ui/MapManager.js";
-import { SearchBar } from "./ui/SearchBar.js";
-import { ItineraryView } from "./ui/ItineraryView.js";
-import { SavedTripsModal } from "./ui/SavedTripsModal.js";
-import { AppRouter } from "./services/Router.js";
-import { FirebaseService } from "./services/FirebaseService.js";
-import { toast } from "./ui/Toast.js";
+import { APP_CONSTANTS } from "./config/constants.js?v=3.5";
+import { tripStore } from "./state/TripStore.js?v=3.5";
+import { SeasonEngine } from "./ui/SeasonEngine.js?v=3.5";
+import { VoyagerGlobe } from "./scenes/VoyagerGlobe.js?v=3.5";
+import { PortalGate } from "./ui/PortalGate.js?v=3.5";
+import { MapManager } from "./ui/MapManager.js?v=3.5";
+import { SearchBar } from "./ui/SearchBar.js?v=3.5";
+import { ItineraryView } from "./ui/ItineraryView.js?v=3.5";
+import { SavedTripsModal } from "./ui/SavedTripsModal.js?v=3.5";
+import { AppRouter } from "./services/Router.js?v=3.5";
+import { FirebaseService } from "./services/FirebaseService.js?v=3.5";
+import { toast } from "./ui/Toast.js?v=3.5";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log(`%c${APP_CONSTANTS.APP_NAME} %cInitialized`, "color: #c6924b; font-weight: 800; font-size: 16px;", "color: #0284c7;");
