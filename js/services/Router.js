@@ -47,8 +47,9 @@ export class AppRouter {
       return;
     }
 
-    // Update active state on navigation pills
-    this.navLinks.forEach(link => {
+    // Update active state on navigation pills (both drawer and any navbar links)
+    const links = document.querySelectorAll(".cga-nav-link");
+    links.forEach(link => {
       const href = link.getAttribute("href");
       if (href === path) {
         link.classList.add("active");
@@ -56,6 +57,12 @@ export class AppRouter {
         link.classList.remove("active");
       }
     });
+
+    // Close slide-over sheet drawer if open
+    const sheetOverlay = document.getElementById("cga-sheet-overlay");
+    const sheetDrawer = document.getElementById("cga-sheet-drawer");
+    if (sheetOverlay) sheetOverlay.classList.remove("open");
+    if (sheetDrawer) sheetDrawer.classList.remove("open");
 
     const handler = this.routes[path] || this.routes["#/globe"];
     handler();

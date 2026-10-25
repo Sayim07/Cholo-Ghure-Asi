@@ -72,11 +72,50 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 11. Bind Export / Print Travel Plan
+  // 11. Bind Hamburger Menu & Slide-Over Sheet Drawer (shadcn Sheet)
+  const hamburgerBtn = document.getElementById("btn-hamburger-menu");
+  const sheetOverlay = document.getElementById("cga-sheet-overlay");
+  const sheetDrawer = document.getElementById("cga-sheet-drawer");
+  const sheetCloseBtn = document.getElementById("btn-sheet-close");
+  const sheetExportBtn = document.getElementById("btn-sheet-export");
   const exportBtn = document.getElementById("btn-export-trip");
-  if (exportBtn) {
-    exportBtn.addEventListener("click", () => {
-      window.print();
+
+  const openDrawer = () => {
+    if (sheetOverlay && sheetDrawer) {
+      sheetOverlay.classList.add("open");
+      sheetDrawer.classList.add("open");
+    }
+  };
+
+  const closeDrawer = () => {
+    if (sheetOverlay && sheetDrawer) {
+      sheetOverlay.classList.remove("open");
+      sheetDrawer.classList.remove("open");
+    }
+  };
+
+  if (hamburgerBtn) hamburgerBtn.addEventListener("click", openDrawer);
+  if (sheetCloseBtn) sheetCloseBtn.addEventListener("click", closeDrawer);
+  if (sheetOverlay) sheetOverlay.addEventListener("click", closeDrawer);
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDrawer();
+  });
+
+  // Close drawer when any route item is selected
+  const sheetNavItems = document.querySelectorAll(".cga-sheet-item");
+  sheetNavItems.forEach(item => {
+    item.addEventListener("click", () => {
+      closeDrawer();
     });
-  }
+  });
+
+  // Bind Export / Print Travel Plan (from Drawer & Navbar)
+  const handleExport = () => {
+    closeDrawer();
+    window.print();
+  };
+
+  if (sheetExportBtn) sheetExportBtn.addEventListener("click", handleExport);
+  if (exportBtn) exportBtn.addEventListener("click", handleExport);
 });

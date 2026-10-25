@@ -13,8 +13,25 @@
   align-items: center;
   justify-content: center;
   background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f7f3eb 50%, var(--cga-bg-base) 85%, #e8dfd1 100%);
-  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 1.2s ease, opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
+}
+
+/* Seasonal Realistic Background Atmospheres for 3D Globe */
+.voyager-globe-section.season-summer {
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #fffbf2 40%, #fef3c7 75%, #fde68a 100%);
+}
+
+.voyager-globe-section.season-monsoon {
+  background: radial-gradient(circle at 50% 40%, #f8fafc 0%, #e2e8f0 40%, #94a3b8 75%, #475569 100%);
+}
+
+.voyager-globe-section.season-autumn {
+  background: radial-gradient(circle at 50% 40%, #fffbeb 0%, #fef3c7 40%, #fed7aa 75%, #f59e0b 100%);
+}
+
+.voyager-globe-section.season-winter {
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f0f9ff 40%, #e0f2fe 75%, #bae6fd 100%);
 }
 
 .voyager-globe-section.hidden {
@@ -74,23 +91,30 @@
   line-height: 1.6;
 }
 
-/* Floating Selector Carousel for Continents */
+/* Floating Selector Carousel for Continents & Countries */
 .globe-control-dock {
   position: absolute;
-  bottom: 34px;
+  bottom: 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   z-index: 60;
   pointer-events: auto;
+  width: 100%;
+  max-width: 1120px;
+  padding: 0 16px;
 }
 
+/* Row 1: Continents Strip + Counter + Search Filter */
 .continent-pill-dock {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  max-width: 980px;
+  padding: 4px 8px;
   background: var(--cga-bg-glass);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -99,13 +123,21 @@
   box-shadow: var(--cga-shadow-elevated);
 }
 
+.continent-chips-strip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .continent-chip {
-  padding: 8px 18px;
+  padding: 6px 16px;
   border-radius: var(--cga-radius-full);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--cga-text-secondary);
   transition: all var(--cga-transition-fast);
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .continent-chip:hover {
@@ -119,45 +151,229 @@
   box-shadow: 0 4px 12px rgba(17, 28, 20, 0.2);
 }
 
-/* Country Selector Drawer / Modal */
-.country-selection-bar {
+.continent-dock-right {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: #ffffff;
-  padding: 8px 16px;
+  gap: 10px;
+  padding-right: 4px;
+}
+
+.globe-country-count-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cga-gold-accent);
+  background: rgba(198, 146, 75, 0.12);
+  padding: 4px 10px;
   border-radius: var(--cga-radius-full);
-  box-shadow: var(--cga-shadow-ambient);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.country-search-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  padding: 4px 10px;
+  border-radius: var(--cga-radius-full);
   border: 1px solid var(--cga-border-subtle);
-  animation: floatUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
-.country-select-dropdown {
-  padding: 6px 12px;
-  font-size: 14px;
-  font-weight: 600;
+.country-search-icon {
+  font-size: 12px;
+  color: var(--cga-text-muted);
+}
+
+.country-search-pill input {
+  border: none;
+  outline: none;
+  font-size: 12px;
+  font-family: inherit;
   color: var(--cga-text-primary);
-  cursor: pointer;
+  width: 110px;
+  background: transparent;
 }
 
-.dive-into-map-btn {
-  display: inline-flex;
+.country-search-pill input::placeholder {
+  color: var(--cga-text-muted);
+}
+
+/* Row 2: Carousel Container with Prev/Next buttons & Dive Button */
+.globe-country-carousel-container {
+  display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, var(--cga-gold-accent), #db9a44);
-  color: #ffffff;
-  padding: 10px 22px;
-  border-radius: var(--cga-radius-full);
+  width: 100%;
+  max-width: 1080px;
+}
+
+.country-scroll-nav-btn {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--cga-border-glass);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--cga-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 13px;
   font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--cga-shadow-subtle);
+  transition: all var(--cga-transition-fast);
+  user-select: none;
+}
+
+.country-scroll-nav-btn:hover {
+  background: var(--cga-forest-contrast);
+  color: #ffffff;
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(17, 28, 20, 0.2);
+}
+
+/* shadcn & 21st.dev Style Scrollable Country Cards Carousel */
+.globe-country-scrollbox {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--cga-border-glass);
+  border-radius: var(--cga-radius-full);
+  box-shadow: 0 6px 20px rgba(17, 28, 20, 0.08);
+}
+
+/* Prominent custom scrollbar */
+.globe-country-scrollbox::-webkit-scrollbar {
+  height: 5px;
+}
+.globe-country-scrollbox::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 999px;
+  margin: 0 12px;
+}
+.globe-country-scrollbox::-webkit-scrollbar-thumb {
+  background: rgba(198, 146, 75, 0.55);
+  border-radius: 999px;
+}
+.globe-country-scrollbox::-webkit-scrollbar-thumb:hover {
+  background: var(--cga-gold-accent);
+}
+
+/* Country Card Items */
+.country-card {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  background: #ffffff;
+  border: 1px solid var(--cga-border-subtle);
+  border-radius: var(--cga-radius-full);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.country-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--cga-gold-accent);
+  box-shadow: 0 4px 12px rgba(198, 146, 75, 0.16);
+}
+
+.country-card.active {
+  background: var(--cga-forest-contrast);
+  border-color: var(--cga-forest-contrast);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(17, 28, 20, 0.25);
+  transform: translateY(-1px);
+}
+
+.country-card-flag {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.country-card-code {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--cga-text-primary);
+}
+
+.country-card.active .country-card-code {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.country-card-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.country-card-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cga-text-primary);
+  white-space: nowrap;
+}
+
+.country-card.active .country-card-name {
+  color: #ffffff;
+}
+
+.country-card-highlight {
+  font-size: 9.5px;
+  color: var(--cga-text-muted);
+  white-space: nowrap;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.country-card.active .country-card-highlight {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* Dive Into Map Action Button */
+.dive-into-map-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, var(--cga-gold-accent), #db9a44);
+  color: #ffffff;
+  padding: 9px 18px;
+  border-radius: var(--cga-radius-full);
+  font-size: 12.5px;
+  font-weight: 700;
   letter-spacing: 0.02em;
-  box-shadow: 0 4px 16px var(--cga-gold-glow);
+  white-space: nowrap;
+  box-shadow: 0 4px 14px var(--cga-gold-glow);
   transition: all var(--cga-transition-smooth);
+  cursor: pointer;
 }
 
 .dive-into-map-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px var(--cga-gold-glow);
+  box-shadow: 0 6px 20px var(--cga-gold-glow);
 }
 
 /* Pin Hover Tooltip */
@@ -190,3 +406,23 @@
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 860px) {
+  .continent-pill-dock {
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: var(--cga-radius-lg);
+    gap: 8px;
+  }
+  .continent-dock-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .country-search-pill input {
+    width: 90px;
+  }
+  .globe-country-carousel-container {
+    gap: 6px;
+  }
+}
+

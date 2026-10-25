@@ -98,25 +98,25 @@ export class VoyagerGlobe {
 
     // 5. Realistic Cloud Sphere
     const cloudGeo = new THREE.SphereGeometry(76, 48, 48);
-    const cloudMat = new THREE.MeshLambertMaterial({
+    this.cloudMat = new THREE.MeshLambertMaterial({
       map: earthClouds,
       transparent: true,
       opacity: 0.38,
       blending: THREE.AdditiveBlending
     });
-    this.clouds = new THREE.Mesh(cloudGeo, cloudMat);
+    this.clouds = new THREE.Mesh(cloudGeo, this.cloudMat);
     this.globeGroup.add(this.clouds);
 
     // 6. Atmosphere Glow Rim
     const atmosGeo = new THREE.SphereGeometry(79, 32, 32);
-    const atmosMat = new THREE.MeshBasicMaterial({
+    this.atmosMat = new THREE.MeshBasicMaterial({
       color: 0x38bdf8,
       transparent: true,
-      opacity: 0.12,
+      opacity: 0.16,
       side: THREE.BackSide
     });
-    const atmosphere = new THREE.Mesh(atmosGeo, atmosMat);
-    this.scene.add(atmosphere);
+    this.atmosphere = new THREE.Mesh(atmosGeo, this.atmosMat);
+    this.scene.add(this.atmosphere);
 
     // 7. Interactive 3D Destination Pins
     this.pinsGroup = new THREE.Group();
@@ -124,17 +124,21 @@ export class VoyagerGlobe {
     this.createDestinationPins();
 
     // 8. Lights
-    const ambientLight = new THREE.AmbientLight(0xfffbe8, 1.3);
-    this.scene.add(ambientLight);
+    this.ambientLight = new THREE.AmbientLight(0xfffbe8, 1.3);
+    this.scene.add(this.ambientLight);
 
-    const sunLight = new THREE.DirectionalLight(0xffffff, 1.8);
-    sunLight.position.set(160, 100, 140);
-    this.scene.add(sunLight);
+    this.sunLight = new THREE.DirectionalLight(0xffffff, 1.8);
+    this.sunLight.position.set(160, 100, 140);
+    this.scene.add(this.sunLight);
 
-    // 9. Interaction Listeners
+    // 9. Subscribe to 4-Season Atmosphere Dynamics
+    tripStore.subscribe("season:changed", (season) => this.applySeasonToGlobe(season));
+    this.applySeasonToGlobe(tripStore.state.activeSeason || "summer");
+
+    // 10. Interaction Listeners
     this.addInteractions();
 
-    // 10. Start Render Loop
+    // 11. Start Render Loop
     this.animate();
 
     window.addEventListener("resize", () => this.onResize());
@@ -295,6 +299,125 @@ export class VoyagerGlobe {
     if (tip) tip.style.display = "none";
   }
 
+  applySeasonToGlobe(season) {
+    if (!this.scene) return;
+    const THREE = window.THREE;
+    if (!THREE) return;
+
+    // 1. Update Section Background Theme
+    if (this.section) {
+      this.section.classList.remove("season-summer", "season-monsoon", "season-autumn", "season-winter");
+      this.section.classList.add(`season-${season}`);
+    }
+
+    // 2. Update Drawer Indicator if available
+    const drawerIndicator = document.getElementById("drawer-season-indicator");
+    if (drawerIndicator) {
+      const labelMap = {
+        summer: "☀️ Summer Mode",
+        monsoon: "🌧️ Monsoon Mode",
+        autumn: "🍂 Autumn Mode",
+        winter: "❄️ Winter Mode"
+      };
+      drawerIndicator.textContent = labelMap[season] || `${season} Mode`;
+    }
+
+    // 3. Realistic Atmospheric Lighting & Cloud Matrix
+    const SEASON_CONFIGS = {
+      summer: {
+        sunColor: 0xfff5e6,
+        sunIntensity: 2.2,
+        ambientColor: 0xfff8e7,
+        ambientIntensity: 1.25,
+        atmosColor: 0x38bdf8,
+        atmosOpacity: 0.18,
+        cloudOpacity: 0.35,
+        cloudRotationMult: 1.2
+      },
+      monsoon: {
+        sunColor: 0x94a3b8,
+        sunIntensity: 1.1,
+        ambientColor: 0x64748b,
+        ambientIntensity: 0.85,
+        atmosColor: 0x0ea5e9,
+        atmosOpacity: 0.32,
+        cloudOpacity: 0.68,
+        cloudRotationMult: 2.0
+      },
+      autumn: {
+        sunColor: 0xfbbf24,
+        sunIntensity: 1.85,
+        ambientColor: 0xfef3c7,
+        ambientIntensity: 1.15,
+        atmosColor: 0xf59e0b,
+        atmosOpacity: 0.24,
+        cloudOpacity: 0.40,
+        cloudRotationMult: 1.4
+      },
+      winter: {
+        sunColor: 0xe0f2fe,
+        sunIntensity: 2.0,
+        ambientColor: 0xf0f9ff,
+        ambientIntensity: 1.4,
+        atmosColor: 0x7dd3fc,
+        atmosOpacity: 0.35,
+        cloudOpacity: 0.54,
+        cloudRotationMult: 1.0
+      }
+    };
+
+    const cfg = SEASON_CONFIGS[season] || SEASON_CONFIGS.summer;
+
+    if (window.gsap && this.ambientLight && this.sunLight && this.cloudMat && this.atmosMat) {
+      // Smoothly tween intensities
+      window.gsap.to(this.ambientLight, { intensity: cfg.ambientIntensity, duration: 1.2, ease: "power2.out" });
+      window.gsap.to(this.sunLight, { intensity: cfg.sunIntensity, duration: 1.2, ease: "power2.out" });
+      window.gsap.to(this.cloudMat, { opacity: cfg.cloudOpacity, duration: 1.2, ease: "power2.out" });
+      window.gsap.to(this.atmosMat, { opacity: cfg.atmosOpacity, duration: 1.2, ease: "power2.out" });
+
+      // Smoothly tween 3D lighting & atmospheric colors
+      const targetSunColor = new THREE.Color(cfg.sunColor);
+      const targetAmbColor = new THREE.Color(cfg.ambientColor);
+      const targetAtmosColor = new THREE.Color(cfg.atmosColor);
+
+      window.gsap.to(this.sunLight.color, {
+        r: targetSunColor.r,
+        g: targetSunColor.g,
+        b: targetSunColor.b,
+        duration: 1.2,
+        ease: "power2.out"
+      });
+      window.gsap.to(this.ambientLight.color, {
+        r: targetAmbColor.r,
+        g: targetAmbColor.g,
+        b: targetAmbColor.b,
+        duration: 1.2,
+        ease: "power2.out"
+      });
+      window.gsap.to(this.atmosMat.color, {
+        r: targetAtmosColor.r,
+        g: targetAtmosColor.g,
+        b: targetAtmosColor.b,
+        duration: 1.2,
+        ease: "power2.out"
+      });
+    } else {
+      if (this.ambientLight) {
+        this.ambientLight.color.setHex(cfg.ambientColor);
+        this.ambientLight.intensity = cfg.ambientIntensity;
+      }
+      if (this.sunLight) {
+        this.sunLight.color.setHex(cfg.sunColor);
+        this.sunLight.intensity = cfg.sunIntensity;
+      }
+      if (this.cloudMat) this.cloudMat.opacity = cfg.cloudOpacity;
+      if (this.atmosMat) {
+        this.atmosMat.color.setHex(cfg.atmosColor);
+        this.atmosMat.opacity = cfg.atmosOpacity;
+      }
+    }
+  }
+
   bindDOMControls() {
     // Continent selection chips
     const chips = document.querySelectorAll(".continent-chip");
@@ -307,18 +430,43 @@ export class VoyagerGlobe {
       });
     });
 
-    // Country selection dropdown
-    const dropdown = document.getElementById("globe-country-select");
-    if (dropdown) {
-      this.populateCountries(dropdown, "asia");
-      dropdown.addEventListener("change", (e) => {
-        const found = APP_CONSTANTS.POPULAR_COUNTRIES.find(c => c.name === e.target.value);
-        if (found) {
-          this.selectedCountry = found;
-          this.focusCountry(found);
-        }
+    // Country Carousel Scroll Arrows
+    const scrollbox = document.getElementById("globe-country-scrollbox");
+    const btnLeft = document.getElementById("btn-country-scroll-left");
+    const btnRight = document.getElementById("btn-country-scroll-right");
+
+    if (btnLeft && scrollbox) {
+      btnLeft.addEventListener("click", () => {
+        scrollbox.scrollBy({ left: -280, behavior: "smooth" });
       });
     }
+
+    if (btnRight && scrollbox) {
+      btnRight.addEventListener("click", () => {
+        scrollbox.scrollBy({ left: 280, behavior: "smooth" });
+      });
+    }
+
+    // Enable mouse wheel horizontal scrolling on the country carousel
+    if (scrollbox) {
+      scrollbox.addEventListener("wheel", (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          scrollbox.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+    }
+
+    // Country Search / Filter input
+    const searchInput = document.getElementById("globe-country-search");
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        this.renderCountryCards(this.selectedContinent, e.target.value.trim().toLowerCase());
+      });
+    }
+
+    // Initial render of countries for default continent ("asia")
+    this.renderCountryCards("asia");
 
     // Dive into Map Button
     const diveBtn = document.getElementById("btn-dive-into-map");
@@ -326,29 +474,105 @@ export class VoyagerGlobe {
       diveBtn.addEventListener("click", () => this.diveIntoDestination());
     }
 
-    // Top Bar "World View" button
+    // Top Bar "World View" / Drawer 3D Globe button
     const worldBtn = document.getElementById("btn-world-view");
     if (worldBtn) {
       worldBtn.addEventListener("click", () => this.showGlobe());
     }
   }
 
-  populateCountries(dropdown, continentKey) {
-    dropdown.innerHTML = "";
-    const filtered = APP_CONSTANTS.POPULAR_COUNTRIES.filter(c => c.continent === continentKey);
-    const list = filtered.length > 0 ? filtered : APP_CONSTANTS.POPULAR_COUNTRIES;
-    
-    list.forEach(c => {
-      const opt = document.createElement("option");
-      opt.value = c.name;
-      opt.textContent = `${c.name}`;
-      dropdown.appendChild(opt);
+  renderCountryCards(continentKey, query = "") {
+    const scrollbox = document.getElementById("globe-country-scrollbox");
+    if (!scrollbox) return;
+
+    scrollbox.innerHTML = "";
+    let filtered = APP_CONSTANTS.POPULAR_COUNTRIES.filter(c => c.continent === continentKey);
+    if (query) {
+      filtered = filtered.filter(c => 
+        c.name.toLowerCase().includes(query) || 
+        c.code.toLowerCase().includes(query) ||
+        (c.highlight && c.highlight.toLowerCase().includes(query))
+      );
+    }
+
+    const list = filtered;
+
+    // Update Country Count Badge
+    const countBadge = document.getElementById("globe-country-count");
+    if (countBadge) {
+      countBadge.textContent = `${list.length} ${list.length === 1 ? "Country" : "Countries"}`;
+    }
+
+    if (list.length === 0) {
+      scrollbox.innerHTML = `
+        <div style="padding: 6px 14px; font-size: 12px; color: var(--cga-text-muted); font-weight: 600;">
+          No countries found for "${query}"
+        </div>
+      `;
+      return;
+    }
+
+    // If current selected country is in the filtered list, keep it; otherwise select first
+    const matchSelected = list.find(c => this.selectedCountry && c.name === this.selectedCountry.name);
+    if (!matchSelected) {
+      this.selectedCountry = list[0];
+    }
+    this.updateDiveButtonText(this.selectedCountry);
+
+    list.forEach((country) => {
+      const isSelected = this.selectedCountry && country.name === this.selectedCountry.name;
+      const card = document.createElement("div");
+      card.className = `country-card ${isSelected ? "active" : ""}`;
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.dataset.countryName = country.name;
+
+      card.innerHTML = `
+        <span class="country-card-flag">${country.flag || "🌍"}</span>
+        <span class="country-card-code">${country.code}</span>
+        <div class="country-card-info">
+          <span class="country-card-name">${country.name}</span>
+          <span class="country-card-highlight">${country.highlight || "Explore territory"}</span>
+        </div>
+      `;
+
+      // Click: focus 3D globe and select
+      card.addEventListener("click", () => {
+        scrollbox.querySelectorAll(".country-card").forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+        this.selectedCountry = country;
+        this.updateDiveButtonText(country);
+        this.focusCountry(country);
+      });
+
+      // Double-click: dive into map directly
+      card.addEventListener("dblclick", () => {
+        this.selectedCountry = country;
+        this.diveIntoDestination();
+      });
+
+      scrollbox.appendChild(card);
     });
-    this.selectedCountry = list[0];
+
+    if (!query) {
+      scrollbox.scrollLeft = 0;
+    }
+  }
+
+  updateDiveButtonText(country) {
+    const btnText = document.getElementById("dive-into-btn-text");
+    if (btnText && country) {
+      btnText.innerHTML = `Dive into ${country.name} &rarr;`;
+    }
   }
 
   selectContinent(continentKey) {
     this.selectedContinent = continentKey;
+
+    // Reset search input if any
+    const searchInput = document.getElementById("globe-country-search");
+    if (searchInput) searchInput.value = "";
+
     const anchor = APP_CONSTANTS.CONTINENT_ANCHORS[continentKey];
     if (anchor && this.globeGroup && window.gsap) {
       // Rotate 3D Earth smoothly to center on the selected continent
@@ -362,8 +586,8 @@ export class VoyagerGlobe {
       });
     }
 
-    const dropdown = document.getElementById("globe-country-select");
-    if (dropdown) this.populateCountries(dropdown, continentKey);
+    // Render all countries for this continent
+    this.renderCountryCards(continentKey);
   }
 
   focusCountry(country) {

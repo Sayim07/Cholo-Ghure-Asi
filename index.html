@@ -51,29 +51,92 @@
         <button class="season-btn" data-season="winter" title="Winter Alpine Frost">❄️ Winter</button>
       </div>
 
-      <!-- Dedicated Section Routes Navigation -->
-      <nav class="cga-nav-routes" aria-label="Application Sections">
-        <a href="#/globe" id="btn-world-view" class="cga-nav-link active" title="3D Voyager Globe Explorer">
-          <span>🌍 3D Globe</span>
-        </a>
-        <a href="#/map" id="nav-route-map" class="cga-nav-link" title="Interactive Map & Waypoints Canvas">
-          <span>🗺️ Map Canvas</span>
-        </a>
-        <a href="#/itinerary" id="btn-toggle-itinerary" class="cga-nav-link" title="Multi-Day Itinerary & Budget Manager">
-          <span>📋 Itinerary</span>
-        </a>
-        <a href="#/saved" id="btn-saved-trips" class="cga-nav-link" title="Cloud Saved Journeys">
-          <span>📁 Saved Trips</span>
-        </a>
-      </nav>
-
-      <!-- Action Navigation Buttons -->
+      <!-- Hamburger Menu Trigger (Clean & Modern Luxury Nav) -->
       <div class="cga-nav-actions">
-        <button id="btn-export-trip" class="cga-btn-pill cga-btn-secondary" title="Print or Export Trip">
-          <span>📥 Export</span>
+        <button id="btn-hamburger-menu" class="cga-hamburger-trigger" aria-label="Open Navigation Menu" title="Menu">
+          <div class="cga-hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span>Menu</span>
         </button>
       </div>
     </header>
+
+    <!-- Slide-Over Sheet Backdrop (shadcn SheetOverlay) -->
+    <div id="cga-sheet-overlay" class="cga-sheet-overlay" aria-hidden="true"></div>
+
+    <!-- Slide-Over Sheet Content (shadcn SheetContent) -->
+    <aside id="cga-sheet-drawer" class="cga-sheet-drawer" aria-label="Application Navigation">
+      <div class="cga-sheet-header">
+        <div class="cga-sheet-brand">
+          <div class="cga-brand-icon">✈️</div>
+          <div class="cga-brand-info">
+            <span class="cga-brand-title">Cholo Ghure Asssiii</span>
+            <span class="cga-brand-tagline">Wanderlust Explorer</span>
+          </div>
+        </div>
+        <button id="btn-sheet-close" class="cga-sheet-close-btn" aria-label="Close Menu">✕</button>
+      </div>
+
+      <div class="cga-sheet-section-title">Explore & Plan</div>
+      <nav class="cga-sheet-nav-list">
+        <a href="#/globe" id="drawer-nav-globe" class="cga-sheet-item cga-nav-link active" title="3D Voyager Globe Explorer">
+          <div class="cga-sheet-item-left">
+            <div class="cga-sheet-item-icon">🌍</div>
+            <div class="cga-sheet-item-text">
+              <span class="cga-sheet-item-label">3D Globe</span>
+              <span class="cga-sheet-item-desc">Planetary View & Continents</span>
+            </div>
+          </div>
+          <span class="cga-sheet-badge">3D</span>
+        </a>
+
+        <a href="#/map" id="drawer-nav-map" class="cga-sheet-item cga-nav-link" title="Interactive Map Canvas">
+          <div class="cga-sheet-item-left">
+            <div class="cga-sheet-item-icon">🗺️</div>
+            <div class="cga-sheet-item-text">
+              <span class="cga-sheet-item-label">Map Canvas</span>
+              <span class="cga-sheet-item-desc">Waypoints & Route Planning</span>
+            </div>
+          </div>
+          <span class="cga-sheet-badge">Live</span>
+        </a>
+
+        <a href="#/itinerary" id="drawer-nav-itinerary" class="cga-sheet-item cga-nav-link" title="Multi-Day Itinerary & Budget">
+          <div class="cga-sheet-item-left">
+            <div class="cga-sheet-item-icon">📋</div>
+            <div class="cga-sheet-item-text">
+              <span class="cga-sheet-item-label">Itinerary</span>
+              <span class="cga-sheet-item-desc">Schedule, Notes & Real Costs</span>
+            </div>
+          </div>
+          <span class="cga-sheet-badge">Planner</span>
+        </a>
+
+        <a href="#/saved" id="drawer-nav-saved" class="cga-sheet-item cga-nav-link" title="Saved Trips">
+          <div class="cga-sheet-item-left">
+            <div class="cga-sheet-item-icon">📁</div>
+            <div class="cga-sheet-item-text">
+              <span class="cga-sheet-item-label">Saved Trips</span>
+              <span class="cga-sheet-item-desc">Cloud Archive & Journeys</span>
+            </div>
+          </div>
+          <span class="cga-sheet-badge">Cloud</span>
+        </a>
+      </nav>
+
+      <div class="cga-sheet-action-section">
+        <button id="btn-sheet-export" class="cga-sheet-export-btn" title="Export or Print Itinerary">
+          <span>📥 Export / Print Trip Plan</span>
+        </button>
+        <div class="cga-sheet-footer-status">
+          <span>Atmosphere:</span>
+          <strong id="drawer-season-indicator">☀️ Summer Mode</strong>
+        </div>
+      </div>
+    </aside>
 
     <!-- SECTION 1: 3D Voyager Globe Onboarding (Continent & Country Discovery) -->
     <section id="voyager-globe-section" class="voyager-globe-section">
@@ -86,21 +149,39 @@
       <!-- WebGL Three.js Container -->
       <div id="globe-canvas-container"></div>
 
-      <!-- Continent Selector Dock -->
+      <!-- Continent & Scrollable Country Selector Dock (shadcn ScrollArea + Carousel Controls) -->
       <div class="globe-control-dock">
+        <!-- Row 1: Continents + Country Counter + Quick Filter -->
         <div class="continent-pill-dock">
-          <button class="continent-chip active" data-continent="asia">Asia</button>
-          <button class="continent-chip" data-continent="europe">Europe</button>
-          <button class="continent-chip" data-continent="americas">Americas</button>
-          <button class="continent-chip" data-continent="africa">Africa</button>
-          <button class="continent-chip" data-continent="oceania">Oceania</button>
+          <div class="continent-chips-strip">
+            <button class="continent-chip active" data-continent="asia">Asia</button>
+            <button class="continent-chip" data-continent="europe">Europe</button>
+            <button class="continent-chip" data-continent="americas">Americas</button>
+            <button class="continent-chip" data-continent="africa">Africa</button>
+            <button class="continent-chip" data-continent="oceania">Oceania</button>
+          </div>
+          <div class="continent-dock-right">
+            <span id="globe-country-count" class="globe-country-count-badge">42 Countries</span>
+            <div class="country-search-pill">
+              <span class="country-search-icon">🔍</span>
+              <input type="text" id="globe-country-search" placeholder="Search country..." aria-label="Filter countries in this continent" />
+            </div>
+          </div>
         </div>
 
-        <div class="country-selection-bar">
-          <span style="font-size: 13px; font-weight: 700; color: var(--cga-text-muted);">SELECT COUNTRY:</span>
-          <select id="globe-country-select" class="country-select-dropdown"></select>
-          <button id="btn-dive-into-map" class="dive-into-map-btn">
-            <span>Dive into Map &rarr;</span>
+        <!-- Row 2: Prev Arrow + Scrollable Country Track + Next Arrow + Dive Button -->
+        <div class="globe-country-carousel-container">
+          <button id="btn-country-scroll-left" class="country-scroll-nav-btn" aria-label="Scroll left" title="Scroll left">❮</button>
+
+          <!-- Scrollable Country Cards Carousel (shadcn ScrollArea) -->
+          <div id="globe-country-scrollbox" class="globe-country-scrollbox" role="region" aria-label="Country Carousel">
+            <!-- Dynamically populated with all countries of selected continent -->
+          </div>
+
+          <button id="btn-country-scroll-right" class="country-scroll-nav-btn" aria-label="Scroll right" title="Scroll right">❯</button>
+
+          <button id="btn-dive-into-map" class="dive-into-map-btn" title="Dive into selected country map">
+            <span id="dive-into-btn-text">Dive into India &rarr;</span>
           </button>
         </div>
       </div>
