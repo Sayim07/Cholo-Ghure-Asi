@@ -11,7 +11,6 @@ import { PortalGate } from "./ui/PortalGate.js";
 import { MapManager } from "./ui/MapManager.js";
 import { SearchBar } from "./ui/SearchBar.js";
 import { ItineraryView } from "./ui/ItineraryView.js";
-import { TelemetryHUD } from "./ui/TelemetryHUD.js";
 import { SavedTripsModal } from "./ui/SavedTripsModal.js";
 import { AppRouter } from "./services/Router.js";
 import { FirebaseService } from "./services/FirebaseService.js";
@@ -43,10 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 6. Initialize Itinerary & Multi-Day Manager
   const itineraryView = new ItineraryView("itinerary-drawer");
 
-  // 7. Initialize Lightship Telemetry HUD
-  const telemetryHUD = new TelemetryHUD("#telemetry-hud");
-
-  // 8. Initialize Saved Trips Modal Drawer
+  // 7. Initialize Saved Trips Modal Drawer
   const savedTripsModal = new SavedTripsModal("#btn-saved-trips");
 
   // 9. Initialize SPA Section Router (Deep Linking for All Sections)

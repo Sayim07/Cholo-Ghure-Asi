@@ -72,12 +72,35 @@ class AgentationWidget {
         box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         user-select: none;
-        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+        cursor: grab;
+        transition: box-shadow 0.25s ease;
+      }
+
+      .agentation-dock.dragging {
+        cursor: grabbing !important;
+        transform: scale(1.02);
+        box-shadow: 0 20px 48px rgba(229, 72, 77, 0.4), 0 0 0 2px rgba(229, 72, 77, 0.7);
+        transition: none !important;
       }
 
       .agentation-dock:hover {
-        transform: translateY(-2px);
         box-shadow: 0 16px 40px rgba(229, 72, 77, 0.25), 0 0 0 1px rgba(229, 72, 77, 0.5);
+      }
+
+      .agentation-drag-handle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #777;
+        cursor: grab;
+        padding: 0 3px;
+        font-size: 14px;
+        line-height: 1;
+        transition: color 0.2s;
+      }
+
+      .agentation-dock:hover .agentation-drag-handle {
+        color: #ddd;
       }
 
       .agentation-logo-btn {
@@ -353,11 +376,12 @@ class AgentationWidget {
     this.tagTooltip.className = 'agentation-tag-tooltip';
     document.body.appendChild(this.tagTooltip);
 
-    // 3. Floating Toolbar Dock
+    // 3. Floating Toolbar Dock (Draggable anywhere on screen)
     const dock = document.createElement('div');
     dock.className = 'agentation-dock';
     dock.id = 'agentation-floating-dock';
     dock.innerHTML = `
+      <div class="agentation-drag-handle" title="Drag toolbar anywhere on screen">⠿</div>
       <div class="agentation-logo-btn" title="Agentation MCP Live Sync">
         <div class="agentation-icon">⚡</div>
         <span class="agentation-label">Agentation</span>
@@ -372,9 +396,106 @@ class AgentationWidget {
     `;
     document.body.appendChild(dock);
 
-    document.getElementById('agentation-toggle-inspect')?.addEventListener('click', () => {
+    // Restore saved drag position from localStorage if exists
+    const savedPos = localStorage.getItem('agentation_dock_pos');
+    if (savedPos) {
+      try {
+        const { x, y } = JSON.parse(savedPos);
+        const maxX = window.innerWidth - 300;
+        const maxY = window.innerHeight - 50;
+        const clampedX = Math.max(10, Math.min(x, maxX));
+        const clampedY = Math.max(10, Math.min(y, maxY));
+        dock.style.left = `${clampedX}px`;
+        dock.style.top = `${clampedY}px`;
+        dock.style.bottom = 'auto';
+        dock.style.right = 'auto';
+      } catch (e) {}
+    }
+
+    this.makeDraggable(dock);
+
+    document.getElementById('agentation-toggle-inspect')?.addEventListener('click', (e) => {
+      e.stopPropagation();
       this.toggleInspect();
     });
+  }
+
+  makeDraggable(dock) {
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let origX = 0, origY = 0;
+    let hasMoved = false;
+
+    const onStart = (clientX, clientY, target) => {
+      // Don't drag if clicking inside buttons or interactive inputs
+      if (target.closest('#agentation-toggle-inspect') || target.tagName === 'BUTTON') return;
+
+      isDragging = true;
+      hasMoved = false;
+      dock.classList.add('dragging');
+
+      const rect = dock.getBoundingClientRect();
+      startX = clientX;
+      startY = clientY;
+      origX = rect.left;
+      origY = rect.top;
+
+      dock.style.left = `${origX}px`;
+      dock.style.top = `${origY}px`;
+      dock.style.bottom = 'auto';
+      dock.style.right = 'auto';
+    };
+
+    const onMove = (clientX, clientY) => {
+      if (!isDragging) return;
+      const dx = clientX - startX;
+      const dy = clientY - startY;
+
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        hasMoved = true;
+      }
+
+      let newX = origX + dx;
+      let newY = origY + dy;
+
+      // Keep within window boundaries with 10px margin
+      const maxX = window.innerWidth - dock.offsetWidth - 10;
+      const maxY = window.innerHeight - dock.offsetHeight - 10;
+      newX = Math.max(10, Math.min(newX, maxX));
+      newY = Math.max(10, Math.min(newY, maxY));
+
+      dock.style.left = `${newX}px`;
+      dock.style.top = `${newY}px`;
+    };
+
+    const onEnd = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      dock.classList.remove('dragging');
+
+      if (hasMoved) {
+        const rect = dock.getBoundingClientRect();
+        localStorage.setItem('agentation_dock_pos', JSON.stringify({ x: rect.left, y: rect.top }));
+      }
+    };
+
+    // Mouse events
+    dock.addEventListener('mousedown', (e) => onStart(e.clientX, e.clientY, e.target));
+    window.addEventListener('mousemove', (e) => onMove(e.clientX, e.clientY));
+    window.addEventListener('mouseup', onEnd);
+
+    // Touch events for tablets / laptops with touch
+    dock.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        onStart(e.touches[0].clientX, e.touches[0].clientY, e.target);
+      }
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      if (isDragging && e.touches.length === 1) {
+        onMove(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+    window.addEventListener('touchend', onEnd);
   }
 
   updateStatusBadge() {

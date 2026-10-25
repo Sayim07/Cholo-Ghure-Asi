@@ -71,9 +71,6 @@ export class AppRouter {
   showGlobeView() {
     this.previousRoute = "#/globe";
 
-    const hud = document.getElementById("telemetry-hud");
-    if (hud) hud.classList.add("hidden");
-
     if (this.savedTripsModal && this.savedTripsModal.modal) {
       this.savedTripsModal.close();
     }
@@ -90,9 +87,6 @@ export class AppRouter {
 
   showMapView() {
     this.previousRoute = "#/map";
-
-    const hud = document.getElementById("telemetry-hud");
-    if (hud) hud.classList.remove("hidden");
 
     if (this.savedTripsModal && this.savedTripsModal.modal) {
       this.savedTripsModal.close();

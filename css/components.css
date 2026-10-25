@@ -184,68 +184,7 @@
   flex-shrink: 0;
 }
 
-/* Telemetry HUD (Lightship RV Inspired Floating Telemetry Bar) */
-.cga-telemetry-hud {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 24px;
-  background: var(--cga-bg-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--cga-border-glass);
-  border-radius: var(--cga-radius-full);
-  box-shadow: var(--cga-shadow-elevated);
-  z-index: 90;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
 
-.cga-telemetry-hud.hidden {
-  display: none !important;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.telemetry-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.telemetry-icon {
-  font-size: 18px;
-  color: var(--cga-gold-accent);
-}
-
-.telemetry-data {
-  display: flex;
-  flex-direction: column;
-}
-
-.telemetry-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--cga-text-muted);
-}
-
-.telemetry-value {
-  font-family: var(--cga-font-mono);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--cga-forest-contrast);
-}
-
-.telemetry-divider {
-  width: 1px;
-  height: 28px;
-  background: var(--cga-border-subtle);
-}
 
 /* Destination Card & Weather Anatomy */
 .destination-modal-header {

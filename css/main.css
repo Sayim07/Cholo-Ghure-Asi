@@ -596,13 +596,6 @@ button {
     font-size: 12px;
   }
 
-  .cga-telemetry-hud {
-    bottom: 14px;
-    padding: 8px 16px;
-    gap: 10px;
-    max-width: calc(100% - 24px);
-    overflow-x: auto;
-  }
 
   .globe-main-title {
     font-size: 28px !important;
