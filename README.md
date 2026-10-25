@@ -10,12 +10,12 @@
 
 ## 📖 1. Overview & Objectives
 
-**Cholo Ghure Asssiii** is an Awwwards-tier, high-performance travel discovery and multi-day itinerary planner. Designed without heavy framework overhead using pure modern **HTML5, Vanilla JavaScript (ES6+ Modules), and CSS3**, it fuses real-time geospatial intelligence, live atmospheric weather analytics, 3D cartographic voyages, and cloud persistence.
+**Cholo Ghure Asssiii** is an ultra-premium, high-performance travel discovery and multi-day itinerary planner. Designed without heavy framework overhead using pure modern **HTML5, Vanilla JavaScript (ES6+ Modules), and CSS3**, it fuses real-time geospatial intelligence, live atmospheric weather analytics, 3D cartographic voyages, and cloud persistence.
 
-Inspired by global design benchmarks (*ERA Residence*, *Primland Resort*, and *Lightship RV*), it delivers:
+Engineered with an original luxury editorial design language and bespoke micro-interactions, it delivers:
 - **3D Voyager Globe:** An interactive rotating Earth (Three.js WebGL) with high-resolution NASA cartography, dynamic cloud layers, and clickable landmark pins.
 - **Atmospheric 4-Season Engine:** Real-time seasonal weather perspectives (*Summer ☀️, Monsoon 🌧️, Autumn 🍂, Winter ❄️*) with live canvas particle physics.
-- **Thematic Architectural Gate Portal (ERA-inspired):** Cinematic double-door portal reveals customized to destination types (*Mountain mist, Coastal waves, Royal heritage palace doors, Rainforest canopies*).
+- **Thematic Architectural Gate Portal:** Cinematic double-door portal reveals customized to destination types (*Mountain mist, Coastal waves, Royal heritage palace doors, Rainforest canopies*).
 - **Interactive Leaflet Cartography:** OpenStreetMap tiles, custom glowing SVG waypoint pins, and radar ripples.
 - **Driving Route Engine (OSRM):** Instant multi-stop road polyline plotting, distance (km), and drive duration calculation.
 - **Multi-Day Itinerary & Budget Manager:** Day-wise scheduling (Day 1, Day 2...), stop reordering (`▲` Up, `▼` Down), deletion, and itemized budget calculations (Accommodation, Food, Transport, Tickets).
