@@ -76,6 +76,7 @@
 | `T-6.3` | Add `@media print` clean itinerary export | Frontend | **Done** | Printable trip summary |
 | `T-6.4` | Cross-device responsiveness audit | QA/Test | **Done** | Mobile drawer, navbar wrap & map resizing verified |
 | `T-6.5` | Production README.md & Vercel deployment | Lead | **Done** | **[FINAL CRITERIA]** README.md created, vercel.json pushed |
+| `T-6.6` | Client-Side SPA Section Routing (`Router.js`) | Frontend | **Done** | Deep linking for `#/globe`, `#/map`, `#/itinerary`, `#/saved` |
 
 ---
 
