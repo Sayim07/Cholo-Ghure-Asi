@@ -4,12 +4,13 @@
 
 // Default Firebase Client Credentials (Replace with your Firebase Console Project Keys)
 export const firebaseConfig = {
-  apiKey: "AIzaSyDemoKeyForCholoGhureAsssiiiPlanner",
-  authDomain: "cholo-ghure-asssiii.firebaseapp.com",
-  projectId: "cholo-ghure-asssiii",
-  storageBucket: "cholo-ghure-asssiii.appspot.com",
-  messagingSenderId: "109876543210",
-  appId: "1:109876543210:web:abcdef1234567890"
+  apiKey: "AIzaSyD0HGVPs-BXg-Hx_oNXzbhpukyWdsLEolw",
+  authDomain: "chologhureassi.firebaseapp.com",
+  projectId: "chologhureassi",
+  storageBucket: "chologhureassi.firebasestorage.app",
+  messagingSenderId: "187621278136",
+  appId: "1:187621278136:web:defd4b5a212d5129130f4d",
+  measurementId: "G-LB6RVKPTTB"
 };
 
 let db = null;
