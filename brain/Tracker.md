@@ -4,55 +4,60 @@
 
 ---
 
-## 1. Phase Status Boards (Scroll-Driven Architecture Refactor)
+## 1. Phase Status Boards
 
-### Phase 1: Scroll Skeleton, Lenis & Pinned Gate Scrub (P1)
+### Phase 0: Project Scaffolding & Layout Shell
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| `T-P1.1`| Integrate Lenis smooth scroll & GSAP ScrollTrigger via CDN | Lead | **In Progress** | Smooth 60 FPS inertia scroll |
-| `T-P1.2`| Build 5-scene HTML vertical scroll container shell | Frontend | **In Progress** | `#scene-gate`, `#scene-globe`, `#scene-explore`, `#scene-journey`, `#scene-saved` |
-| `T-P1.3`| Implement scroll-scrubbed ERA Residence double gate doors | UI/UX | **In Progress** | Doors open proportional to scroll progress (0->1 scrub) |
-| `T-P1.4`| Verify scroll pinning & smooth unpinning on desktop/mobile | QA | Not Started | **[BLOCKING EXIT CRITERIA]** Smooth gate scrub reveal |
+| `T-0.1` | Create project directory structure & `brain/` doc set | Architect | **Done** | Complete 8-document grounding set established |
+| `T-0.2` | Create `index.html` with exact branding & layout slots | Frontend | Not Started | Branded title, navbar, panel wrappers |
+| `T-0.3` | Setup `styles/variables.css` & base themes | Frontend | Not Started | Dark/light mode tokens defined |
+| `T-0.4` | Connect Leaflet 1.9, GSAP 3.12, Lucide CDNs | Frontend | Not Started | CDN scripts and stylesheets loaded |
+| `T-0.5` | Verify split-screen responsive desktop & mobile shells | Frontend | Not Started | **[BLOCKING EXIT CRITERIA]** Zero console errors |
 
 ---
 
-### Phase 2: Globe Scroll-Link & Zoom-Through Dive Transition (P2)
+### Phase 1: Interactive Map & Leaflet Engine
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| `T-P2.1`| Link 3D Earth rotation & scale to ScrollTrigger progress | 3D/WebGL | Not Started | Globe turns and scales as user scrolls scene 2 |
-| `T-P2.2`| Continent chips + country dropdown + 3D pins integration | Frontend | Not Started | Retain smooth spherical camera orientation |
-| `T-P2.3`| Implement seamless camera dive cross-fade into Leaflet map | UI/UX | Not Started | **[BLOCKING EXIT CRITERIA]** No hard cuts, buttery camera dive |
+| `T-1.1` | Implement `MapManager.js` instance & OSM tiles | Maps/GIS | Not Started | Map centered on Kolkata `[22.5726, 88.3639]` |
+| `T-1.2` | Design custom SVG markers (Origin, Waypoint, Finish)| Maps/GIS | Not Started | High-contrast glowing map pins |
+| `T-1.3` | Implement map click listener with reverse coordinates | Maps/GIS | Not Started | User can tap map to drop pins |
+| `T-1.4` | Implement `map.invalidateSize()` resize handler | Maps/GIS | Not Started | **[BLOCKING EXIT CRITERIA]** No grey tile glitches |
 
 ---
 
-### Phase 3: Explore Map, Right-Side Detail Panel & Wikipedia Images (P3)
+### Phase 2: Geocoding & Live Weather Integration
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| `T-P3.1`| Edge-to-edge interactive Leaflet map with Carto/OSM tiles | Maps/GIS | Not Started | Full-screen interactive canvas (Primland style) |
-| `T-P3.2`| Build `wikiImages.js` service resolving real photos | Backend/API | Not Started | Wikipedia REST + Wikimedia geosearch (NO wrong images) |
-| `T-P3.3`| Build GSAP Right-Side Detail Panel (420px, glass, mobile sheet)| UI/UX | Not Started | Replaces centered modal; map stays draggable |
-| `T-P3.4`| Custom SVG pulsing pins + category filter chips | Frontend | Not Started | Heritage, Hills, Beach, Nature, Food, Spiritual |
-| `T-P3.5`| Live weather + travel modes + in-panel gate/mist reveal | Frontend | Not Started | **[BLOCKING EXIT CRITERIA]** Kolkata search shows Kolkata photo |
+| `T-2.1` | Build `NominatimService.js` with 1s debounce & User-Agent | Backend/API | Not Started | Respects OSM usage policy |
+| `T-2.2` | Build `WeatherService.js` for Open-Meteo REST API | Backend/API | Not Started | Fetches temp, humidity, wind, code |
+| `T-2.3` | Create `weatherIcons.js` WMO code mapper | Frontend | Not Started | Maps codes 0-99 to Lucide icons |
+| `T-2.4` | Implement `DestinationCard.js` with live weather badge | Frontend | Not Started | **[BLOCKING EXIT CRITERIA]** Search displays temp & map pin |
 
 ---
 
-### Phase 4: Journey Timeline, Telemetry Scrub & Firebase Sync (P4)
+### Phase 3: Route Planning & Polyline Rendering
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| `T-4.1` | Pinned Journey Scene (Sticky left map + right scrolling days) | Frontend | Not Started | Map flies along day stops on scroll |
-| `T-4.2` | Telemetry HUD numbers scrub with GSAP numerical tweens | UI/UX | Not Started | Distance, duration, budget, temperature scrub |
-| `T-4.3` | Stop controls: reorder up/down, delete, edit budget, add day | Frontend | Not Started | Dynamic route recalculation via OSRM |
-| `T-4.4` | Firebase Firestore cloud sync + offline localStorage fallback | Backend/DB | Not Started | **[BLOCKING EXIT CRITERIA]** Scroll scrubs telemetry and route |
+| `T-3.1` | Build `RoutingService.js` calling OSRM driving API | Backend/API | Not Started | Multi-point driving route query |
+| `T-3.2` | Parse OSRM GeoJSON & render Leaflet polyline | Maps/GIS | Not Started | Electric cyan glowing road line |
+| `T-3.3` | Implement route summary badge (Distance km, duration) | Frontend | Not Started | Floating map metric overlay |
+| `T-3.4` | Fallback straight-line polyline if OSRM fails | Maps/GIS | Not Started | **[BLOCKING EXIT CRITERIA]** Dynamic road route rendering |
 
 ---
 
-### Phase 5: Visual Polish, SVG Icons, Responsive & Performance (P5)
+### Phase 4: Itinerary Management & Multi-Day Organization
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
-| `T-5.1` | Replace all raw emojis with 1.5px stroke inline SVG icons | UI/UX | Not Started | Crisp uniform iconography across app |
-| `T-5.2` | Add magnetic button effects + card spotlight hover effect | UI/UX | Not Started | Subtle modern micro-interactions |
-| `T-5.3` | IntersectionObserver to pause Three.js and particles offscreen | Perf | Not Started | 60 FPS performance optimization |
-| `T-5.4` | Support `prefers-reduced-motion` & responsive audit (390-1440px)| QA | Not Started | **[FINAL CRITERIA]** Lighthouse > 80, zero console errors |
+| `T-4.1` | Build `TripStore.js` centralized state manager | Frontend | Not Started | Pub/Sub state reactivity |
+| `T-4.2` | Implement `ItineraryView.js` day-wise timeline list | Frontend | Not Started | Day 1, Day 2 tabs with stop cards |
+| `T-4.3` | Add stop reorder controls (`▲` Up, `▼` Down) & delete | Frontend | Not Started | Triggers route recalculation |
+| `T-4.4` | Build `BudgetPlanner.js` cost estimation by category | Frontend | Not Started | **[BLOCKING EXIT CRITERIA]** Stops, reorder, budget update |
+
+---
+
+### Phase 5: Firebase Firestore Cloud Integration
 | Task ID | Task Description | Owner | Status | Notes / Exit Criteria |
 | :--- | :--- | :--- | :--- | :--- |
 | `T-5.1` | Configure `firebase.config.js` with Web SDK v10 | Backend/DB | Not Started | Modular CDN imports |
