@@ -152,6 +152,43 @@ button {
   gap: 14px;
 }
 
+/* Distinct Route Links Dock */
+.cga-nav-routes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--cga-bg-subtle);
+  padding: 4px;
+  border-radius: var(--cga-radius-full);
+  border: 1px solid var(--cga-border-subtle);
+}
+
+.cga-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--cga-radius-full);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--cga-text-secondary);
+  text-decoration: none;
+  transition: all var(--cga-transition-fast);
+  cursor: pointer;
+  user-select: none;
+}
+
+.cga-nav-link:hover {
+  color: var(--cga-text-primary);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.cga-nav-link.active {
+  background: var(--cga-forest-contrast);
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(17, 28, 20, 0.16);
+}
+
 /* Season Selector Capsule Pill */
 .season-selector {
   display: flex;
@@ -262,6 +299,12 @@ button {
     order: 3;
     width: 100%;
     justify-content: center;
+  }
+
+  .cga-nav-routes {
+    order: 2;
+    overflow-x: auto;
+    max-width: 100%;
   }
 
   .cga-nav-actions {

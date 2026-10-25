@@ -13,6 +13,7 @@ import { SearchBar } from "./ui/SearchBar.js";
 import { ItineraryView } from "./ui/ItineraryView.js";
 import { TelemetryHUD } from "./ui/TelemetryHUD.js";
 import { SavedTripsModal } from "./ui/SavedTripsModal.js";
+import { AppRouter } from "./services/Router.js";
 import { FirebaseService } from "./services/FirebaseService.js";
 import { toast } from "./ui/Toast.js";
 
@@ -48,7 +49,18 @@ document.addEventListener("DOMContentLoaded", () => {
   // 8. Initialize Saved Trips Modal Drawer
   const savedTripsModal = new SavedTripsModal("#btn-saved-trips");
 
-  // 9. Bind Navbar Seasonal Buttons
+  // 9. Initialize SPA Section Router (Deep Linking for All Sections)
+  const router = new AppRouter({
+    voyagerGlobe,
+    mapManager,
+    itineraryView,
+    savedTripsModal,
+    portalGate
+  });
+  router.init();
+  window.appRouter = router;
+
+  // 10. Bind Navbar Seasonal Buttons
   const seasonButtons = document.querySelectorAll(".season-btn");
   seasonButtons.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -60,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 10. Bind Export / Print Travel Plan
+  // 11. Bind Export / Print Travel Plan
   const exportBtn = document.getElementById("btn-export-trip");
   if (exportBtn) {
     exportBtn.addEventListener("click", () => {

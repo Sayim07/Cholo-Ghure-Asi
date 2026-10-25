@@ -150,5 +150,8 @@ export class SavedTripsModal {
       this.modal.remove();
       this.modal = null;
     }
+    if (window.location.hash === "#/saved") {
+      window.location.hash = "#/map";
+    }
   }
 }

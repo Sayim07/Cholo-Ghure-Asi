@@ -33,6 +33,9 @@ export class ItineraryView {
     if (closeBtn) {
       closeBtn.addEventListener("click", () => {
         this.drawer.classList.add("collapsed");
+        if (window.location.hash === "#/itinerary") {
+          window.location.hash = "#/map";
+        }
       });
     }
 

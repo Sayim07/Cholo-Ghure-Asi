@@ -399,6 +399,7 @@ export class VoyagerGlobe {
         onComplete: () => {
           this.section.classList.add("hidden");
           tripStore.setGlobeView(false);
+          window.location.hash = "#/map";
           tripStore.emit("map:focus", [dest.lat, dest.lon], 13);
 
           // Open the Thematic Gate Reveal for this place!
@@ -430,6 +431,7 @@ export class VoyagerGlobe {
     } else {
       this.section.classList.add("hidden");
       tripStore.setGlobeView(false);
+      window.location.hash = "#/map";
       tripStore.emit("map:focus", [dest.lat, dest.lon], 13);
     }
   }
@@ -445,6 +447,7 @@ export class VoyagerGlobe {
         onComplete: () => {
           this.section.classList.add("hidden");
           tripStore.setGlobeView(false);
+          window.location.hash = "#/map";
           tripStore.emit("map:focus", target.coords, target.zoom);
           this.camera.position.z = 240; // reset
         }
@@ -452,6 +455,7 @@ export class VoyagerGlobe {
     } else {
       this.section.classList.add("hidden");
       tripStore.setGlobeView(false);
+      window.location.hash = "#/map";
       tripStore.emit("map:focus", target.coords, target.zoom);
     }
   }
