@@ -1,0 +1,433 @@
+/* ==========================================================================
+   Cholo Ghure Asssiii — Pinned Scroll Scenes (css/scenes.css)
+   ========================================================================== */
+
+/* Main Scroll Track */
+#scroll-track {
+  position: relative;
+  width: 100%;
+}
+
+.scene-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   SCENE 1: ARCHITECTURAL GATE (ERA Residence Behavior)
+   ========================================================================== */
+#scene-gate {
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cga-bg-base);
+}
+
+.gate-doors-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  pointer-events: none;
+  z-index: 102;
+  overflow: hidden;
+}
+
+.gate-door {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(135deg, #18261c 0%, #0d1710 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+  will-change: transform;
+}
+
+.gate-door.left {
+  border-right: 1.5px solid var(--cga-gold-accent);
+}
+
+.gate-door.right {
+  border-left: 1.5px solid var(--cga-gold-accent);
+}
+
+.gate-ornament {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border: 1.5px solid rgba(212, 175, 55, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 35px rgba(198, 146, 75, 0.25);
+}
+
+.gate-door.left .gate-ornament { right: -75px; }
+.gate-door.right .gate-ornament { left: -75px; }
+
+.gate-symbol {
+  font-family: var(--cga-font-serif);
+  font-size: 34px;
+  color: var(--cga-gold-accent);
+}
+
+/* Hero Content Behind the Gate */
+.gate-hero-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 20px;
+  z-index: 101;
+}
+
+.gate-brand-eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--cga-gold-accent);
+  margin-bottom: 12px;
+}
+
+.gate-main-heading {
+  font-family: var(--cga-font-serif);
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--cga-forest-contrast);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.gate-bengali-tagline {
+  font-family: var(--cga-font-serif);
+  font-size: 26px;
+  font-style: italic;
+  color: var(--cga-gold-accent);
+  margin-bottom: 24px;
+}
+
+.gate-scroll-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--cga-text-secondary);
+  background: var(--cga-bg-glass);
+  padding: 8px 20px;
+  border-radius: var(--cga-radius-full);
+  border: 1px solid var(--cga-border-glass);
+  box-shadow: var(--cga-shadow-sm);
+  animation: bounceCue 2s infinite ease-in-out;
+}
+
+@keyframes bounceCue {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* ==========================================================================
+   SCENE 2: 3D VOYAGER GLOBE
+   ========================================================================== */
+#scene-globe {
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f7f3eb 50%, var(--cga-bg-base) 85%, #e8dfd1 100%);
+}
+
+#globe-canvas-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+#globe-canvas-container:active {
+  cursor: grabbing;
+}
+
+.globe-header-overlay {
+  position: absolute;
+  top: 96px;
+  text-align: center;
+  pointer-events: none;
+  z-index: 55;
+  max-width: 720px;
+  padding: 0 20px;
+}
+
+.globe-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cga-gold-accent);
+  margin-bottom: 6px;
+}
+
+.globe-main-title {
+  font-family: var(--cga-font-serif);
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--cga-forest-contrast);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.globe-subtitle {
+  font-size: 14px;
+  color: var(--cga-text-secondary);
+  line-height: 1.5;
+}
+
+.globe-control-dock {
+  position: absolute;
+  bottom: 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  z-index: 60;
+  pointer-events: auto;
+}
+
+.continent-pill-dock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  background: var(--cga-bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--cga-border-glass);
+  border-radius: var(--cga-radius-full);
+  box-shadow: var(--cga-shadow-elevated);
+}
+
+.continent-chip {
+  padding: 8px 18px;
+  border-radius: var(--cga-radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cga-text-secondary);
+  transition: all var(--cga-transition-fast);
+}
+
+.continent-chip:hover {
+  color: var(--cga-text-primary);
+  background: rgba(198, 146, 75, 0.08);
+}
+
+.continent-chip.active {
+  background: var(--cga-forest-contrast);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(17, 28, 20, 0.2);
+}
+
+.country-selection-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  padding: 8px 16px;
+  border-radius: var(--cga-radius-full);
+  box-shadow: var(--cga-shadow-ambient);
+  border: 1px solid var(--cga-border-subtle);
+}
+
+.country-select-dropdown {
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cga-text-primary);
+  cursor: pointer;
+}
+
+.dive-into-map-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--cga-gold-accent), #db9a44);
+  color: #ffffff;
+  padding: 10px 22px;
+  border-radius: var(--cga-radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 16px var(--cga-gold-glow);
+  transition: all var(--cga-transition-smooth);
+}
+
+.dive-into-map-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px var(--cga-gold-glow);
+}
+
+/* ==========================================================================
+   SCENE 3: EXPLORE MAP & RIGHT-SIDE PANEL (Primland Behavior)
+   ========================================================================== */
+#scene-explore {
+  z-index: 80;
+  position: relative;
+  background-color: #f4efe6;
+}
+
+#explore-map-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Category Filter Chips */
+.category-filter-bar {
+  position: absolute;
+  top: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 85;
+  background: var(--cga-bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 6px 10px;
+  border-radius: var(--cga-radius-full);
+  border: 1px solid var(--cga-border-glass);
+  box-shadow: var(--cga-shadow-elevated);
+}
+
+.category-chip {
+  padding: 6px 14px;
+  border-radius: var(--cga-radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cga-text-secondary);
+  background: var(--cga-bg-surface);
+  border: 1px solid var(--cga-border-subtle);
+  transition: all var(--cga-transition-fast);
+}
+
+.category-chip:hover, .category-chip.active {
+  background: var(--cga-forest-contrast);
+  color: #ffffff;
+  border-color: var(--cga-forest-contrast);
+}
+
+/* Right-Side Detail Panel (Primland Behavior) */
+#detail-side-panel {
+  position: absolute;
+  top: 96px;
+  right: 24px;
+  width: 420px;
+  bottom: 24px;
+  background: var(--cga-bg-glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--cga-border-glass);
+  border-radius: var(--cga-radius-lg);
+  box-shadow: var(--cga-shadow-elevated);
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateX(450px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+}
+
+#detail-side-panel.open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   SCENE 4: JOURNEY TIMELINE (Lightship RV Behavior)
+   ========================================================================== */
+#scene-journey {
+  z-index: 70;
+  display: flex;
+  background: var(--cga-bg-base);
+}
+
+.journey-split-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.journey-map-col {
+  width: 55%;
+  height: 100%;
+  position: relative;
+}
+
+#journey-route-map {
+  width: 100%;
+  height: 100%;
+}
+
+.journey-days-col {
+  width: 45%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 96px 36px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background: var(--cga-bg-subtle);
+  border-left: 1px solid var(--cga-border-subtle);
+}
+
+/* ==========================================================================
+   SCENE 5: SAVED TRIPS & FOOTER
+   ========================================================================== */
+#scene-saved {
+  z-index: 60;
+  padding: 100px 36px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #ffffff;
+}
+
+.saved-trips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.cga-footer {
+  padding-top: 40px;
+  border-top: 1px solid var(--cga-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--cga-text-muted);
+}

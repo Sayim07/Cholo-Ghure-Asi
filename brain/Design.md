@@ -102,31 +102,28 @@ In the Application Navbar:
 - Integrated search icon, clear button, and an active pulsing search button.
 - Focus ring: glowing cyan outer shadow (`var(--cga-shadow-glow)`).
 
-### 4.2 Destination Weather Card
-- Displays city name, country flag, and geographic coordinates in a monospace tag.
-- Live Temperature readout (large 32px bold number) alongside an animated weather icon (sun, rain clouds, storm).
-- Metrics grid: Humidity pill (💧 65%), Wind speed (💨 18 km/h), Weather condition description.
-- Action CTA: Primary button *"Add to Itinerary"* with `+` icon.
+### 4.2 Right-Side Detail Panel (Primland Behavior — Replaces Centered Modal)
+- **Position & Dimensions:** Floats on the right side of the screen (`width: 420px`, `top: 88px`, `bottom: 24px`, `right: 24px`), sliding in with a snappy GSAP cubic bezier (`x: 0` from `x: 450px`).
+- **Map Remains Visible & Draggable:** The main Leaflet map stays 100% interactive and visible on the left side. Never blocks the entire screen with a white centered modal!
+- **Mobile Adaptability:** On viewport width < 768px, slides up from the bottom as an elegant draggable bottom sheet (`height: 70vh`).
+- **Dynamic Wikipedia Photo Resolution:** Hero image fetched dynamically via Wikipedia REST API (`/page/summary/{title}`) or Wikimedia geosearch near coordinates. Hardcoded image-theme mappings are strictly prohibited.
+- **In-Panel Miniature Gate Reveal:** A subtle (~0.8s) in-panel gate/mist/wave curtain parting when opening, rather than a full-screen blocker.
+- **Components Inside:** Hero photo, place title, administrative region, mono coordinates, live Open-Meteo weather badge, "Best season" tag, Travel Mode selector (🚗 Drive | 🚆 Transit | 🚶 Walk), Add to Itinerary CTA, Google Maps button, and Close button.
 
-### 4.3 Itinerary Stop Timeline Cards
-- Sequential numbering badges (1, 2, 3...) connected by an elegant vertical route line.
-- Reordering controls: `▲` Move Up, `▼` Move Down.
-- Stop deletion button: subtle trash icon with red hover glow.
-- Day categorizer: segmented pill tabs (`Day 1`, `Day 2`, `Day 3`, `+ Add Day`).
-- Dynamic inter-stop distance & drive time pill (e.g., `🚗 48 km • 55 mins to next stop`).
+### 4.3 Clean Inline SVG Icon System (No Raw Emojis)
+- Strictly replace all raw unicode emojis with crisp, consistent inline SVG vector icons with `stroke: 1.5px` and `stroke-linecap: round`.
+- Consistent palette fill/stroke matching `--cga-gold-accent`, `--cga-forest-contrast`, and `--cga-text-secondary`.
 
-### 4.4 Interactive Map Viewport & Route Layer
-- Custom SVG marker pins:
-  - 🟢 Origin stop (Start Pin)
-  - 🔵 Intermediate waypoints
-  - 🏁 Final destination (Finish Flag)
-- OSRM route line styled with vibrant electric cyan `#0ea5e9` with a subtle pulsing dashed glow.
-- Floating bottom-right summary chip: `Total Route: 184 km | Est. Travel Time: 3h 40m`.
+### 4.4 Journey Timeline & Scroll-Linked Telemetry (Lightship Behavior)
+- Pinned section where left = sticky Leaflet itinerary route, right = scrolling day timeline.
+- Telemetry HUD numbers scrub smoothly with scroll progress using GSAP numerical interpolation.
 
 ---
 
 ## 5. What to Avoid (Negative Constraints)
+- **NO Centered Screen-Blocking Modals:** Use the right-side glass panel (or mobile bottom sheet).
+- **NO Raw Emojis in Place of Icons:** Use crisp 1.5px SVG icons everywhere.
+- **NO Hardcoded Destination Images:** Always query Wikipedia/Wikimedia REST with graceful themed gradient fallbacks.
 - **NO Default Browser Alerts (`window.alert`):** Use custom animated glass toast notifications.
-- **NO Harsh Solid Colors:** Never use raw `#ff0000` or `#0000ff`; always use curated HSL/Hex palette tokens.
-- **NO Broken Layout on 375px Viewports:** On mobile screens, left panel and map stack vertically, or toggle via a bottom navigation bar.
 - **NO Layout Shifts (CLS):** Map container must have explicit height or `flex: 1` fill, never collapsing to 0px while loading.
+- **Respect `prefers-reduced-motion`:** If user requests reduced motion, disable scroll scrub physics and particle canvases; use simple opacity fades.

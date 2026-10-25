@@ -4,46 +4,59 @@
 
 ---
 
-## 1. End-to-End Discovery & Planning Lifecycle
+## 1. Scroll-Driven 5-Scene Architecture & Data Flow
+
+`Cholo Ghure Asssiii` is structured as a vertical single-page journey powered by Lenis smooth scroll and GSAP ScrollTrigger pinned scenes:
 
 ```
-[ Step 1: 3D Voyager Globe Landing ]
-               |
-  User interacts with rotating WebGL / SVG Globe
-  Selects CONTINENT (e.g., Asia) -> Selects COUNTRY (e.g., India)
-               |
-               v
-[ Step 2: Smooth Cinematic Camera Descent ]
-  Globe camera zooms into Country coordinates -> Seamlessly dissolves into
-  Full-Screen High-Resolution Leaflet Cartography (Primland Style)
-               |
-               v
-[ Step 3: Interactive Exploration & Season Controls ]
-  User toggles 4-Season Filter [Summer ☀️ | Monsoon 🌧️ | Autumn 🍂 | Winter ❄️]
-  Tile tone shifts, ambient particle canvas activates
-               |
-               v
-[ Step 4: Destination Search / Pin Selection ]
-  User searches city or taps glowing hotspot on map
-               |
-               v
-[ Step 5: ERA Residence "Portal Gate Reveal" ]
-  Grand arched gateway / nature portal smoothly slides open via GSAP
-  Revealing:
-  - Destination Imagery & Geographic Coordinates
-  - Live Open-Meteo Weather Badge (Temp °C, Condition Icon, Wind, Humidity)
-  - "+ Add to Itinerary" CTA Button
-               |
-               v
-[ Step 6: Lightship RV Telemetry & Multi-Stop Routing ]
-  Adding stops triggers OSRM Routing Engine:
-  - Electric Azure road polyline drawn across stops
-  - Live HUD metrics updated: Total Distance (km), Drive Time (hrs), Budget (₹)
-  - Scrolling through itinerary days triggers smooth drone flyTo along waypoints
-               |
-               v
-[ Step 7: Cloud Synchronization ]
-  Trip persisted to Firebase Firestore `trips` collection + localStorage backup.
+[ SCENE 1: THE ARCHITECTURAL GATE (ERA Residence Behavior) ]
+  * Pinned for 120vh scroll distance.
+  * Scroll scrub (0 -> 1) progressively parts the golden filigree heritage double doors.
+  * Behind the parting doors, the 3D glowing Earth globe is revealed with subtle scale parallax.
+  * "Scroll to explore" cue gently fades out.
+            |
+            v
+[ SCENE 2: THE 3D VOYAGER GLOBE (Interactive WebGL) ]
+  * Pinned scene: scroll smoothly scales and rotates the 3D Earth.
+  * Continent selector chips + Country dropdown + 3D glowing landmark pins.
+  * Selecting a continent or country rotates globe coordinates to focus on that territory.
+  * End of scene (or "Dive in" button): Camera dives into the globe (zoom-through),
+    cross-fading directly into the full-screen interactive Leaflet map canvas.
+            |
+            v
+[ SCENE 3: EXPLORE MAP & SIDE PANEL (Primland Behavior) — CORE PRODUCT ]
+  * Full-viewport edge-to-edge interactive Leaflet cartography with custom Carto/OSM tiles.
+  * Top floating glass search bar with Nominatim geocoding & category filters (Heritage, Hills, Beach, Nature, Food, Spiritual).
+  * 4-Season ambient switcher in navigation (Summer, Monsoon, Autumn, Winter) with dynamic particle physics.
+  * Interactive hotspot markers (custom SVG pins with pulse). Hover displays micro tooltip; click smoothly flies camera.
+  * Search Flow: User searches place -> Nominatim geocodes -> map.flyTo(lat, lon, zoom 11, duration 2.2s) ->
+    Drop animated pin -> Open RIGHT-SIDE DETAIL PANEL (~420px frosted glass, slides in with GSAP).
+  * NO centered white modal: Map stays fully visible, draggable, and interactive.
+  * Detail Panel:
+    - Real Wikipedia / Wikimedia REST photo resolution (no hardcoded generic images!).
+    - Place name, administrative region, mono coordinates.
+    - Live Open-Meteo weather badge (temp °C, condition, humidity, wind, 3-day forecast strip).
+    - Travel mode selector (🚗 Drive | 🚆 Transit | 🚶 Walk).
+    - Action buttons: "➕ Add to Itinerary", "🗺️ Open in Google Maps", "✕ Close".
+    - In-panel thematic miniature gate/mist/wave reveal (~0.8s).
+            |
+            v
+[ SCENE 4: JOURNEY TIMELINE & ROUTE (Lightship RV Behavior) ]
+  * Pinned split scene:
+    - Left side (55%): Sticky Leaflet route map showing the full multi-stop itinerary.
+    - Right side (45%): Scrolling Day cards (Day 1, Day 2, Day 3) containing scheduled stops.
+  * As the user scrolls through each day, the map camera flies (flyToBounds) to that day's stops,
+    and that day's OSRM polyline road route segment illuminates.
+  * Telemetry HUD (JetBrains Mono font, large numbers) scrubs with scroll:
+    - Total Distance km, Travel Duration, Stops count, Est. Budget ₹, Current Stop Temp °C.
+    - GSAP number tweens tied to ScrollTrigger progress.
+  * Itinerary controls per stop: reorder up/down, delete, edit budget, add day, and Firebase Firestore cloud sync.
+            |
+            v
+[ SCENE 5: SAVED TRIPS ARCHIVE & FOOTER ]
+  * Grid of saved trips retrieved from Firestore (and localStorage fallback).
+  * Load trip, delete trip, clean export (print stylesheet / JSON download).
+  * Attribution footer: OpenStreetMap, Nominatim, Open-Meteo, Project OSRM, Wikimedia.
 ```
 
 ---
