@@ -391,4 +391,140 @@ export class TripBudgetEngine {
       }
     ];
   }
+
+  /**
+   * Dynamically estimates realistic itemized budget for an individual stop
+   * based on geographic cost-of-living tier, location, attraction type, and distance.
+   */
+  static estimateStopBudget(destination, origin = null) {
+    if (!destination) {
+      return { stay: 2000, food: 900, transport: 600, tickets: 400 };
+    }
+
+    const lat = Number(destination.latitude) || 0;
+    const lon = Number(destination.longitude) || 0;
+    const nameLower = (destination.name || destination.fullName || destination.shortName || "").toLowerCase();
+
+    // 1. Switzerland, Iceland, Nordic, Monaco (Tier 1 Ultra-High Cost)
+    const isUltraHigh = 
+      (lat >= 45.8 && lat <= 47.8 && lon >= 5.9 && lon <= 10.5) || // Switzerland
+      nameLower.includes("swiss") || nameLower.includes("zermatt") || 
+      nameLower.includes("zurich") || nameLower.includes("interlaken") ||
+      nameLower.includes("geneva") || nameLower.includes("lucerne") ||
+      nameLower.includes("iceland") || nameLower.includes("norway") ||
+      nameLower.includes("monaco");
+
+    // 2. Western Europe, US, UK, Australia, Japan (Tier 1 International)
+    const isTier1International = isUltraHigh ? false : (
+      nameLower.includes("paris") || nameLower.includes("france") ||
+      nameLower.includes("london") || nameLower.includes("uk") ||
+      nameLower.includes("new york") || nameLower.includes("usa") ||
+      nameLower.includes("tokyo") || nameLower.includes("japan") ||
+      nameLower.includes("kyoto") || nameLower.includes("osaka") ||
+      nameLower.includes("rome") || nameLower.includes("italy") ||
+      nameLower.includes("amsterdam") || nameLower.includes("netherlands") ||
+      nameLower.includes("berlin") || nameLower.includes("germany") ||
+      nameLower.includes("dubai") || nameLower.includes("uae") ||
+      nameLower.includes("santorini") || nameLower.includes("greece") ||
+      nameLower.includes("sydney") || nameLower.includes("singapore") ||
+      (lat >= 35 && lat <= 65 && lon >= -10 && lon <= 30) || // Western/Central Europe
+      (lat >= 25 && lat <= 50 && lon >= -125 && lon <= -70) || // USA
+      (lat >= 30 && lat <= 45 && lon >= 128 && lon <= 145)   // Japan
+    );
+
+    // 3. Southeast Asia / Mid International (Bali, Thailand, Vietnam, Sri Lanka, Nepal, Turkey)
+    const isMidInternational = (!isUltraHigh && !isTier1International) && (
+      nameLower.includes("bali") || nameLower.includes("indonesia") ||
+      nameLower.includes("bangkok") || nameLower.includes("thailand") ||
+      nameLower.includes("phuket") || nameLower.includes("vietnam") ||
+      nameLower.includes("maldives") || nameLower.includes("sri lanka") ||
+      nameLower.includes("nepal") || nameLower.includes("istanbul") ||
+      nameLower.includes("turkey") || nameLower.includes("egypt") ||
+      (lat < 22 && lat > -12 && lon > 95 && lon < 140) // SE Asia
+    );
+
+    // 4. India Premium Tourist / Metros (Goa, Mumbai, Delhi, Bengaluru, Leh, Manali, Kashmir, Shimla)
+    const isIndiaPremium = (!isUltraHigh && !isTier1International && !isMidInternational) && (
+      nameLower.includes("goa") || nameLower.includes("mumbai") ||
+      nameLower.includes("delhi") || nameLower.includes("bengaluru") ||
+      nameLower.includes("bangalore") || nameLower.includes("manali") ||
+      nameLower.includes("ladakh") || nameLower.includes("leh") ||
+      nameLower.includes("kashmir") || nameLower.includes("srinagar") ||
+      nameLower.includes("shimla") || nameLower.includes("munnar") ||
+      nameLower.includes("andaman")
+    );
+
+    // 5. India Classic Cultural & Heritage (Agra, Jaipur, Varanasi, Kolkata, Udaipur, Amritsar, Darjeeling)
+    const isIndiaClassic = (!isUltraHigh && !isTier1International && !isMidInternational && !isIndiaPremium) && (
+      nameLower.includes("agra") || nameLower.includes("taj mahal") ||
+      nameLower.includes("jaipur") || nameLower.includes("kolkata") ||
+      nameLower.includes("calcutta") || nameLower.includes("varanasi") ||
+      nameLower.includes("udaipur") || nameLower.includes("amritsar") ||
+      nameLower.includes("darjeeling") || nameLower.includes("pondicherry") ||
+      nameLower.includes("kerala") || nameLower.includes("hampi") ||
+      nameLower.includes("jodhpur") || nameLower.includes("mysore")
+    );
+
+    let stay = 1800;
+    let food = 800;
+    let transport = 500;
+    let tickets = 400;
+
+    if (isUltraHigh) {
+      stay = 12000;
+      food = 3800;
+      transport = 2500;
+      tickets = 3200;
+    } else if (isTier1International) {
+      stay = 7800;
+      food = 2800;
+      transport = 1600;
+      tickets = 2100;
+    } else if (isMidInternational) {
+      stay = 3500;
+      food = 1500;
+      transport = 850;
+      tickets = 850;
+    } else if (isIndiaPremium) {
+      stay = 2900;
+      food = 1300;
+      transport = 750;
+      tickets = 650;
+    } else if (isIndiaClassic) {
+      stay = 2100;
+      food = 900;
+      transport = 550;
+      tickets = 550;
+    } else {
+      // General coordinate check: if outside India (lat < 6 or lat > 38 or lon < 68 or lon > 97)
+      const isOutsideIndia = lat !== 0 && lon !== 0 && (lat < 6.5 || lat > 37.5 || lon < 67.0 || lon > 97.5);
+      if (isOutsideIndia) {
+        stay = 5800;
+        food = 2200;
+        transport = 1400;
+        tickets = 1200;
+      } else {
+        stay = 1600;
+        food = 750;
+        transport = 450;
+        tickets = 350;
+      }
+    }
+
+    // Micro-adjustments by place category
+    const typeLower = (destination.type || "").toLowerCase();
+    if (typeLower === "heritage" || typeLower === "monument" || nameLower.includes("mahal") || nameLower.includes("fort") || nameLower.includes("palace") || nameLower.includes("museum")) {
+      tickets = Math.round(tickets * 1.35);
+    } else if (typeLower === "nature" || typeLower === "beach" || nameLower.includes("beach") || nameLower.includes("lake")) {
+      tickets = Math.round(tickets * 0.55);
+      food = Math.round(food * 1.15); // Seaside or scenic dining
+    }
+
+    return {
+      stay: Math.round(stay),
+      food: Math.round(food),
+      transport: Math.round(transport),
+      tickets: Math.round(tickets)
+    };
+  }
 }

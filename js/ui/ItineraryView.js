@@ -10,6 +10,7 @@ import { formatCurrency, escapeHTML } from "../utils/helpers.js";
 import { searchDestination } from "../services/NominatimService.js";
 import { fetchWeather } from "../services/WeatherService.js";
 import { TripExportModal } from "./TripExportModal.js";
+import { TripBudgetEngine } from "../services/TripBudgetEngine.js";
 
 export class ItineraryView {
   constructor(drawerId) {
@@ -240,7 +241,7 @@ export class ItineraryView {
           <div class="stop-name">${escapeHTML(stop.name)}</div>
           <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap;">
             ${weatherTag}
-            <button class="stop-budget-pill btn-edit-budget" title="Edit Budget for this stop" style="font-size: 11px; font-weight: 700; color: var(--cga-text-primary); background: var(--cga-bg-subtle); border: 1px solid var(--cga-border-subtle); padding: 2px 8px; border-radius: var(--cga-radius-full); cursor: pointer;">
+            <button class="stop-budget-pill btn-edit-budget" title="Lodging: ₹${stop.budget?.stay || 0} • Food: ₹${stop.budget?.food || 0} • Travel: ₹${stop.budget?.transport || 0} • Tickets: ₹${stop.budget?.tickets || 0} (Click to customize)" style="font-size: 11px; font-weight: 700; color: var(--cga-text-primary); background: var(--cga-bg-subtle); border: 1px solid var(--cga-border-subtle); padding: 2px 8px; border-radius: var(--cga-radius-full); cursor: pointer; transition: all 0.2s;">
               💰 ${formatCurrency((stop.budget?.stay || 0) + (stop.budget?.food || 0) + (stop.budget?.transport || 0) + (stop.budget?.tickets || 0))}
             </button>
             <span style="font-size: 11px; color: var(--cga-text-muted);">
@@ -278,7 +279,7 @@ export class ItineraryView {
   }
 
   openBudgetEditor(stop) {
-    const budget = stop.budget || { stay: 1500, food: 800, transport: 500, tickets: 200 };
+    const budget = stop.budget || TripBudgetEngine.estimateStopBudget(stop);
 
     // Create lightweight budget editor modal
     const modal = document.createElement("div");
@@ -288,8 +289,11 @@ export class ItineraryView {
     modal.innerHTML = `
       <div style="background: #ffffff; width: 90%; max-width: 380px; border-radius: var(--cga-radius-lg); border: 1px solid var(--cga-border-glass); box-shadow: var(--cga-shadow-elevated); padding: 24px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-          <h3 style="font-family: var(--cga-font-serif); font-size: 18px; font-weight: 700; color: var(--cga-forest-contrast);">Budget: ${escapeHTML(stop.name)}</h3>
-          <button id="close-budget-modal" style="font-size: 16px; color: var(--cga-text-muted);">✕</button>
+          <div>
+            <h3 style="font-family: var(--cga-font-serif); font-size: 18px; font-weight: 700; color: var(--cga-forest-contrast); margin: 0;">Budget: ${escapeHTML(stop.name)}</h3>
+            <span style="font-size: 11px; color: var(--cga-text-muted);">Adjust individual expense categories</span>
+          </div>
+          <button id="close-budget-modal" style="font-size: 16px; color: var(--cga-text-muted); background: none; border: none; cursor: pointer;">✕</button>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
@@ -302,7 +306,7 @@ export class ItineraryView {
             <input type="number" id="inp-food" value="${budget.food || 0}" style="width: 100px; text-align: right; background: var(--cga-bg-subtle); padding: 6px 10px; border-radius: var(--cga-radius-sm); border: 1px solid var(--cga-border-subtle); font-family: var(--cga-font-mono);">
           </label>
           <label style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
-            <span>🚗 Travel & Fuel (₹)</span>
+            <span>🚗 Travel & Transit (₹)</span>
             <input type="number" id="inp-transport" value="${budget.transport || 0}" style="width: 100px; text-align: right; background: var(--cga-bg-subtle); padding: 6px 10px; border-radius: var(--cga-radius-sm); border: 1px solid var(--cga-border-subtle); font-family: var(--cga-font-mono);">
           </label>
           <label style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
@@ -311,21 +315,40 @@ export class ItineraryView {
           </label>
         </div>
 
-        <button id="save-budget-modal" class="cga-btn-pill cga-btn-primary" style="width: 100%; justify-content: center; height: 42px;">
-          <span>Save Expenses</span>
-        </button>
+        <div style="display: flex; gap: 8px;">
+          <button id="btn-re-estimate-budget" class="cga-btn-pill cga-btn-secondary" style="flex: 1; height: 38px; font-size: 11px; justify-content: center;">
+            <span>⚡ Dynamic Est</span>
+          </button>
+          <button id="save-budget-modal" class="cga-btn-pill cga-btn-primary" style="flex: 1.2; height: 38px; font-size: 12px; justify-content: center;">
+            <span>Save Expenses</span>
+          </button>
+        </div>
       </div>
     `;
 
     document.body.appendChild(modal);
 
+    const inpStay = modal.querySelector("#inp-stay");
+    const inpFood = modal.querySelector("#inp-food");
+    const inpTransport = modal.querySelector("#inp-transport");
+    const inpTickets = modal.querySelector("#inp-tickets");
+
+    modal.querySelector("#btn-re-estimate-budget")?.addEventListener("click", () => {
+      const freshEst = TripBudgetEngine.estimateStopBudget(stop);
+      inpStay.value = freshEst.stay;
+      inpFood.value = freshEst.food;
+      inpTransport.value = freshEst.transport;
+      inpTickets.value = freshEst.tickets;
+      toast.info(`Updated to real-time dynamic estimate for ${stop.name}!`);
+    });
+
     modal.querySelector("#close-budget-modal").addEventListener("click", () => modal.remove());
     modal.querySelector("#save-budget-modal").addEventListener("click", () => {
       stop.budget = {
-        stay: Number(modal.querySelector("#inp-stay").value) || 0,
-        food: Number(modal.querySelector("#inp-food").value) || 0,
-        transport: Number(modal.querySelector("#inp-transport").value) || 0,
-        tickets: Number(modal.querySelector("#inp-tickets").value) || 0
+        stay: Number(inpStay.value) || 0,
+        food: Number(inpFood.value) || 0,
+        transport: Number(inpTransport.value) || 0,
+        tickets: Number(inpTickets.value) || 0
       };
       tripStore.recalculateBudget();
       tripStore.persistTrip();

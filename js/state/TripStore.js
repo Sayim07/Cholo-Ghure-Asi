@@ -5,6 +5,7 @@
 
 import { APP_CONSTANTS } from "../config/constants.js";
 import { generateId } from "../utils/helpers.js";
+import { TripBudgetEngine } from "../services/TripBudgetEngine.js";
 
 class TripStore {
   constructor() {
@@ -25,18 +26,47 @@ class TripStore {
   loadInitialTrip() {
     try {
       const raw = localStorage.getItem(APP_CONSTANTS.STORAGE_KEYS.ACTIVE_TRIP);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        const trip = JSON.parse(raw);
+        // Dynamically upgrade any stops that had the old static flat ₹3,000 budget
+        if (trip && Array.isArray(trip.stops)) {
+          trip.stops.forEach(s => {
+            const sum = (s.budget?.stay || 0) + (s.budget?.food || 0) + (s.budget?.transport || 0) + (s.budget?.tickets || 0);
+            if (sum === 3000 || !s.budget) {
+              s.budget = TripBudgetEngine.estimateStopBudget(s);
+            }
+          });
+          // Recalculate dynamic budget
+          let total = 0;
+          trip.stops.forEach(s => {
+            if (s.budget) {
+              total += (s.budget.stay || 0) + (s.budget.food || 0) + (s.budget.transport || 0) + (s.budget.tickets || 0);
+            }
+          });
+          trip.totalBudget = total;
+        }
+
+        // Clean up legacy hardcoded placeholder title if user didn't explicitly customize it
+        if (trip.title === "My Royal Bengal Expedition" && (!trip.stops || trip.stops.length === 0 || trip.stops.some(s => (s.name || "").toLowerCase().includes("paris") || (s.name || "").toLowerCase().includes("tokyo") || (s.name || "").toLowerCase().includes("agra")))) {
+          if (trip.stops && trip.stops.length > 0) {
+            trip.title = `${trip.stops[0].name} Journey`;
+          } else {
+            trip.title = "My Travel Journey";
+          }
+        }
+        return trip;
+      }
     } catch (e) {}
 
     return {
       id: generateId(),
-      title: "My Royal Bengal Expedition",
+      title: "My Travel Journey",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       daysCount: 2,
       totalDistanceKm: 0,
       totalDurationMins: 0,
-      totalBudget: 4500,
+      totalBudget: 0,
       stops: []
     };
   }
@@ -106,6 +136,9 @@ class TripStore {
       throw new Error("Max itinerary stops reached (25).");
     }
 
+    // Calculate realistic dynamic budget based on geographic tier and location
+    const dynamicBudget = TripBudgetEngine.estimateStopBudget(destination);
+
     const newStop = {
       stopId: generateId(),
       orderIndex: existingStops.length,
@@ -115,14 +148,14 @@ class TripStore {
       latitude: destination.latitude,
       longitude: destination.longitude,
       type: destination.type || "attraction",
-      budget: {
-        stay: 1500,
-        food: 800,
-        transport: 500,
-        tickets: 200
-      },
+      budget: dynamicBudget,
       weatherSnapshot: weatherSnapshot || null
     };
+
+    // Auto-update generic title if it's the first stop added
+    if (existingStops.length === 0 && (this.state.activeTrip.title === "My Travel Journey" || this.state.activeTrip.title === "New Travel Journey")) {
+      this.state.activeTrip.title = `${newStop.name} & Highlights Journey`;
+    }
 
     this.state.activeTrip.stops.push(newStop);
     this.recalculateBudget();
