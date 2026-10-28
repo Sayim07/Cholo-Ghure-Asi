@@ -8,12 +8,12 @@
    - Floating Route Control Bar with Live Distance and "Clear Route"
    ========================================================================== */
 
-import { APP_CONSTANTS } from "../config/constants.js?v=3.5";
-import { tripStore } from "../state/TripStore.js?v=3.5";
-import { calculateRoute } from "../services/RoutingService.js?v=3.5";
-import { fetchWeather } from "../services/WeatherService.js?v=3.5";
-import { reverseGeocode } from "../services/NominatimService.js?v=3.5";
-import { toast } from "./Toast.js?v=3.5";
+import { APP_CONSTANTS } from "../config/constants.js";
+import { tripStore } from "../state/TripStore.js";
+import { calculateRoute } from "../services/RoutingService.js";
+import { fetchWeather } from "../services/WeatherService.js";
+import { reverseGeocode } from "../services/NominatimService.js";
+import { toast } from "./Toast.js";
 
 export class MapManager {
   constructor(containerId) {

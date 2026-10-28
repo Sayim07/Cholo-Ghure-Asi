@@ -18,20 +18,24 @@
 }
 
 /* Seasonal Realistic Background Atmospheres for 3D Globe */
-.voyager-globe-section.season-summer {
-  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #fffbf2 40%, #fef3c7 75%, #fde68a 100%);
+.voyager-globe-section.season-summer,
+body.season-summer .voyager-globe-section {
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #fffbf2 40%, #fef3c7 75%, #fde68a 100%) !important;
 }
 
-.voyager-globe-section.season-monsoon {
-  background: radial-gradient(circle at 50% 40%, #f8fafc 0%, #e2e8f0 40%, #94a3b8 75%, #475569 100%);
+.voyager-globe-section.season-monsoon,
+body.season-monsoon .voyager-globe-section {
+  background: radial-gradient(circle at 50% 40%, #f8fafc 0%, #e2e8f0 40%, #94a3b8 75%, #475569 100%) !important;
 }
 
-.voyager-globe-section.season-autumn {
-  background: radial-gradient(circle at 50% 40%, #fffbeb 0%, #fef3c7 40%, #fed7aa 75%, #f59e0b 100%);
+.voyager-globe-section.season-autumn,
+body.season-autumn .voyager-globe-section {
+  background: radial-gradient(circle at 50% 40%, #fffbeb 0%, #fef3c7 40%, #fed7aa 75%, #f59e0b 100%) !important;
 }
 
-.voyager-globe-section.season-winter {
-  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f0f9ff 40%, #e0f2fe 75%, #bae6fd 100%);
+.voyager-globe-section.season-winter,
+body.season-winter .voyager-globe-section {
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f0f9ff 40%, #e0f2fe 75%, #bae6fd 100%) !important;
 }
 
 .voyager-globe-section.hidden {

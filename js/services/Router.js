@@ -133,6 +133,14 @@ export class AppRouter {
       this.portalGate.closeGate();
     }
 
+    // Hide season switcher & ambient canvas on destination canvas (exclusive to Map and Globe)
+    const seasonSelector = document.querySelector(".season-selector");
+    if (seasonSelector) seasonSelector.style.display = "none";
+    const seasonCanvas = document.getElementById("season-canvas");
+    if (seasonCanvas) seasonCanvas.style.display = "none";
+    const seasonOverlay = document.querySelector(".season-ambient-overlay");
+    if (seasonOverlay) seasonOverlay.style.display = "none";
+
     const destSection = document.getElementById("view-destination");
     if (destSection) {
       destSection.classList.remove("hidden");
@@ -150,6 +158,14 @@ export class AppRouter {
 
   hideDestinationView() {
     document.body.classList.remove("viewing-destination");
+
+    // Restore season switcher & ambient canvas for Map and Globe
+    const seasonSelector = document.querySelector(".season-selector");
+    if (seasonSelector) seasonSelector.style.display = "";
+    const seasonCanvas = document.getElementById("season-canvas");
+    if (seasonCanvas) seasonCanvas.style.display = "";
+    const seasonOverlay = document.querySelector(".season-ambient-overlay");
+    if (seasonOverlay) seasonOverlay.style.display = "";
 
     const searchContainer = document.querySelector(".cga-search-container");
     if (searchContainer) searchContainer.classList.remove("hidden");

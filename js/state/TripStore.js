@@ -201,4 +201,11 @@ class TripStore {
   }
 }
 
-export const tripStore = new TripStore();
+export const tripStore = (typeof window !== "undefined" && window.__tripStoreInstance)
+  ? window.__tripStoreInstance
+  : new TripStore();
+
+if (typeof window !== "undefined") {
+  window.__tripStoreInstance = tripStore;
+  window.tripStore = tripStore;
+}

@@ -9,8 +9,8 @@
    - 1-Click Route & Itinerary Integration
    ========================================================================== */
 
-import { tripStore } from "../state/TripStore.js?v=4.2";
-import { toast } from "./Toast.js?v=4.2";
+import { tripStore } from "../state/TripStore.js";
+import { toast } from "./Toast.js";
 import { escapeHTML, formatCurrency } from "../utils/helpers.js?v=4.2";
 import { WikipediaService } from "../services/WikipediaService.js?v=4.2";
 import { fetchWeather } from "../services/WeatherService.js?v=4.2";

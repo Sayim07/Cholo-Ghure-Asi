@@ -3,19 +3,19 @@
    Integrates VoyagerGlobe, SeasonEngine, PortalGate, MapManager, and Itinerary
    ========================================================================== */
 
-import { APP_CONSTANTS } from "./config/constants.js?v=4.2";
-import { tripStore } from "./state/TripStore.js?v=4.2";
-import { SeasonEngine } from "./ui/SeasonEngine.js?v=4.2";
-import { VoyagerGlobe } from "./scenes/VoyagerGlobe.js?v=4.2";
-import { PortalGate } from "./ui/PortalGate.js?v=4.2";
-import { MapManager } from "./ui/MapManager.js?v=4.2";
-import { SearchBar } from "./ui/SearchBar.js?v=4.2";
-import { ItineraryView } from "./ui/ItineraryView.js?v=4.2";
-import { SavedTripsModal } from "./ui/SavedTripsModal.js?v=4.2";
-import { AppRouter } from "./services/Router.js?v=4.2";
-import { DestinationView } from "./ui/DestinationView.js?v=4.2";
-import { FirebaseService } from "./services/FirebaseService.js?v=4.2";
-import { toast } from "./ui/Toast.js?v=4.2";
+import { APP_CONSTANTS } from "./config/constants.js?v=4.3";
+import { tripStore } from "./state/TripStore.js";
+import { SeasonEngine } from "./ui/SeasonEngine.js?v=4.3";
+import { VoyagerGlobe } from "./scenes/VoyagerGlobe.js?v=4.3";
+import { PortalGate } from "./ui/PortalGate.js?v=4.3";
+import { MapManager } from "./ui/MapManager.js?v=4.3";
+import { SearchBar } from "./ui/SearchBar.js?v=4.3";
+import { ItineraryView } from "./ui/ItineraryView.js?v=4.3";
+import { SavedTripsModal } from "./ui/SavedTripsModal.js?v=4.3";
+import { AppRouter } from "./services/Router.js?v=4.3";
+import { DestinationView } from "./ui/DestinationView.js?v=4.3";
+import { FirebaseService } from "./services/FirebaseService.js?v=4.3";
+import { toast } from "./ui/Toast.js?v=4.3";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log(`%c${APP_CONSTANTS.APP_NAME} %cInitialized`, "color: #c6924b; font-weight: 800; font-size: 16px;", "color: #0284c7;");
@@ -62,15 +62,30 @@ document.addEventListener("DOMContentLoaded", () => {
   router.init();
   window.appRouter = router;
 
-  // 10. Bind Navbar Seasonal Buttons
+  // 10. Bind Navbar Seasonal Buttons (Synchronously switches atmosphere & particles)
   const seasonButtons = document.querySelectorAll(".season-btn");
   seasonButtons.forEach(btn => {
     btn.addEventListener("click", () => {
+      const season = btn.dataset.season;
+      if (!season) return;
+
+      // Update button visual state immediately
       seasonButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      const season = btn.dataset.season;
+
+      // Synchronously update particle engine, body atmosphere & background
+      seasonEngine.setSeason(season);
+
+      // Persist & notify store
       tripStore.setSeason(season);
-      toast.info(`Switched to ${season.toUpperCase()} atmosphere 🍂`);
+
+      const seasonDescriptions = {
+        summer: "☀️ Summer Sun & Golden Shimmer Active",
+        monsoon: "🌧️ Monsoon Rain Streaks & Lush Atmosphere Active",
+        autumn: "🍂 Autumn Amber Leaves & Foliage Active",
+        winter: "❄️ Winter Alpine Frost & Snow Crystals Active"
+      };
+      toast.info(seasonDescriptions[season] || `Atmosphere switched to ${season.toUpperCase()}`);
     });
   });
 

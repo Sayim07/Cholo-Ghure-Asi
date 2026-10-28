@@ -16,6 +16,16 @@ body.viewing-destination #telemetry-hud {
   display: none !important;
 }
 
+/* Season Switcher & Ambient Canvas is Exclusive to Map & Globe (Hidden on Destination Canvas) */
+body.viewing-destination .season-selector {
+  display: none !important;
+}
+
+body.viewing-destination #season-canvas,
+body.viewing-destination .season-ambient-overlay {
+  display: none !important;
+}
+
 /* Seamless Luxury Header when Viewing Destination (Zero Gap, Flush with Top) */
 body.viewing-destination .cga-navbar {
   position: fixed !important;
