@@ -11,10 +11,12 @@ export class CuisineCultureService {
    * @param {Object} dest Destination object { name, shortName, latitude, longitude, ... }
    * @param {Object} wikiData Wikipedia summary extract & metadata
    */
-  static getCuisineAndCulture(dest = {}, wikiData = {}) {
-    const rawName = (dest.shortName || dest.name || wikiData.title || "").toLowerCase();
-    const cleanName = dest.shortName || dest.name || wikiData.title || "Destination";
-    const desc = `${rawName} ${dest.desc || ""} ${wikiData.extract || ""}`.toLowerCase();
+  static getCuisineAndCulture(dest, wikiData) {
+    const safeDest = dest || {};
+    const safeWiki = wikiData || {};
+    const rawName = (safeDest.shortName || safeDest.name || safeWiki.title || "").toLowerCase();
+    const cleanName = safeDest.shortName || safeDest.name || safeWiki.title || "Destination";
+    const desc = `${rawName} ${safeDest.desc || ""} ${safeWiki.extract || ""}`.toLowerCase();
 
     // 1. Kolkata (The Cultural & Culinary Capital of India)
     if (rawName.includes("kolkata") || rawName.includes("calcutta")) {
@@ -187,6 +189,187 @@ export class CuisineCultureService {
           "🚖 Kolkata yellow ambassador taxis operate on regulated meter rates or fixed pre-paid airport/station booths.",
           "🤝 A friendly conversation about local football (East Bengal vs Mohun Bagan) or Rabindranath Tagore instantly wins hearts.",
           "🌶️ Traditional Bengali cuisine is eaten in courses: bitter (shukto) first, then lentils, followed by fish/meat, and sweet dessert last."
+        ]
+      };
+    }
+
+    // 2. Agra & The Taj Mahal (Mughlai Gastronomy & Parchin Kari Marble Guilds)
+    if (
+      rawName.includes("taj") || 
+      rawName.includes("tajmahal") || 
+      rawName.includes("agra") || 
+      desc.includes("taj mahal") || 
+      desc.includes("agra fort")
+    ) {
+      return {
+        tagline: "Imperial Mughlai Gastronomy & Living Pietra Dura Marble Guilds of the Taj",
+        quote: "Beneath the pure white marble domes of the Taj Mahal lies centuries of imperial Awadhi & Mughlai culinary alchemy, paired with sweet translucent pethas created for the Mughal emperor's court.",
+        signatureDishes: [
+          {
+            id: "agra_petha",
+            name: "World-Famous GI-Tagged Panchi Petha",
+            localName: "पंछी का आगरे का पेठा (केसर, अंगूरी व सादा)",
+            tag: "17th-Century Imperial Confection",
+            diet: "Veg",
+            rating: "5.0",
+            price: "₹ 120 - ₹ 350 / kg",
+            image: "https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=900&q=80",
+            desc: "Translucent candied ash gourd simmered in fragrant saffron-infused syrup and organic rose attar. Invented in Shah Jahan's royal kitchens to nourish the 20,000 master builders of the Taj Mahal.",
+            famousSpot: "Original Panchi Petha (Hari Parwat & Sadar Bazaar)",
+            timing: "All Day (8:30 AM - 10:30 PM)"
+          },
+          {
+            id: "agra_bedmi_puri",
+            name: "Agra Bedmi Puri with Hing Aloo & Methi Chutney",
+            localName: "आगरा की बेड़मी पूरी और हींग वाले आलू",
+            tag: "Legendary Dawn Breakfast",
+            diet: "Veg",
+            rating: "4.9",
+            price: "₹ 60 - ₹ 110 (2 pcs)",
+            image: "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=900&q=80",
+            desc: "Crisp, stone-ground urad dal stuffed puris fried golden in desi ghee, accompanied by fiery hing-infused potato curry and bittersweet fenugreek-pumpkin chutney.",
+            famousSpot: "Deviram Sweets & Confectioners (Pratappura Crossing)",
+            timing: "Morning Only (7:00 AM - 11:30 AM)"
+          },
+          {
+            id: "agra_mughlai_korma",
+            name: "Royal Mughlai Shahi Mutton Korma & Khamiri Roti",
+            localName: "शाही मुटन कोरमा व खमीरी रोटी",
+            tag: "Imperial Mughal Dynasty Recipe",
+            diet: "Non-Veg",
+            rating: "4.9",
+            price: "₹ 340 - ₹ 590",
+            image: "https://images.unsplash.com/photo-1545247181-516773ca838b?auto=format&fit=crop&w=900&q=80",
+            desc: "Succulent cuts of baby mutton slow-braised in brown onions, cashew paste, mace, and royal rose attar, served with warm clay-oven baked yeast flatbread.",
+            famousSpot: "Pinch of Spice (Fatehabad Road) & Peshawri (ITC Mughal)",
+            timing: "Lunch & Royal Dinner (12:30 PM - 11 PM)"
+          },
+          {
+            id: "agra_jalebi_rabdi",
+            name: "Crispy Desi Ghee Jalebi with Thick Malai Rabdi",
+            localName: "देसी घी की कुरकुरी जलेबी और मलाईदार रबड़ी",
+            tag: "Golden Saffron Indulgence",
+            diet: "Veg",
+            rating: "4.8",
+            price: "₹ 70 - ₹ 150",
+            image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=900&q=80",
+            desc: "Crunchy spiral jalebis fried live in pure desi ghee, steeped in hot saffron syrup and dolloped with slow-reduced creamy buffalo milk rabdi.",
+            famousSpot: "Bhagat Halwai (Civil Lines) & Deviram (Pratappura)",
+            timing: "Breakfast & Evening Teatime (7 AM - 10 AM, 5 PM - 9 PM)"
+          },
+          {
+            id: "agra_bhalla",
+            name: "Agra Ka Dal-Bhalla & Golgappa Chaat",
+            localName: "आगरे का करारा भल्ला व गोलगप्पा",
+            tag: "Iconic Street Food Sensation",
+            diet: "Veg",
+            rating: "4.8",
+            price: "₹ 50 - ₹ 90",
+            image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=900&q=80",
+            desc: "Jumbo spiced potato croquettes pan-crisped on giant smoking tawas, stuffed with roasted chana dal, smothered in whipped sweet dahi and spicy dried-ginger sonth.",
+            famousSpot: "Agra Chaat House & Pandit Ji (Sadar Bazaar Chaat Gali)",
+            timing: "Evening Promenade (4:30 PM - 10:30 PM)"
+          },
+          {
+            id: "agra_tandoori_murgh",
+            name: "Smoky Charcoal Tandoori Murgh Jahangiri",
+            localName: "तंदूरी मुर्ग जहांगीरी",
+            tag: "Charcoal Clay Oven Masterpiece",
+            diet: "Non-Veg",
+            rating: "4.8",
+            price: "₹ 320 - ₹ 620",
+            image: "https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=900&q=80",
+            desc: "Spring chicken steeped for 18 hours in hung yogurt, Kashmiri deggi mirch, kasoori methi, and cold-pressed mustard oil, blistered over flaming clay coals.",
+            famousSpot: "Mama Chicken Mama Franky (Sadar Bazaar)",
+            timing: "Dinner (6 PM - 11 PM)"
+          }
+        ],
+        streetEateries: [
+          {
+            name: "Original Panchi Petha Store (Hari Parwat)",
+            badge: "GI Tag Certified Landmark (Est. 1950)",
+            hours: "8:30 AM - 10:30 PM",
+            specialty: "Kesar Petha, Angoori Petha, Chocolate & Sandalwood Petha",
+            vibe: "The gold standard of authentic Agra petha with gift packaging for world travelers",
+            image: "https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=800&q=80",
+            priceRange: "₹ 120 - ₹ 380 per kg"
+          },
+          {
+            name: "Deviram Sweets & Confectioners",
+            badge: "Heritage Breakfast Mecca (Est. 1920)",
+            hours: "7:00 AM - 10:00 PM",
+            specialty: "Steaming Bedmi Puri, Hing Aloo Curry, Saffron Rabdi & Lassi",
+            vibe: "Legendary morning queue of locals and travelers relishing piping hot breakfast",
+            image: "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80",
+            priceRange: "₹ 70 - ₹ 160 per person"
+          },
+          {
+            name: "Sadar Bazaar Chaat Gali (Food Street)",
+            badge: "Evening Gastronomy Promenade",
+            hours: "4:30 PM - 11:00 PM",
+            specialty: "Crisp Aloo Bhalla, Dahi Gujiya, Raj Kachori & Kulfi Falooda",
+            vibe: "Sizzling copper tawas, fragrant spices, and vibrant evening street energy",
+            image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80",
+            priceRange: "₹ 50 - ₹ 140 per person"
+          },
+          {
+            name: "Peshawri (ITC Mughal, Fatehabad Road)",
+            badge: "Royal North-West Frontier Dining",
+            hours: "12:30 PM - 3:00 PM, 7:00 PM - 11:30 PM",
+            specialty: "Dal Bukhara (18-hour slow simmered), Sikandari Raan & Naan",
+            vibe: "Atmospheric rustic brickwork, copper dinnerware & open tandoor kitchens",
+            image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
+            priceRange: "₹ 1800 - ₹ 3500 per person"
+          }
+        ],
+        craftsAndArts: [
+          {
+            title: "Parchin Kari (Pietra Dura White Marble Inlay)",
+            category: "Direct Taj Mahal Guild Lineage",
+            desc: "The direct lineage of master craftsmen who carved the Taj Mahal chisel Makrana white marble and delicately inlay semi-precious lapis lazuli, malachite, turquoise, jasper, and carnelian.",
+            souvenir: "Certified authentic Inlaid Marble Plates, Coasters & Table Art",
+            image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80"
+          },
+          {
+            title: "Zardozi Heavy Metallic Gold & Silver Embroidery",
+            category: "Mughal Imperial Royal Guild",
+            desc: "Three-dimensional metallic thread embroidery onto velvet and silk fabric, historically created for emperor robes, palanquins, and coronation tents.",
+            souvenir: "Handcrafted Zardozi cushion covers, clutch bags & wall art",
+            image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80"
+          },
+          {
+            title: "Heritage Agra Leather Guilds & Mojris",
+            category: "Traditional Cobblers & Tanners",
+            desc: "Generational leather craft producing handcrafted slip-on royal mojris (juttis), embossed travel baggage, and fine leather goods.",
+            souvenir: "Embroidered leather juttis & handmade leather travel bags",
+            image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80"
+          }
+        ],
+        festivalsAndTraditions: [
+          {
+            title: "Taj Mahotsav (Shilpgram Cultural Carnival)",
+            season: "Every February 18 - 27 (Annual 10-Day Festival)",
+            desc: "Celebrated right outside the Taj Mahal Eastern Gate featuring 400+ master artisans from across India, classical Kathak dance, soul-stirring Sufi Qawwalis, and folk processions.",
+            highlight: "India's premier celebration of artisanal craftsmanship & culinary traditions"
+          },
+          {
+            title: "Sharad Purnima Moonlight Taj Viewing",
+            season: "Autumn Full Moon Nights (5 Nights Monthly)",
+            desc: "Rare nocturnal access to watch the translucent white Makrana marble shimmer with an ethereal silvery glow under the luminous full moon.",
+            highlight: "Once-in-a-lifetime mystical visual experience"
+          },
+          {
+            title: "Sunset Yamuna Aarti at Mehtab Bagh",
+            season: "Daily Sunset across the Riverbank",
+            desc: "Brass lamp ritual along the quiet Yamuna riverbank framing the grand Taj silhouette in twilight amber reflections.",
+            highlight: "Spiritual peace away from daylight monument crowds"
+          }
+        ],
+        etiquette: [
+          "🕌 Remove footwear or slip on provided shoe covers before stepping onto the main white marble plinth of the Taj Mahal.",
+          "🏷️ Look for the official government GI-Tag Hologram when buying Agra Petha to ensure authentic winter melon preparation.",
+          "💎 When buying marble inlay art, shine a smartphone flashlight through the stone; genuine lapis lazuli and carnelian glow with translucent brilliance.",
+          "🌅 Arrive at the Taj Mahal gates at dawn (6:00 AM) to experience the morning mist and golden sunrise without midday tourist crowds."
         ]
       };
     }

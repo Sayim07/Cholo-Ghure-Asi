@@ -1310,12 +1310,52 @@ body.viewing-destination .cga-navbar {
   color: var(--cga-text-muted);
 }
 
-/* 1. Signature Dishes Bento Grid */
-.food-dishes-grid {
+/* 1. Signature Dishes Bento Grid & Legacy Fallback Grid */
+.food-dishes-grid,
+.culture-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   gap: 24px;
   margin-bottom: 36px;
+}
+
+.culture-card {
+  background: #ffffff;
+  border: 1px solid var(--cga-border-glass);
+  border-radius: var(--cga-radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(17, 28, 20, 0.04);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.culture-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(17, 28, 20, 0.1);
+  border-color: rgba(198, 146, 75, 0.4);
+}
+
+.culture-card-icon {
+  font-size: 32px;
+  margin-bottom: 6px;
+}
+
+.culture-card-title {
+  font-family: var(--cga-font-serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--cga-forest-contrast);
+  margin-bottom: 4px;
+}
+
+.culture-card-desc {
+  font-size: 13.5px;
+  color: var(--cga-text-secondary);
+  line-height: 1.55;
 }
 
 .food-dish-card {

@@ -9,18 +9,18 @@
    - 1-Click Route & Itinerary Integration
    ========================================================================== */
 
-import { tripStore } from "../state/TripStore.js?v=3.5";
-import { toast } from "./Toast.js?v=3.5";
-import { escapeHTML, formatCurrency } from "../utils/helpers.js";
-import { WikipediaService } from "../services/WikipediaService.js";
-import { fetchWeather } from "../services/WeatherService.js";
-import { CuisineCultureService } from "../services/CuisineCultureService.js";
+import { tripStore } from "../state/TripStore.js?v=4.2";
+import { toast } from "./Toast.js?v=4.2";
+import { escapeHTML, formatCurrency } from "../utils/helpers.js?v=4.2";
+import { WikipediaService } from "../services/WikipediaService.js?v=4.2";
+import { fetchWeather } from "../services/WeatherService.js?v=4.2";
+import { CuisineCultureService } from "../services/CuisineCultureService.js?v=4.2";
 import { 
   TripBudgetEngine, 
   ORIGIN_HUBS, 
   TRANSPORT_MODES, 
   STAY_TIERS 
-} from "../services/TripBudgetEngine.js";
+} from "../services/TripBudgetEngine.js?v=4.2";
 
 export class DestinationView {
   constructor(containerId = "view-destination") {
@@ -1000,15 +1000,6 @@ export class DestinationView {
         { name: `${name} Riverside Memorial & Gardens`, type: "Serene Landmark", duration: "1.5 Hours", estTicket: "₹ 40", desc: "Peaceful manicured sanctuary with classical marble sculptures, walking trails, and sunset promenades." }
       ];
     }
-  }
-
-  generateCulturalHighlights(dest) {
-    const name = dest?.shortName || dest?.name || "Destination";
-    return [
-      { icon: "🍵", title: `Signature Gastronomy of ${name}`, desc: "Savor indigenous culinary masteries, wood-fired local breads, fragrant regional curries, and organic tea traditions passed down through generations." },
-      { icon: "🏺", title: "Handicrafts & Artisanship", desc: "Discover hand-woven regional silks, intricate terracotta craft, and antique metalwork curated by traditional heritage guilds." },
-      { icon: "🎭", title: "Festivals & Evening Folklore", desc: "Immerse in festive celebrations, vibrant local melodies, evening riverside aartis, and seasonal harvest masquerades." }
-    ];
   }
 
   bindDOMEvents() {
