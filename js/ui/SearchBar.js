@@ -288,16 +288,16 @@ export class SearchBar {
     }
 
     try {
-      toast.info(`Opening gateway to ${place.shortName}...`);
       const weather = await fetchWeather(place.latitude, place.longitude);
 
       tripStore.setCurrentDestination(place);
       tripStore.emit("map:focus", [place.latitude, place.longitude], 13);
 
-      // Open Thematic Door Parting Portal Gate
-      if (this.portalGate) {
-        this.portalGate.openGate(place, weather);
-      }
+      const destName = place.shortName || place.name;
+      toast.info(`Exploring ${destName}...`);
+
+      // Seamlessly navigate to the Dedicated Destination Canvas
+      window.location.hash = `#/destination?place=${encodeURIComponent(destName)}`;
     } catch (e) {
       console.error(e);
       toast.error("Failed to load destination details.");

@@ -196,7 +196,10 @@ export class PortalGate {
               📍 ${dest.latitude.toFixed(4)}° N, ${dest.longitude.toFixed(4)}° E · ${escapeHTML(subtitle)}
             </div>
           </div>
-          <div style="display: flex; gap: 8px;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" id="btn-open-full-dest-page" class="dossier-nav-pill highlight" style="height: 38px; display: inline-flex; align-items: center; cursor: pointer; background: linear-gradient(135deg, var(--cga-gold-accent), #db9a44); color: #ffffff; border: none; font-weight: 700;">
+              ↗️ Full Page Experience (Pro)
+            </button>
             <button type="button" class="dossier-nav-pill highlight" data-target="section-wanna-trip" style="height: 38px; display: flex; align-items: center; cursor: pointer;">
               🎒 Plan Your Journey
             </button>
@@ -580,6 +583,16 @@ export class PortalGate {
           targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       });
+    });
+
+    // Open Dedicated Full-Page Destination View
+    document.getElementById("btn-open-full-dest-page")?.addEventListener("click", () => {
+      this.closeGate();
+      const dest = this.currentDestination;
+      if (dest) {
+        tripStore.setCurrentDestination(dest);
+        window.location.hash = `#/destination?place=${encodeURIComponent(dest.shortName || dest.name)}`;
+      }
     });
 
     // Planner Tab Switching

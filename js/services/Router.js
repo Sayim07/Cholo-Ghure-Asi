@@ -8,12 +8,13 @@
    ========================================================================== */
 
 export class AppRouter {
-  constructor({ voyagerGlobe, mapManager, itineraryView, savedTripsModal, portalGate }) {
+  constructor({ voyagerGlobe, mapManager, itineraryView, savedTripsModal, portalGate, destinationView }) {
     this.voyagerGlobe = voyagerGlobe;
     this.mapManager = mapManager;
     this.itineraryView = itineraryView;
     this.savedTripsModal = savedTripsModal;
     this.portalGate = portalGate;
+    this.destinationView = destinationView;
 
     this.navLinks = document.querySelectorAll(".cga-nav-link");
     this.previousRoute = "#/globe";
@@ -21,6 +22,7 @@ export class AppRouter {
     this.routes = {
       "#/globe": () => this.showGlobeView(),
       "#/map": () => this.showMapView(),
+      "#/destination": () => this.showDestinationView(),
       "#/itinerary": () => this.showItineraryView(),
       "#/saved": () => this.showSavedTripsView()
     };
@@ -71,6 +73,8 @@ export class AppRouter {
   showGlobeView() {
     this.previousRoute = "#/globe";
 
+    this.hideDestinationView();
+
     if (this.savedTripsModal && this.savedTripsModal.modal) {
       this.savedTripsModal.close();
     }
@@ -88,6 +92,8 @@ export class AppRouter {
   showMapView() {
     this.previousRoute = "#/map";
 
+    this.hideDestinationView();
+
     if (this.savedTripsModal && this.savedTripsModal.modal) {
       this.savedTripsModal.close();
     }
@@ -102,7 +108,63 @@ export class AppRouter {
     }
   }
 
+  showDestinationView() {
+    this.previousRoute = "#/destination";
+    document.body.classList.add("viewing-destination");
+
+    // Hide map-specific search container and HUD
+    const searchContainer = document.querySelector(".cga-search-container");
+    if (searchContainer) searchContainer.classList.add("hidden");
+    const hud = document.getElementById("telemetry-hud");
+    if (hud) hud.classList.add("hidden");
+    const mapRouteBar = document.getElementById("map-route-bar");
+    if (mapRouteBar) mapRouteBar.classList.add("hidden");
+
+    if (this.savedTripsModal && this.savedTripsModal.modal) {
+      this.savedTripsModal.close();
+    }
+    if (this.itineraryView && this.itineraryView.drawer) {
+      this.itineraryView.drawer.classList.add("collapsed");
+    }
+    if (this.voyagerGlobe && this.voyagerGlobe.section) {
+      this.voyagerGlobe.section.classList.add("hidden");
+    }
+    if (this.portalGate && this.portalGate.overlay) {
+      this.portalGate.closeGate();
+    }
+
+    const destSection = document.getElementById("view-destination");
+    if (destSection) {
+      destSection.classList.remove("hidden");
+    }
+
+    // Extract query parameter ?place=...
+    const fullHash = window.location.hash || "";
+    const placeMatch = fullHash.match(/[?&]place=([^&]+)/);
+    const placeQuery = placeMatch ? decodeURIComponent(placeMatch[1]) : null;
+
+    if (this.destinationView) {
+      this.destinationView.loadDestination(placeQuery);
+    }
+  }
+
+  hideDestinationView() {
+    document.body.classList.remove("viewing-destination");
+
+    const searchContainer = document.querySelector(".cga-search-container");
+    if (searchContainer) searchContainer.classList.remove("hidden");
+    const hud = document.getElementById("telemetry-hud");
+    if (hud) hud.classList.remove("hidden");
+
+    const destSection = document.getElementById("view-destination");
+    if (destSection) {
+      destSection.classList.add("hidden");
+    }
+  }
+
   showItineraryView() {
+    this.hideDestinationView();
+
     const hud = document.getElementById("telemetry-hud");
     if (hud) hud.classList.remove("hidden");
 
@@ -121,6 +183,8 @@ export class AppRouter {
   }
 
   showSavedTripsView() {
+    this.hideDestinationView();
+
     if (this.itineraryView && this.itineraryView.drawer) {
       this.itineraryView.drawer.classList.add("collapsed");
     }

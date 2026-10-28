@@ -3,18 +3,19 @@
    Integrates VoyagerGlobe, SeasonEngine, PortalGate, MapManager, and Itinerary
    ========================================================================== */
 
-import { APP_CONSTANTS } from "./config/constants.js?v=3.5";
-import { tripStore } from "./state/TripStore.js?v=3.5";
-import { SeasonEngine } from "./ui/SeasonEngine.js?v=3.5";
-import { VoyagerGlobe } from "./scenes/VoyagerGlobe.js?v=3.5";
-import { PortalGate } from "./ui/PortalGate.js?v=3.5";
-import { MapManager } from "./ui/MapManager.js?v=3.5";
-import { SearchBar } from "./ui/SearchBar.js?v=3.5";
-import { ItineraryView } from "./ui/ItineraryView.js?v=3.5";
-import { SavedTripsModal } from "./ui/SavedTripsModal.js?v=3.5";
-import { AppRouter } from "./services/Router.js?v=3.5";
-import { FirebaseService } from "./services/FirebaseService.js?v=3.5";
-import { toast } from "./ui/Toast.js?v=3.5";
+import { APP_CONSTANTS } from "./config/constants.js?v=4.1";
+import { tripStore } from "./state/TripStore.js?v=4.1";
+import { SeasonEngine } from "./ui/SeasonEngine.js?v=4.1";
+import { VoyagerGlobe } from "./scenes/VoyagerGlobe.js?v=4.1";
+import { PortalGate } from "./ui/PortalGate.js?v=4.1";
+import { MapManager } from "./ui/MapManager.js?v=4.1";
+import { SearchBar } from "./ui/SearchBar.js?v=4.1";
+import { ItineraryView } from "./ui/ItineraryView.js?v=4.1";
+import { SavedTripsModal } from "./ui/SavedTripsModal.js?v=4.1";
+import { AppRouter } from "./services/Router.js?v=4.1";
+import { DestinationView } from "./ui/DestinationView.js?v=4.1";
+import { FirebaseService } from "./services/FirebaseService.js?v=4.1";
+import { toast } from "./ui/Toast.js?v=4.1";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log(`%c${APP_CONSTANTS.APP_NAME} %cInitialized`, "color: #c6924b; font-weight: 800; font-size: 16px;", "color: #0284c7;");
@@ -25,13 +26,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // 2. Initialize ERA Residence Style Portal Gate Reveal
   const portalGate = new PortalGate();
 
-  // 3. Initialize 3D Voyager Globe (Continent & Country Onboarding)
+  // 3. Initialize Dedicated Destination Experience View (shadcn & 21st.dev inspired)
+  const destinationView = new DestinationView("view-destination");
+  window.destinationViewInstance = destinationView;
+
+  // 4. Initialize 3D Voyager Globe (Continent & Country Onboarding)
   const voyagerGlobe = new VoyagerGlobe("globe-canvas-container");
 
-  // 4. Initialize Interactive Leaflet Map
+  // 5. Initialize Interactive Leaflet Map
   const mapManager = new MapManager("map-container");
 
-  // 5. Initialize Search Bar with Geocoding
+  // 6. Initialize Search Bar with Geocoding
   const searchBar = new SearchBar(
     "#input-search",
     "#btn-search",
@@ -39,10 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
     portalGate
   );
 
-  // 6. Initialize Itinerary & Multi-Day Manager
+  // 7. Initialize Itinerary & Multi-Day Manager
   const itineraryView = new ItineraryView("itinerary-drawer");
 
-  // 7. Initialize Saved Trips Modal Drawer
+  // 8. Initialize Saved Trips Modal Drawer
   const savedTripsModal = new SavedTripsModal("#btn-saved-trips");
 
   // 9. Initialize SPA Section Router (Deep Linking for All Sections)
@@ -51,7 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
     mapManager,
     itineraryView,
     savedTripsModal,
-    portalGate
+    portalGate,
+    destinationView
   });
   router.init();
   window.appRouter = router;

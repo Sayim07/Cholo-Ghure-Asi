@@ -152,9 +152,9 @@ export class MapManager {
               this.markersLayer.removeLayer(this.tempExploreMarker);
               this.tempExploreMarker = null;
             }
-            if (window.portalGateInstance) {
-              window.portalGateInstance.openGate(placeInfo, weather);
-            }
+            tripStore.setCurrentDestination(placeInfo);
+            const targetName = placeInfo.shortName || placeInfo.name;
+            window.location.hash = `#/destination?place=${encodeURIComponent(targetName)}`;
           });
         }
 
@@ -263,9 +263,8 @@ export class MapManager {
         if (viewBtn) {
           viewBtn.addEventListener("click", () => {
             marker.closePopup();
-            if (window.portalGateInstance) {
-              window.portalGateInstance.openGate(stop, stop.weatherSnapshot);
-            }
+            tripStore.setCurrentDestination(stop);
+            window.location.hash = `#/destination?place=${encodeURIComponent(stop.name)}`;
           });
         }
 
