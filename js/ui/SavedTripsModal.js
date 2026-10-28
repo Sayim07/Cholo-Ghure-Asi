@@ -20,9 +20,6 @@ export class SavedTripsModal {
   }
 
   async open() {
-    toast.info("Retrieving trips from cloud archive...");
-    const trips = await FirebaseService.getSavedTrips();
-
     this.modal = document.createElement("div");
     this.modal.className = "cga-modal-backdrop";
     this.modal.style.cssText = "position: fixed; inset: 0; background: rgba(17, 28, 20, 0.7); backdrop-filter: blur(12px); z-index: 350; display: flex; align-items: center; justify-content: center;";
@@ -33,20 +30,24 @@ export class SavedTripsModal {
         <!-- Header -->
         <div style="padding: 20px 24px; border-bottom: 1px solid var(--cga-border-subtle); display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <h3 style="font-family: var(--cga-font-serif); font-size: 20px; font-weight: 700; color: var(--cga-forest-contrast);">Cloud Saved Trips</h3>
-            <span style="font-size: 12px; color: var(--cga-text-muted);">Travel Plans & Firestore Cloud Archive</span>
+            <h3 style="font-family: var(--cga-font-serif); font-size: 20px; font-weight: 700; color: var(--cga-forest-contrast);">Your Saved Trips</h3>
+            <span style="font-size: 12px; color: var(--cga-text-muted);">Personalized itineraries & travel plans</span>
           </div>
           <button id="close-saved-trips-modal" style="font-size: 18px; color: var(--cga-text-muted); padding: 4px; cursor: pointer;">✕</button>
         </div>
 
-        <!-- Trips List -->
-        <div id="saved-trips-body" style="padding: 16px 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px;"></div>
+        <!-- Trips List Container with Skeleton placeholder -->
+        <div id="saved-trips-body" style="padding: 16px 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px;">
+          <div class="cga-skeleton" style="height: 68px; border-radius: var(--cga-radius-md);"></div>
+          <div class="cga-skeleton" style="height: 68px; border-radius: var(--cga-radius-md);"></div>
+          <div class="cga-skeleton" style="height: 68px; border-radius: var(--cga-radius-md);"></div>
+        </div>
 
         <!-- Footer -->
         <div style="padding: 16px 24px; border-top: 1px solid var(--cga-border-subtle); background: var(--cga-bg-subtle); display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-size: 12px; color: var(--cga-text-muted);">${trips.length} Saved Trip${trips.length === 1 ? "" : "s"}</span>
+          <span id="saved-trips-count-label" style="font-size: 12px; color: var(--cga-text-muted);">Loading trips...</span>
           <button id="btn-start-new-trip" class="cga-btn-pill cga-btn-primary" style="font-size: 12px; height: 36px;">
-            <span>➕ Start Fresh Trip</span>
+            <span>➕ Start New Trip</span>
           </button>
         </div>
 
@@ -54,8 +55,6 @@ export class SavedTripsModal {
     `;
 
     document.body.appendChild(this.modal);
-
-    this.renderTripsList(trips);
 
     // Close button
     this.modal.querySelector("#close-saved-trips-modal").addEventListener("click", () => this.close());
@@ -67,7 +66,7 @@ export class SavedTripsModal {
     this.modal.querySelector("#btn-start-new-trip").addEventListener("click", () => {
       tripStore.state.activeTrip = {
         id: "cga_" + Math.random().toString(36).substr(2, 9),
-        title: "New Wanderlust Expedition",
+        title: "New Travel Journey",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         daysCount: 2,
@@ -77,9 +76,20 @@ export class SavedTripsModal {
         stops: []
       };
       tripStore.persistTrip();
-      toast.success("Initialized a fresh trip!");
+      toast.success("Started a new travel plan!");
       this.close();
     });
+
+    try {
+      const trips = await FirebaseService.getSavedTrips();
+      const countLabel = this.modal?.querySelector("#saved-trips-count-label");
+      if (countLabel) {
+        countLabel.textContent = `${trips.length} Saved Trip${trips.length === 1 ? "" : "s"}`;
+      }
+      this.renderTripsList(trips);
+    } catch (err) {
+      this.renderTripsList([]);
+    }
   }
 
   renderTripsList(trips) {
@@ -91,7 +101,7 @@ export class SavedTripsModal {
         <div style="text-align: center; padding: 40px 10px; color: var(--cga-text-muted);">
           <div style="font-size: 32px; margin-bottom: 8px;">📁</div>
           <div style="font-weight: 600; color: var(--cga-text-primary); margin-bottom: 4px;">No saved trips found</div>
-          <p style="font-size: 12px;">Build an itinerary on the map and click 'Sync to Cloud' to save it here!</p>
+          <p style="font-size: 12px;">Build an itinerary on the map and click 'Save to My Trips' to store it here!</p>
         </div>
       `;
       return;

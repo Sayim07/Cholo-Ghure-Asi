@@ -141,16 +141,49 @@ export class DestinationView {
 
   renderSkeleton() {
     this.container.innerHTML = `
-      <div class="dest-skeleton-container">
-        <div class="dest-skeleton-hero animate-pulse"></div>
-        <div class="dest-skeleton-content">
-          <div class="dest-skeleton-line h-8 w-1/3"></div>
-          <div class="dest-skeleton-line h-4 w-2/3"></div>
-          <div class="dest-skeleton-grid">
-            <div class="dest-skeleton-card"></div>
-            <div class="dest-skeleton-card"></div>
-            <div class="dest-skeleton-card"></div>
+      <div class="dest-skeleton-wrap">
+        <!-- Top Navigation Bar Skeleton -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div class="cga-skeleton" style="width: 140px; height: 38px; border-radius: 999px;"></div>
+          <div style="display: flex; gap: 10px;">
+            <div class="cga-skeleton" style="width: 110px; height: 38px; border-radius: 999px;"></div>
+            <div class="cga-skeleton" style="width: 140px; height: 38px; border-radius: 999px;"></div>
           </div>
+        </div>
+
+        <!-- Hero Skeleton with Shimmer -->
+        <div class="dest-skeleton-hero cga-skeleton">
+          <div class="cga-skeleton dark dest-skeleton-hero-badge"></div>
+          <div class="cga-skeleton dark dest-skeleton-hero-title"></div>
+          <div class="cga-skeleton dark dest-skeleton-hero-subtitle"></div>
+          <div class="dest-skeleton-hero-pills">
+            <div class="cga-skeleton dark dest-skeleton-hero-pill"></div>
+            <div class="cga-skeleton dark dest-skeleton-hero-pill"></div>
+            <div class="cga-skeleton dark dest-skeleton-hero-pill"></div>
+          </div>
+        </div>
+
+        <!-- Sticky Tabs Bar Skeleton -->
+        <div class="dest-skeleton-tabs-strip">
+          <div class="cga-skeleton dest-skeleton-tab-pill"></div>
+          <div class="cga-skeleton dest-skeleton-tab-pill"></div>
+          <div class="cga-skeleton dest-skeleton-tab-pill"></div>
+          <div class="cga-skeleton dest-skeleton-tab-pill"></div>
+          <div class="cga-skeleton dest-skeleton-tab-pill"></div>
+          <div class="cga-skeleton dest-skeleton-tab-pill"></div>
+        </div>
+
+        <!-- Main Narrative & Overview Skeleton -->
+        <div class="dest-skeleton-grid">
+          <div class="cga-skeleton dest-skeleton-card-large"></div>
+          <div class="cga-skeleton dest-skeleton-card-small"></div>
+        </div>
+
+        <!-- Bento Grid Skeleton -->
+        <div class="dest-skeleton-bento">
+          <div class="cga-skeleton dest-skeleton-bento-card"></div>
+          <div class="cga-skeleton dest-skeleton-bento-card"></div>
+          <div class="cga-skeleton dest-skeleton-bento-card"></div>
         </div>
       </div>
     `;
@@ -324,34 +357,34 @@ export class DestinationView {
             </div>
           </div>
 
-          <!-- Quick Telemetry & Logistics Card -->
+          <!-- Key Travel Details & Overview Card -->
           <div class="dest-card">
             <div class="dest-card-header">
-              <span class="dest-card-tag">Travel Logistics</span>
-              <h3 class="dest-card-title">Journey Essentials</h3>
+              <span class="dest-card-tag">Travel Essentials</span>
+              <h3 class="dest-card-title">Good to Know</h3>
             </div>
             <div class="dest-quick-stats-list">
               <div class="stat-row">
-                <span class="stat-name">🧭 Primary Hub</span>
+                <span class="stat-name">🧭 Starting From</span>
                 <span class="stat-val">${this.selectedOrigin.name}</span>
               </div>
               <div class="stat-row">
-                <span class="stat-name">🚗 Transit Distance</span>
+                <span class="stat-name">🚗 Driving Distance</span>
                 <span class="stat-val">${this.customPlan?.distanceKm || "Calculated on route"} km</span>
               </div>
               <div class="stat-row">
-                <span class="stat-name">⏱️ Travel Duration</span>
+                <span class="stat-name">⏱️ Travel Time</span>
                 <span class="stat-val">${this.customPlan?.durationHours || 4} Hours</span>
               </div>
               <div class="stat-row">
-                <span class="stat-name">🛡️ Safe Travel Score</span>
-                <span class="stat-val text-green">9.4 / 10 Verified</span>
+                <span class="stat-name">🛡️ Traveler Safety</span>
+                <span class="stat-val text-green">9.4 / 10 Excellent</span>
               </div>
             </div>
 
             <div class="quick-action-cta">
               <button id="cta-tab-goto-budget" class="btn-block-gold">
-                Calculate Trip Cost &rarr;
+                Plan Trip Budget &rarr;
               </button>
             </div>
           </div>
@@ -432,10 +465,10 @@ export class DestinationView {
         <!-- Mode Switcher Tabs (shadcn Segmented Control) -->
         <div class="budget-mode-switch-dock">
           <button class="budget-mode-btn ${this.budgetMode === 'calculator' ? 'active' : ''}" data-budget-mode="calculator">
-            ⚙️ Custom Expense Calculator
+            🧮 Estimate My Trip Cost
           </button>
           <button class="budget-mode-btn ${this.budgetMode === 'reverse' ? 'active' : ''}" data-budget-mode="reverse">
-            💡 Reverse Budget Matcher ("I Have A Budget: Plan For Me")
+            💡 Plan Around My Budget ("I Have a Budget")
           </button>
         </div>
 
@@ -448,7 +481,7 @@ export class DestinationView {
 
   renderCustomCalculatorSection(displayName, plan, formatMoney) {
     return `
-      <!-- Tier Selection (Backpacker, Comfort, Luxury) -->
+      <!-- Travel Style Selection (Backpacker, Comfort, Luxury) -->
       <div class="budget-tiers-container">
         <div class="tier-card ${this.budgetTier === 'backpacker' ? 'active' : ''}" data-tier="backpacker">
           <div class="tier-icon">🎒</div>
@@ -476,11 +509,11 @@ export class DestinationView {
       <div class="dest-budget-layout">
         <!-- Controls Panel -->
         <div class="budget-controls-card">
-          <h3 class="controls-title">⚙️ Configure Trip Parameters</h3>
+          <h3 class="controls-title">✨ Customize Your Trip</h3>
 
-          <!-- Departure Hub -->
+          <!-- Departure City -->
           <div class="control-field">
-            <label class="control-label">Departure Origin Hub</label>
+            <label class="control-label">Departure City</label>
             <select id="budget-origin-select" class="cga-select">
               ${ORIGIN_HUBS.map(hub => `
                 <option value="${hub.id}" ${hub.id === this.selectedOrigin.id ? 'selected' : ''}>
@@ -565,7 +598,7 @@ export class DestinationView {
           </div>
 
           <button id="btn-budget-save-to-trip" class="btn-save-plan-primary">
-            💾 Lock Budget into Active Itinerary
+            💾 Save Budget to My Trip Plan
           </button>
         </div>
       </div>
@@ -601,7 +634,7 @@ export class DestinationView {
             </div>
 
             <div>
-              <label class="control-label">Departure Hub</label>
+              <label class="control-label">Departure City</label>
               <select id="budget-origin-select-reverse" class="cga-select">
                 ${ORIGIN_HUBS.map(hub => `
                   <option value="${hub.id}" ${hub.id === this.selectedOrigin.id ? 'selected' : ''}>
@@ -658,7 +691,7 @@ export class DestinationView {
 
                 <div>
                   <button class="btn-select-package" data-pkg-id="${pkg.id}" data-pkg-days="${pkg.days}" data-pkg-transport="${pkg.transportMode}" data-pkg-stay="${pkg.stayTier}" data-pkg-cost="${pkg.plan.breakdown.total}" data-pkg-title="${escapeHTML(pkg.title)}">
-                    ${isFeatured ? '⭐ Select Recommended Plan & Lock Route' : '🚀 Select Package & Lock Route'}
+                    ${isFeatured ? '⭐ Choose Recommended Plan & Add to Trip' : '🚀 Choose This Plan & Add to Trip'}
                   </button>
                 </div>
               </div>
@@ -685,8 +718,8 @@ export class DestinationView {
       <div class="tab-pane-fade">
         <div class="tab-header-strip">
           <div>
-            <h2 class="tab-heading">Gastronomic Tapestry & Cultural Soul</h2>
-            <p class="tab-subheading">Legendary signature dishes, historic food corridors, generational crafts & living folklore</p>
+            <h2 class="tab-heading">Local Food Flavors & Living Culture</h2>
+            <p class="tab-subheading">Legendary signature dishes, famous food spots, traditional crafts & folklore</p>
           </div>
         </div>
 
@@ -862,8 +895,22 @@ export class DestinationView {
   renderGalleryTab() {
     if (!this.galleryImages || this.galleryImages.length === 0) {
       return `
-        <div class="tab-pane-fade empty-gallery">
-          <p>📷 Exploring high-resolution photography archives for this location...</p>
+        <div class="tab-pane-fade">
+          <div class="tab-header-strip">
+            <div>
+              <h2 class="tab-heading">Curated Scenic Photography Gallery</h2>
+              <p class="tab-subheading">Loading high-resolution photos captured by travelers...</p>
+            </div>
+            <span class="dest-badge-count">Finding Photos...</span>
+          </div>
+          <div class="dest-photo-gallery-grid">
+            <div class="cga-skeleton" style="height: 220px; border-radius: 14px;"></div>
+            <div class="cga-skeleton" style="height: 220px; border-radius: 14px;"></div>
+            <div class="cga-skeleton" style="height: 220px; border-radius: 14px;"></div>
+            <div class="cga-skeleton" style="height: 220px; border-radius: 14px;"></div>
+            <div class="cga-skeleton" style="height: 220px; border-radius: 14px;"></div>
+            <div class="cga-skeleton" style="height: 220px; border-radius: 14px;"></div>
+          </div>
         </div>
       `;
     }
@@ -899,14 +946,14 @@ export class DestinationView {
       <div class="tab-pane-fade">
         <div class="tab-header-strip">
           <div>
-            <h2 class="tab-heading">Real-Time Climate & Seasonal Recommendations</h2>
-            <p class="tab-subheading">Live satellite readings and optimal visiting calendar</p>
+            <h2 class="tab-heading">Real-Time Climate & Travel Conditions</h2>
+            <p class="tab-subheading">Live weather readings and best times to visit</p>
           </div>
         </div>
 
         <div class="weather-telemetry-grid">
           <div class="weather-card primary">
-            <span class="w-label">Live Conditions</span>
+            <span class="w-label">Current Weather</span>
             <div class="w-main-stat">
               <span class="w-icon">${weather.icon}</span>
               <span class="w-temp">${weather.temperature}°C</span>
@@ -917,19 +964,19 @@ export class DestinationView {
           <div class="weather-card">
             <span class="w-label">Humidity</span>
             <span class="w-val">💧 ${weather.humidity || 55}%</span>
-            <span class="w-sub">Comfortable air density</span>
+            <span class="w-sub">Pleasant and comfortable</span>
           </div>
 
           <div class="weather-card">
-            <span class="w-label">Wind Velocity</span>
+            <span class="w-label">Wind Speed</span>
             <span class="w-val">💨 ${weather.windKmh || 12} km/h</span>
             <span class="w-sub">Gentle breeze</span>
           </div>
 
           <div class="weather-card">
-            <span class="w-label">Atmospheric Advisory</span>
-            <span class="w-val text-gold">Optimal for Travel</span>
-            <span class="w-sub">Clear visibility across vistas</span>
+            <span class="w-label">Travel Weather Tip</span>
+            <span class="w-val text-gold">Great for Travel</span>
+            <span class="w-sub">Clear skies and great visibility</span>
           </div>
         </div>
       </div>
@@ -1196,7 +1243,7 @@ export class DestinationView {
         tripStore.addStop(this.currentDestination, this.currentWeather);
         tripStore.state.activeTrip.totalBudget = this.customPlan.totalCost;
         tripStore.persistTrip();
-        toast.success(`Locked ₹${this.customPlan.totalCost.toLocaleString('en-IN')} budget into Itinerary! ✈️`);
+        toast.success(`Saved ₹${this.customPlan.totalCost.toLocaleString('en-IN')} budget into your Trip Plan! ✈️`);
       }
     });
 

@@ -135,4 +135,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (sheetExportBtn) sheetExportBtn.addEventListener("click", handleExport);
   if (exportBtn) exportBtn.addEventListener("click", handleExport);
+
+  // 12. Dismiss Global App Preloader Screen with silky fade
+  const appLoader = document.getElementById("cga-app-loader");
+  if (appLoader) {
+    const dismissLoader = () => {
+      appLoader.classList.add("fade-out");
+      setTimeout(() => {
+        if (appLoader.parentNode) appLoader.parentNode.removeChild(appLoader);
+      }, 500);
+    };
+
+    if (document.readyState === "complete") {
+      setTimeout(dismissLoader, 650);
+    } else {
+      window.addEventListener("load", () => setTimeout(dismissLoader, 650));
+      // Safe fallback in case window load already triggered
+      setTimeout(dismissLoader, 1400);
+    }
+  }
 });

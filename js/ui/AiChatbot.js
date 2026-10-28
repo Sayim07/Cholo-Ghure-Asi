@@ -33,7 +33,7 @@ export class AiChatbot {
 
     // Initial greeting (do not record in API chat history)
     this.addBotMessage(
-      "Hello wanderer! ✈️ I'm your **Cholo AI Concierge**.\n\nAsk me anything about your destinations, historical secrets, realistic budgets, or best local foods! You can also click the ⚙️ icon to plug in your Groq or NVIDIA API key.",
+      "Hello wanderer! ✈️ I'm your **Cholo AI Travel Assistant**.\n\nAsk me anything about your destinations, travel stories, realistic budgets, or best local foods! You can also click the ⚙️ icon to plug in your Groq or NVIDIA key if you'd like to use your own AI model.",
       false
     );
   }
@@ -348,7 +348,7 @@ export class AiChatbot {
     trigger.type = "button";
     trigger.innerHTML = `
       <div class="cga-chatbot-avatar">✨</div>
-      <span>Cholo AI Concierge</span>
+      <span>AI Travel Assistant</span>
     `;
     document.body.appendChild(trigger);
     this.trigger = trigger;
@@ -362,7 +362,7 @@ export class AiChatbot {
         <div class="cga-chat-header-title">
           <div class="cga-chatbot-avatar">✨</div>
           <div>
-            <h3>Cholo AI Concierge</h3>
+            <h3>Cholo AI Travel Assistant</h3>
             <span>● Ready</span>
           </div>
         </div>
@@ -608,11 +608,18 @@ export class AiChatbot {
     const currentDest = tripStore.state.currentDestination || tripStore.state.activeTrip?.stops?.[0] || null;
     const destName = currentDest?.shortName || currentDest?.name || "Global Explorer";
 
-    // Show typing placeholder
+    // Show luxury 3-dot bouncing typing indicator
     const list = document.getElementById("cga-chat-messages");
     const typingBubble = document.createElement("div");
     typingBubble.className = "cga-chat-bubble bot";
-    typingBubble.innerHTML = "<em>Analyzing destination intelligence...</em>";
+    typingBubble.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 12.5px; color: rgba(255,255,255,0.85);">Thinking of ideas for you...</span>
+        <div class="chat-typing-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    `;
     list.appendChild(typingBubble);
     list.scrollTop = list.scrollHeight;
 

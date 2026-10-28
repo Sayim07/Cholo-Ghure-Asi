@@ -134,9 +134,32 @@ export class SearchBar {
     if (!this.resultsContainer) return;
     this.resultsContainer.classList.add("active");
     this.resultsContainer.innerHTML = `
-      <div style="padding: 12px 16px; font-size: 12.5px; color: var(--cga-text-muted); display: flex; align-items: center; gap: 10px;">
-        <span style="display: inline-block; animation: pulse 0.8s infinite alternate;">🧭</span>
-        <span>Searching global destinations for "<strong>${escapeHTML(query)}</strong>"...</span>
+      <div class="cga-search-skeleton-wrap">
+        <div style="padding: 10px 18px 8px 18px; font-size: 12px; color: var(--cga-text-muted); display: flex; align-items: center; gap: 8px;">
+          <span style="display: inline-block; animation: cga-pulse-subtle 1s infinite alternate;">🔍</span>
+          <span>Looking up destinations matching "<strong>${escapeHTML(query)}</strong>"...</span>
+        </div>
+        <div class="cga-search-skeleton-item">
+          <div class="cga-skeleton cga-search-skeleton-circle"></div>
+          <div class="cga-search-skeleton-lines">
+            <div class="cga-skeleton cga-search-skeleton-line" style="width: 55%;"></div>
+            <div class="cga-skeleton cga-search-skeleton-line" style="width: 35%; opacity: 0.7;"></div>
+          </div>
+        </div>
+        <div class="cga-search-skeleton-item">
+          <div class="cga-skeleton cga-search-skeleton-circle"></div>
+          <div class="cga-search-skeleton-lines">
+            <div class="cga-skeleton cga-search-skeleton-line" style="width: 68%;"></div>
+            <div class="cga-skeleton cga-search-skeleton-line" style="width: 42%; opacity: 0.7;"></div>
+          </div>
+        </div>
+        <div class="cga-search-skeleton-item" style="border-bottom: none;">
+          <div class="cga-skeleton cga-search-skeleton-circle"></div>
+          <div class="cga-search-skeleton-lines">
+            <div class="cga-skeleton cga-search-skeleton-line" style="width: 50%;"></div>
+            <div class="cga-skeleton cga-search-skeleton-line" style="width: 30%; opacity: 0.7;"></div>
+          </div>
+        </div>
       </div>
     `;
   }

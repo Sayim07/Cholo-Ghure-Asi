@@ -29,6 +29,20 @@
 </head>
 <body class="season-summer">
 
+  <!-- Global Luxury App Preloader / Splash Screen (shadcn & 21st.dev style) -->
+  <div id="cga-app-loader">
+    <div class="cga-loader-logo-wrap">
+      <div class="cga-loader-ripple"></div>
+      <div class="cga-loader-ripple delay"></div>
+      <div class="cga-loader-icon">✈️</div>
+    </div>
+    <h2 class="cga-loader-brand">Cholo Ghure Asssiii</h2>
+    <p class="cga-loader-sub">Preparing your global travel canvas...</p>
+    <div class="cga-loader-bar-wrap">
+      <div class="cga-loader-bar-fill"></div>
+    </div>
+  </div>
+
   <!-- Atmospheric Ambient Seasonal Filter Overlay -->
   <div class="season-ambient-overlay season-summer"></div>
 
@@ -97,12 +111,12 @@
           <span class="cga-sheet-badge">3D</span>
         </a>
 
-        <a href="#/map" id="drawer-nav-map" class="cga-sheet-item cga-nav-link" title="Interactive Map Canvas">
+        <a href="#/map" id="drawer-nav-map" class="cga-sheet-item cga-nav-link" title="Interactive Travel Map">
           <div class="cga-sheet-item-left">
             <div class="cga-sheet-item-icon">🗺️</div>
             <div class="cga-sheet-item-text">
-              <span class="cga-sheet-item-label">Map Canvas</span>
-              <span class="cga-sheet-item-desc">Waypoints & Route Planning</span>
+              <span class="cga-sheet-item-label">Travel Map</span>
+              <span class="cga-sheet-item-desc">Places & Route Planning</span>
             </div>
           </div>
           <span class="cga-sheet-badge">Live</span>
@@ -112,22 +126,22 @@
           <div class="cga-sheet-item-left">
             <div class="cga-sheet-item-icon">📋</div>
             <div class="cga-sheet-item-text">
-              <span class="cga-sheet-item-label">Itinerary</span>
+              <span class="cga-sheet-item-label">Trip Itinerary</span>
               <span class="cga-sheet-item-desc">Schedule, Notes & Real Costs</span>
             </div>
           </div>
           <span class="cga-sheet-badge">Planner</span>
         </a>
 
-        <a href="#/destination" id="drawer-nav-destination" class="cga-sheet-item cga-nav-link" title="Full Destination Dossier">
+        <a href="#/destination" id="drawer-nav-destination" class="cga-sheet-item cga-nav-link" title="Complete Destination Guide">
           <div class="cga-sheet-item-left">
             <div class="cga-sheet-item-icon">🏛️</div>
             <div class="cga-sheet-item-text">
-              <span class="cga-sheet-item-label">Destination Dossier</span>
+              <span class="cga-sheet-item-label">Destination Guide</span>
               <span class="cga-sheet-item-desc">In-depth Guide & Smart Budget</span>
             </div>
           </div>
-          <span class="cga-sheet-badge">Pro</span>
+          <span class="cga-sheet-badge">Featured</span>
         </a>
 
         <a href="#/saved" id="drawer-nav-saved" class="cga-sheet-item cga-nav-link" title="Saved Trips">
@@ -135,10 +149,10 @@
             <div class="cga-sheet-item-icon">📁</div>
             <div class="cga-sheet-item-text">
               <span class="cga-sheet-item-label">Saved Trips</span>
-              <span class="cga-sheet-item-desc">Cloud Archive & Journeys</span>
+              <span class="cga-sheet-item-desc">Your Saved Journeys</span>
             </div>
           </div>
-          <span class="cga-sheet-badge">Cloud</span>
+          <span class="cga-sheet-badge">Saved</span>
         </a>
       </nav>
 
@@ -253,7 +267,7 @@
             <span id="itinerary-budget-total" class="budget-val">₹ 0</span>
           </div>
           <button id="btn-save-cloud-trip" class="save-cloud-btn">
-            <span>☁️ Sync to Cloud</span>
+            <span>☁️ Save to My Trips</span>
           </button>
         </div>
       </aside>
@@ -283,7 +297,7 @@
 
       <!-- Revealed Destination Card Content -->
       <div id="portal-content" class="cga-portal-content">
-        <button id="portal-close-btn" class="cga-portal-close" title="Close Destination Gate">✕</button>
+        <button id="portal-close-btn" class="cga-portal-close" title="Close Travel Guide">✕</button>
         <div id="portal-destination-details"></div>
       </div>
     </div>

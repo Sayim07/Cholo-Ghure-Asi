@@ -125,8 +125,8 @@ export class ItineraryView {
             <button class="stop-budget-pill btn-edit-budget" title="Edit Budget for this stop" style="font-size: 11px; font-weight: 700; color: var(--cga-text-primary); background: var(--cga-bg-subtle); border: 1px solid var(--cga-border-subtle); padding: 2px 8px; border-radius: var(--cga-radius-full); cursor: pointer;">
               💰 ${formatCurrency((stop.budget?.stay || 0) + (stop.budget?.food || 0) + (stop.budget?.transport || 0) + (stop.budget?.tickets || 0))}
             </button>
-            <span style="font-size: 11px; color: var(--cga-text-muted); font-family: var(--cga-font-mono);">
-              ${stop.latitude.toFixed(2)}°, ${stop.longitude.toFixed(2)}°
+            <span style="font-size: 11px; color: var(--cga-text-muted);">
+              📍 Stop #${index + 1}
             </span>
           </div>
         </div>
@@ -231,18 +231,18 @@ export class ItineraryView {
     }
 
     const originalText = this.saveCloudBtn.innerHTML;
-    this.saveCloudBtn.innerHTML = "<span>Saving...</span>";
+    this.saveCloudBtn.innerHTML = "<span style='display:inline-flex; align-items:center; gap:6px;'><span style='animation: cga-pulse-subtle 1s infinite;'>☁️</span> Saving...</span>";
     this.saveCloudBtn.disabled = true;
 
     try {
       const res = await FirebaseService.saveTrip(trip);
       if (res.mode === "cloud") {
-        toast.success("Trip synced to Firebase Firestore cloud! ☁️");
+        toast.success("Trip saved safely to your Cloud Account! ☁️");
       } else {
-        toast.success("Trip saved securely to local travel archive! 💾");
+        toast.success("Trip saved securely to your personal archive! 💾");
       }
     } catch (e) {
-      toast.error("Could not save trip. Saved locally.");
+      toast.error("Could not save to cloud. Saved locally.");
     } finally {
       this.saveCloudBtn.innerHTML = originalText;
       this.saveCloudBtn.disabled = false;

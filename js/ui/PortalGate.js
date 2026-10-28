@@ -130,14 +130,45 @@ export class PortalGate {
     if (!container) return;
 
     container.innerHTML = `
-      <div style="padding: 60px 20px; text-align: center; color: var(--cga-text-secondary);">
-        <div style="font-size: 38px; animation: spin 1.5s linear infinite;">✈️</div>
-        <h3 style="font-family: var(--cga-font-serif); font-size: 22px; color: var(--cga-forest-contrast); margin: 14px 0 6px 0;">
-          Connecting to Global Intelligence Archives for ${escapeHTML(dest.shortName || dest.name)}...
-        </h3>
-        <p style="font-size: 13px; color: var(--cga-text-muted);">
-          Fetching authentic photography, historical facts, and live weather telemetry...
-        </p>
+      <div style="padding: 24px;">
+        <!-- Modal Loading Header -->
+        <div style="text-align: center; margin-bottom: 24px;">
+          <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--cga-gold-accent); margin-bottom: 6px;">
+            <span style="display: inline-block; animation: cga-pulse-subtle 1.2s infinite ease-in-out;">✨</span>
+            <span>Opening Travel Guide</span>
+          </div>
+          <h3 style="font-family: var(--cga-font-serif); font-size: 24px; font-weight: 700; color: var(--cga-forest-contrast); margin-bottom: 4px;">
+            Discovering ${escapeHTML(dest.shortName || dest.name)}
+          </h3>
+          <p style="font-size: 13px; color: var(--cga-text-muted);">
+            Gathering beautiful photos, travel stories, sights, and live weather...
+          </p>
+        </div>
+
+        <!-- Skeleton Hero Image -->
+        <div class="cga-skeleton" style="width: 100%; height: 260px; border-radius: var(--cga-radius-lg); margin-bottom: 20px;"></div>
+
+        <!-- Skeleton Pills Strip -->
+        <div style="display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto;">
+          <div class="cga-skeleton" style="width: 120px; height: 38px; border-radius: 999px; flex-shrink: 0;"></div>
+          <div class="cga-skeleton" style="width: 140px; height: 38px; border-radius: 999px; flex-shrink: 0;"></div>
+          <div class="cga-skeleton" style="width: 130px; height: 38px; border-radius: 999px; flex-shrink: 0;"></div>
+          <div class="cga-skeleton" style="width: 150px; height: 38px; border-radius: 999px; flex-shrink: 0;"></div>
+        </div>
+
+        <!-- Skeleton Body Prose -->
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;">
+          <div class="cga-skeleton" style="width: 100%; height: 16px; border-radius: 4px;"></div>
+          <div class="cga-skeleton" style="width: 90%; height: 16px; border-radius: 4px;"></div>
+          <div class="cga-skeleton" style="width: 95%; height: 16px; border-radius: 4px;"></div>
+          <div class="cga-skeleton" style="width: 70%; height: 16px; border-radius: 4px;"></div>
+        </div>
+
+        <!-- Skeleton Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px;">
+          <div class="cga-skeleton" style="height: 140px; border-radius: var(--cga-radius-md);"></div>
+          <div class="cga-skeleton" style="height: 140px; border-radius: var(--cga-radius-md);"></div>
+        </div>
       </div>
     `;
   }
@@ -193,12 +224,12 @@ export class PortalGate {
             </span>
             <h1>${escapeHTML(title)}</h1>
             <div class="dest-hero-coords">
-              📍 ${dest.latitude.toFixed(4)}° N, ${dest.longitude.toFixed(4)}° E · ${escapeHTML(subtitle)}
+              📍 ${escapeHTML(subtitle)}
             </div>
           </div>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <button type="button" id="btn-open-full-dest-page" class="dossier-nav-pill highlight" style="height: 38px; display: inline-flex; align-items: center; cursor: pointer; background: linear-gradient(135deg, var(--cga-gold-accent), #db9a44); color: #ffffff; border: none; font-weight: 700;">
-              ↗️ Full Page Experience (Pro)
+              ↗️ Open Full Travel Guide
             </button>
             <button type="button" class="dossier-nav-pill highlight" data-target="section-wanna-trip" style="height: 38px; display: flex; align-items: center; cursor: pointer;">
               🎒 Plan Your Journey
@@ -237,8 +268,8 @@ export class PortalGate {
         <div class="dossier-prose">
           <p style="margin: 0 0 10px 0;">${escapeHTML(historyText)}</p>
           <div style="font-size: 11.5px; color: var(--cga-text-muted); display: flex; align-items: center; gap: 6px;">
-            <span>Verified encyclopedia source: Wikipedia Global Archives</span>
-            ${this.wikiData?.contentUrls ? `· <a href="${this.wikiData.contentUrls}" target="_blank" style="color: var(--cga-gold-accent); text-decoration: underline;">Read Full Monograph ↗</a>` : ""}
+            <span>Source: Wikipedia Travel Archives</span>
+            ${this.wikiData?.contentUrls ? `· <a href="${this.wikiData.contentUrls}" target="_blank" style="color: var(--cga-gold-accent); text-decoration: underline;">Read More on Wikipedia ↗</a>` : ""}
           </div>
         </div>
       </section>
@@ -247,7 +278,7 @@ export class PortalGate {
       <section class="dossier-section" id="section-weather">
         <div class="dossier-section-header">
           <span style="font-size: 20px;">🌤️</span>
-          <h3>Live Weather & Atmospheric Situation</h3>
+          <h3>Live Weather & Climate</h3>
         </div>
         <div class="weather-card-container" style="padding: 18px 22px; margin-bottom: 0;">
           <div class="weather-primary">
@@ -264,7 +295,7 @@ export class PortalGate {
               <span class="metric-val">💧 ${weather.humidity}%</span>
             </div>
             <div class="metric-row">
-              <span>Atmospheric Wind</span>
+              <span>Wind Speed</span>
               <span class="metric-val">💨 ${weather.windSpeed} km/h</span>
             </div>
             <div class="metric-row">
@@ -295,18 +326,18 @@ export class PortalGate {
         <div class="specialties-grid">
           <div class="specialty-card">
             <span style="font-size: 22px;">🍵</span>
-            <span class="specialty-card-title">Authentic Regional Gastronomy</span>
-            <span class="specialty-card-desc">Renowned traditional delicacies, organic heritage teas, artisanal street food, and century-old culinary recipes.</span>
+            <span class="specialty-card-title">Authentic Local Flavors</span>
+            <span class="specialty-card-desc">Renowned traditional delicacies, organic teas, authentic street food, and heritage recipes.</span>
           </div>
           <div class="specialty-card">
             <span style="font-size: 22px;">🏺</span>
-            <span class="specialty-card-title">Heritage Handicrafts & Textiles</span>
-            <span class="specialty-card-desc">Handmade woolen shawls, indigenous wooden carvings, brass antiquities, and distinct souvenir craft promenades.</span>
+            <span class="specialty-card-title">Handicrafts & Souvenirs</span>
+            <span class="specialty-card-desc">Handmade woolen shawls, wooden carvings, brass artworks, and local shopping bazaars.</span>
           </div>
           <div class="specialty-card">
             <span style="font-size: 22px;">🎭</span>
-            <span class="specialty-card-title">Living Cultural Rituals & Festivals</span>
-            <span class="specialty-card-desc">Vibrant seasonal folk dances, evening monastery bells, lantern festivals, and community musical folklore.</span>
+            <span class="specialty-card-title">Living Culture & Festivals</span>
+            <span class="specialty-card-desc">Vibrant seasonal folk dances, evening bells, lantern festivals, and lively celebration traditions.</span>
           </div>
         </div>
       </section>
@@ -315,21 +346,21 @@ export class PortalGate {
       <section class="wanna-trip-master-box" id="section-wanna-trip">
         <div class="wanna-trip-header">
           <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; color: var(--cga-gold-accent);">
-            INTERACTIVE TRIP & BUDGET ENGINE
+            EASY TRIP & BUDGET PLANNER
           </span>
           <h2 class="wanna-trip-title">Plan Your Journey to ${escapeHTML(title)} 🎒</h2>
           <p style="font-size: 13.5px; color: var(--cga-text-secondary); margin: 0;">
-            Customize your trip parameters to calculate costs, or enter your target budget to generate 3 tailored travel packages!
+            Pick your preferences to see estimated costs, or tell us your budget to get 3 instant travel options!
           </p>
         </div>
 
         <!-- Mode Toggle Tabs -->
         <div class="wanna-trip-tabs">
           <button class="wanna-tab-btn ${this.activePlannerTab === "custom" ? "active" : ""}" id="tab-custom-mode">
-            🛠️ Customize & Calculate Budget
+            🛠️ Estimate Trip Cost
           </button>
           <button class="wanna-tab-btn ${this.activePlannerTab === "reverse" ? "active" : ""}" id="tab-reverse-mode">
-            💡 Reverse Budget Matcher (Enter Your Budget)
+            💡 Plan Around My Budget
           </button>
         </div>
 
@@ -467,7 +498,7 @@ export class PortalGate {
       <!-- Bottom Global Action Bar -->
       <div class="dest-action-row" style="margin-top: 24px;">
         <button id="btn-ask-ai-dest" class="cga-btn-pill cga-btn-secondary" style="height: 48px; gap: 8px;">
-          <span>🤖 Ask AI Concierge About ${escapeHTML(title)}</span>
+          <span>✨ Ask Travel Assistant About ${escapeHTML(title)}</span>
         </button>
         <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" class="cga-btn-pill cga-btn-secondary" style="height: 48px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
           <span>🗺️ Google Maps Directions</span>

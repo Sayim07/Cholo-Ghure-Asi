@@ -124,16 +124,16 @@ export class MapManager {
       const popupContent = `
         <div class="cga-popup-card">
           <div class="cga-popup-title">${placeInfo.flag || "📍"} ${placeInfo.shortName}</div>
-          <div class="cga-popup-meta">${placeInfo.subText} • ${lat.toFixed(3)}°, ${lon.toFixed(3)}°</div>
+          <div class="cga-popup-meta">${placeInfo.subText || "Scenic Destination"}</div>
           <div class="cga-popup-weather">
             ${weather.icon} ${weather.temperature}°C • ${weather.condition}
           </div>
           <div class="cga-popup-actions">
-            <button id="popup-explore-dossier" class="cga-popup-btn cga-popup-btn-primary" title="Open full guide with photos, history and budget planner">
-              🌟 Explore Full Dossier & Budget
+            <button id="popup-explore-dossier" class="cga-popup-btn cga-popup-btn-primary" title="Open complete guide with photos, stories and budget planner">
+              🌟 View Travel Guide & Budget
             </button>
-            <button id="popup-add-itinerary" class="cga-popup-btn cga-popup-btn-secondary" title="Add directly to itinerary and route">
-              ➕ Quick Add to Route
+            <button id="popup-add-itinerary" class="cga-popup-btn cga-popup-btn-secondary" title="Add directly to your trip route">
+              ➕ Add to My Trip
             </button>
           </div>
         </div>
@@ -244,7 +244,7 @@ export class MapManager {
           ` : ""}
           <div class="cga-popup-actions" style="margin-top: 10px;">
             <button class="cga-popup-btn cga-popup-btn-primary stop-view-dossier-btn" data-stop-id="${stop.stopId}">
-              🌟 View Full Dossier
+              🌟 View Travel Guide
             </button>
             <button class="cga-popup-btn cga-popup-btn-danger stop-remove-btn" data-stop-id="${stop.stopId}">
               🗑️ Remove Stop
@@ -280,8 +280,11 @@ export class MapManager {
       latLngs.push([stop.latitude, stop.longitude]);
     });
 
-    // If 2 or more stops, calculate and draw OSRM driving route
+    // If 2 or more stops, calculate and draw driving route
     if (latLngs.length >= 2) {
+      if (distanceBadge) {
+        distanceBadge.innerHTML = '<span style="display:inline-flex; align-items:center; gap:6px;"><span style="animation: cga-pulse-subtle 0.8s infinite;">🛣️</span> Calculating best route...</span>';
+      }
       try {
         const routeData = await calculateRoute(latLngs);
         if (routeData && routeData.geoJsonGeometry) {
