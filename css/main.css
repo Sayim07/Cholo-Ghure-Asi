@@ -821,4 +821,59 @@ button {
 .chat-typing-dots span:nth-child(1) { animation-delay: -0.32s; }
 .chat-typing-dots span:nth-child(2) { animation-delay: -0.16s; }
 
+/* 5. Clean Print Stylesheet for Trip Itinerary Export */
+@media print {
+  /* Hide all background layers and UI controls */
+  #cga-app-loader,
+  .cga-navbar,
+  .cga-sheet-overlay,
+  .cga-sheet-drawer,
+  .season-ambient-overlay,
+  .cga-search-container,
+  #map-route-bar,
+  #telemetry-hud,
+  #map-container,
+  #voyager-globe-section,
+  #portal-overlay,
+  .cga-chatbot-trigger,
+  .cga-chatbot-window,
+  .cga-toast-container,
+  .cga-export-toolbar,
+  #itinerary-drawer,
+  .cga-destination-section {
+    display: none !important;
+  }
+
+  body, html, #app {
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  .cga-export-modal-backdrop {
+    position: static !important;
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    inset: auto !important;
+    z-index: 1 !important;
+    display: block !important;
+  }
+
+  .cga-export-modal-card {
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    width: 100% !important;
+  }
+
+  #cga-printable-itinerary-sheet {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+}
+
 

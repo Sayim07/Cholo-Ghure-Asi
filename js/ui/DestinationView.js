@@ -21,6 +21,154 @@ import {
   TRANSPORT_MODES, 
   STAY_TIERS 
 } from "../services/TripBudgetEngine.js?v=4.2";
+import { searchDestination } from "../services/NominatimService.js";
+
+export const CURATED_GLOBAL_DESTINATIONS = [
+  {
+    name: "Paris, France",
+    shortName: "Paris",
+    category: "heritage",
+    country: "France",
+    flag: "🇫🇷",
+    badge: "🗼 City of Light",
+    desc: "Iconic Eiffel Tower, Louvre masterpieces, romantic Seine cruises & legendary sidewalk bistros.",
+    image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80",
+    latitude: 48.8566,
+    longitude: 2.3522
+  },
+  {
+    name: "Tokyo, Japan",
+    shortName: "Tokyo",
+    category: "modern",
+    country: "Japan",
+    flag: "🇯🇵",
+    badge: "🍣 Futuristic & Heritage",
+    desc: "Shibuya crossing, neon skylines, historic Senso-ji temple, world-class sushi & Mount Fuji day trips.",
+    image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800&q=80",
+    latitude: 35.6762,
+    longitude: 139.6503
+  },
+  {
+    name: "Taj Mahal, Agra, India",
+    shortName: "Agra",
+    category: "heritage",
+    country: "India",
+    flag: "🇮🇳",
+    badge: "🏛️ Wonder of the World",
+    desc: "The timeless ivory-white marble mausoleum on the Yamuna river, Agra Fort & rich Mughal culinary heritage.",
+    image: "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80",
+    latitude: 27.1751,
+    longitude: 78.0421
+  },
+  {
+    name: "Bali, Indonesia",
+    shortName: "Bali",
+    category: "beach",
+    country: "Indonesia",
+    flag: "🇮🇩",
+    badge: "🏖️ Tropical Paradise",
+    desc: "Emerald terraced rice paddies in Ubud, sacred sea temples in Tanah Lot, world-class surf & sunset beaches.",
+    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80",
+    latitude: -8.4095,
+    longitude: 115.1889
+  },
+  {
+    name: "Rome, Italy",
+    shortName: "Rome",
+    category: "heritage",
+    country: "Italy",
+    flag: "🇮🇹",
+    badge: "🏛️ Eternal City",
+    desc: "The monumental Colosseum, Roman Forum, Vatican City, St. Peter's Basilica & authentic pasta carbonara.",
+    image: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80",
+    latitude: 41.9028,
+    longitude: 12.4964
+  },
+  {
+    name: "Zermatt & Swiss Alps, Switzerland",
+    shortName: "Swiss Alps",
+    category: "mountain",
+    country: "Switzerland",
+    flag: "🇨🇭",
+    badge: "🏔️ Alpine Wonderland",
+    desc: "Towering Matterhorn peaks, Gornergrat cogwheel train, glacier skiing, fondue & crystal alpine lakes.",
+    image: "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=800&q=80",
+    latitude: 45.9765,
+    longitude: 7.7491
+  },
+  {
+    name: "Dubai, United Arab Emirates",
+    shortName: "Dubai",
+    category: "modern",
+    country: "UAE",
+    flag: "🇦🇪",
+    badge: "✨ Desert Oasis",
+    desc: "Towering Burj Khalifa, Dubai Mall fountains, luxury desert dunes safari & Palm Jumeirah vistas.",
+    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    latitude: 25.2048,
+    longitude: 55.2708
+  },
+  {
+    name: "New York City, United States",
+    shortName: "New York",
+    category: "modern",
+    country: "United States",
+    flag: "🇺🇸",
+    badge: "🗽 The Big Apple",
+    desc: "Manhattan skyline, Central Park strolls, Broadway theatre, Times Square lights & historic Statue of Liberty.",
+    image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    latitude: 40.7128,
+    longitude: -74.0060
+  },
+  {
+    name: "Bangkok, Thailand",
+    shortName: "Bangkok",
+    category: "beach",
+    country: "Thailand",
+    flag: "🇹🇭",
+    badge: "🍜 Street Food Capital",
+    desc: "Ornate Grand Palace, Wat Arun temple on the Chao Phraya river, lively floating markets & legendary Pad Thai.",
+    image: "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=800&q=80",
+    latitude: 13.7563,
+    longitude: 100.5018
+  },
+  {
+    name: "Santorini, Greece",
+    shortName: "Santorini",
+    category: "beach",
+    country: "Greece",
+    flag: "🇬🇷",
+    badge: "🌊 Aegean Dream",
+    desc: "Whitewashed cubiform cliff houses in Oia, blue-domed churches, volcanic black sand beaches & caldera sunsets.",
+    image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80",
+    latitude: 36.3932,
+    longitude: 25.4615
+  },
+  {
+    name: "Kyoto, Japan",
+    shortName: "Kyoto",
+    category: "heritage",
+    country: "Japan",
+    flag: "🇯🇵",
+    badge: "🍁 Zen Heritage",
+    desc: "Fushimi Inari thousand vermillion torii gates, Arashiyama bamboo forest, golden Kinkaku-ji temple & tea ceremonies.",
+    image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80",
+    latitude: 35.0116,
+    longitude: 135.7681
+  },
+  {
+    name: "Manali & Solang Valley, India",
+    shortName: "Manali",
+    category: "mountain",
+    country: "India",
+    flag: "🇮🇳",
+    badge: "❄️ Himalayan Escape",
+    desc: "High-altitude Atal Tunnel, Rohtang Pass snow valleys, Beas river rafting, cedar pine forests & mountain cafes.",
+    image: "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80",
+    latitude: 32.2396,
+    longitude: 77.1887
+  }
+];
 
 export class DestinationView {
   constructor(containerId = "view-destination") {
@@ -54,35 +202,57 @@ export class DestinationView {
   async loadDestination(placeOrName) {
     if (!this.container) return;
 
+    // 1. If no place specified, show the Worldwide Destination Discovery Hub!
+    if (!placeOrName) {
+      this.currentDestination = null;
+      this.renderDestinationHub();
+      return;
+    }
+
+    // 2. Geocode dynamically to ensure real coordinates and country
     let placeInfo = null;
     if (typeof placeOrName === "string") {
-      placeInfo = {
-        name: decodeURIComponent(placeOrName),
-        shortName: decodeURIComponent(placeOrName),
-        latitude: 22.5726,
-        longitude: 88.3639,
-        type: "city"
-      };
-    } else if (placeOrName) {
-      placeInfo = placeOrName;
+      const cleanTarget = decodeURIComponent(placeOrName).trim();
+      this.renderSkeleton(cleanTarget);
+
+      try {
+        const found = await searchDestination(cleanTarget);
+        if (found && found.length > 0) {
+          placeInfo = found[0];
+        }
+      } catch (err) {
+        console.warn("[DestinationView] Geocoding lookup error:", err);
+      }
+
+      if (!placeInfo) {
+        // Check curated list fallback
+        const match = CURATED_GLOBAL_DESTINATIONS.find(d => 
+          d.name.toLowerCase().includes(cleanTarget.toLowerCase()) || 
+          d.shortName.toLowerCase().includes(cleanTarget.toLowerCase())
+        );
+        if (match) {
+          placeInfo = match;
+        } else {
+          placeInfo = {
+            name: cleanTarget,
+            shortName: cleanTarget,
+            latitude: 28.6139,
+            longitude: 77.2090,
+            type: "city"
+          };
+        }
+      }
     } else {
-      // Fallback to active trip destination or default
-      placeInfo = tripStore.state.currentDestination || {
-        name: "New York City, United States",
-        shortName: "New York",
-        latitude: 40.7128,
-        longitude: -74.0060,
-        type: "city",
-        flag: "🇺🇸"
-      };
+      placeInfo = placeOrName;
     }
 
     this.currentDestination = placeInfo;
-    this.renderSkeleton();
+    tripStore.setCurrentDestination(placeInfo);
+    this.renderSkeleton(placeInfo.shortName || placeInfo.name);
 
     const cleanName = placeInfo.shortName || placeInfo.name;
-    const lat = placeInfo.latitude || 22.5726;
-    const lon = placeInfo.longitude || 88.3639;
+    const lat = placeInfo.latitude || 28.6139;
+    const lon = placeInfo.longitude || 77.2090;
 
     // Fetch live weather, Wikipedia summary, and sanitized gallery in parallel
     try {
@@ -1284,6 +1454,132 @@ export class DestinationView {
           };
           tripStore.addStop(foodPlace, this.currentWeather);
           toast.success(`Added "${dishName}" to your Itinerary! 🍽️`);
+        }
+      });
+    });
+  }
+
+  /**
+   * Worldwide Destination Guide Hub (When no specific place is requested)
+   */
+  renderDestinationHub() {
+    if (!this.container) return;
+    const activeStops = tripStore.state.activeTrip?.stops || [];
+    const filter = this.activeHubCategory || "all";
+
+    const filtered = filter === "all" 
+      ? CURATED_GLOBAL_DESTINATIONS 
+      : CURATED_GLOBAL_DESTINATIONS.filter(d => d.category === filter);
+
+    this.container.innerHTML = `
+      <div class="dest-hub-wrapper">
+        
+        <!-- Hero Search Section -->
+        <div class="dest-hub-hero">
+          <span class="dest-hub-badge">🌍 Worldwide Travel Guides</span>
+          <h1 class="dest-hub-title">Explore Destination Guides</h1>
+          <p class="dest-hub-subtitle">
+            Authentic history, signature food, living cultures, real-time weather, and smart budgets for iconic destinations across the globe.
+          </p>
+
+          <div class="dest-hub-search-box">
+            <span style="font-size: 18px; color: var(--cga-gold-accent);">🔍</span>
+            <input type="text" id="dest-hub-search-input" class="dest-hub-search-input" placeholder="Search any city, country, or landmark (e.g. Paris, Tokyo, Bali, Agra, Dubai, Rome)..." autocomplete="off" />
+            <button id="dest-hub-search-submit" class="dest-hub-search-btn">Search Guide</button>
+          </div>
+        </div>
+
+        <!-- Optional: From Your Active Trip -->
+        ${activeStops.length > 0 ? `
+          <div class="dest-hub-trip-strip">
+            <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cga-forest-contrast);">
+              📍 From Your Current Trip:
+            </span>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+              ${activeStops.map(s => `
+                <button class="cga-hub-trip-chip" data-dest-name="${escapeHTML(s.name)}">
+                  <span>${escapeHTML(s.name)}</span>
+                  <span style="font-size: 10px; opacity: 0.7;">Day ${s.dayNumber} ➔</span>
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        ` : ""}
+
+        <!-- Category Filter Chips -->
+        <div class="dest-hub-filter-dock">
+          <button class="dest-hub-filter-chip ${filter === 'all' ? 'active' : ''}" data-hub-cat="all">🌟 Worldwide Highlights (${CURATED_GLOBAL_DESTINATIONS.length})</button>
+          <button class="dest-hub-filter-chip ${filter === 'heritage' ? 'active' : ''}" data-hub-cat="heritage">🏛️ Heritage & History</button>
+          <button class="dest-hub-filter-chip ${filter === 'mountain' ? 'active' : ''}" data-hub-cat="mountain">🏔️ Mountains & Alpine</button>
+          <button class="dest-hub-filter-chip ${filter === 'beach' ? 'active' : ''}" data-hub-cat="beach">🏖️ Beaches & Tropical</button>
+          <button class="dest-hub-filter-chip ${filter === 'modern' ? 'active' : ''}" data-hub-cat="modern">🌆 Iconic Cities</button>
+        </div>
+
+        <!-- Curated Destinations Grid -->
+        <div class="dest-hub-grid">
+          ${filtered.map(dest => `
+            <div class="dest-hub-card">
+              <div class="dest-hub-card-img" style="background-image: url('${dest.image}');">
+                <span class="dest-hub-card-badge">${dest.badge}</span>
+                <span class="dest-hub-card-flag">${dest.flag}</span>
+              </div>
+              <div class="dest-hub-card-body">
+                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cga-gold-accent);">
+                  ${dest.country}
+                </div>
+                <h3 class="dest-hub-card-name">${escapeHTML(dest.name)}</h3>
+                <p class="dest-hub-card-desc">${escapeHTML(dest.desc)}</p>
+                <button class="btn-hub-open-guide" data-dest-name="${escapeHTML(dest.shortName)}">
+                  <span>Explore Guide &rarr;</span>
+                </button>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+
+      </div>
+    `;
+
+    this.bindHubEvents();
+  }
+
+  bindHubEvents() {
+    const input = document.getElementById("dest-hub-search-input");
+    const submitBtn = document.getElementById("dest-hub-search-submit");
+
+    const doSearch = () => {
+      const q = input?.value.trim();
+      if (q) {
+        window.location.hash = `#/destination?place=${encodeURIComponent(q)}`;
+      }
+    };
+
+    if (submitBtn) submitBtn.addEventListener("click", doSearch);
+    if (input) {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          doSearch();
+        }
+      });
+    }
+
+    // Filter chips
+    const filterChips = document.querySelectorAll(".dest-hub-filter-chip");
+    filterChips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        this.activeHubCategory = chip.getAttribute("data-hub-cat");
+        this.renderDestinationHub();
+      });
+    });
+
+    // Card buttons
+    const guideBtns = document.querySelectorAll(".btn-hub-open-guide, .cga-hub-trip-chip");
+    guideBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const name = btn.getAttribute("data-dest-name");
+        if (name) {
+          window.location.hash = `#/destination?place=${encodeURIComponent(name)}`;
         }
       });
     });

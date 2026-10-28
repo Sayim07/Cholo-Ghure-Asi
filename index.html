@@ -247,15 +247,24 @@
       <!-- Multi-Day Itinerary Side Drawer -->
       <aside id="itinerary-drawer" class="cga-itinerary-drawer">
         <div class="drawer-header">
-          <div class="drawer-title-group">
-            <h2 class="drawer-title">Trip Itinerary</h2>
+          <div class="drawer-title-group" style="flex: 1; margin-right: 8px;">
+            <input type="text" id="itinerary-trip-title" class="drawer-title-input" value="My Travel Journey" placeholder="Name your trip..." title="Click to rename your trip plan" />
             <span class="drawer-subtitle">Personalized Multi-Day Schedule</span>
           </div>
-          <button id="close-drawer-btn" style="font-size: 18px; color: var(--cga-text-muted); padding: 4px;">✕</button>
+          <div class="drawer-header-actions">
+            <button id="itinerary-expand-btn" class="drawer-action-btn" title="Toggle wide view">⤢</button>
+            <button id="close-drawer-btn" class="drawer-action-btn" title="Close drawer">✕</button>
+          </div>
         </div>
 
         <!-- Day Selector Tabs -->
         <div id="itinerary-day-tabs" class="day-tabs-bar"></div>
+
+        <!-- Quick Destination Search for Active Day -->
+        <div class="itinerary-quick-search-box">
+          <input type="text" id="itinerary-quick-search" placeholder="🔍 Add stop (e.g. Paris, Taj Mahal, Tokyo)..." autocomplete="off" />
+          <button id="itinerary-quick-add-btn" class="cga-btn-pill cga-btn-primary" style="height: 30px; padding: 0 12px; font-size: 11px; flex-shrink: 0;">+ Add</button>
+        </div>
 
         <!-- Ordered Waypoint Stops List -->
         <div id="itinerary-stops-list" class="stops-list-container"></div>
@@ -266,9 +275,14 @@
             <span class="budget-label">Total Estimate</span>
             <span id="itinerary-budget-total" class="budget-val">₹ 0</span>
           </div>
-          <button id="btn-save-cloud-trip" class="save-cloud-btn">
-            <span>☁️ Save to My Trips</span>
-          </button>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button id="btn-itinerary-export" class="cga-btn-pill" style="height: 38px; padding: 0 14px; background: #c8963e; color: #111; font-weight: 700; font-size: 12px; border: none; cursor: pointer; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px;" title="Export or Print Itinerary">
+              <span>🖨️ Export</span>
+            </button>
+            <button id="btn-save-cloud-trip" class="save-cloud-btn">
+              <span>☁️ Save to My Trips</span>
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -310,7 +324,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <!-- Application Bootstrap Entry Point (Vanilla ES6 Modules) -->
-  <script type="module" src="./js/main.js?v=4.3"></script>
+  <script type="module" src="./js/main.js?v=4.4"></script>
 
   <!-- Agentation Visual Feedback Toolbar (Auto-disabled on production/Vercel, active only on localhost) -->
   <script type="module" src="./js/ui/AgentationWidget.js?v=2.1"></script>

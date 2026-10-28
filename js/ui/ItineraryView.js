@@ -7,6 +7,9 @@ import { tripStore } from "../state/TripStore.js";
 import { FirebaseService } from "../services/FirebaseService.js";
 import { toast } from "./Toast.js";
 import { formatCurrency, escapeHTML } from "../utils/helpers.js";
+import { searchDestination } from "../services/NominatimService.js";
+import { fetchWeather } from "../services/WeatherService.js";
+import { TripExportModal } from "./TripExportModal.js";
 
 export class ItineraryView {
   constructor(drawerId) {
@@ -16,6 +19,11 @@ export class ItineraryView {
     this.budgetVal = document.getElementById("itinerary-budget-total");
     this.saveCloudBtn = document.getElementById("btn-save-cloud-trip");
     this.toggleDrawerBtn = document.getElementById("btn-toggle-itinerary");
+    this.tripTitleInput = document.getElementById("itinerary-trip-title");
+    this.expandBtn = document.getElementById("itinerary-expand-btn");
+    this.quickSearchInput = document.getElementById("itinerary-quick-search");
+    this.quickAddBtn = document.getElementById("itinerary-quick-add-btn");
+    this.exportBtn = document.getElementById("btn-itinerary-export");
 
     this.bindEvents();
     this.render();
@@ -36,6 +44,81 @@ export class ItineraryView {
         if (window.location.hash === "#/itinerary") {
           window.location.hash = "#/map";
         }
+      });
+    }
+
+    // Toggle wide / docked view
+    if (this.expandBtn) {
+      this.expandBtn.addEventListener("click", () => {
+        if (!this.drawer) return;
+        this.drawer.classList.toggle("expanded");
+        const isExpanded = this.drawer.classList.contains("expanded");
+        this.expandBtn.textContent = isExpanded ? "⤡" : "⤢";
+        this.expandBtn.title = isExpanded ? "Dock to side" : "Toggle wide view";
+      });
+    }
+
+    // Editable Trip Title
+    if (this.tripTitleInput) {
+      this.tripTitleInput.addEventListener("change", (e) => {
+        const newTitle = e.target.value.trim() || "My Travel Journey";
+        tripStore.state.activeTrip.title = newTitle;
+        tripStore.persistTrip();
+        toast.success(`Renamed trip to "${newTitle}"! ✨`);
+      });
+    }
+
+    // Quick Add Place by text
+    const handleQuickAdd = async () => {
+      if (!this.quickSearchInput) return;
+      const query = this.quickSearchInput.value.trim();
+      if (!query) return;
+
+      const origText = this.quickAddBtn.textContent;
+      this.quickAddBtn.textContent = "...";
+      this.quickAddBtn.disabled = true;
+
+      try {
+        const found = await searchDestination(query);
+        let place = null;
+        if (found && found.length > 0) {
+          place = found[0];
+        } else {
+          place = {
+            name: query,
+            shortName: query,
+            latitude: 28.6139,
+            longitude: 77.2090,
+            type: "city"
+          };
+        }
+
+        const weather = await fetchWeather(place.latitude, place.longitude).catch(() => null);
+        tripStore.addStop(place, weather);
+        this.quickSearchInput.value = "";
+        toast.success(`Added "${place.shortName || place.name}" to Day ${tripStore.state.activeDay}! 🚗`);
+      } catch (err) {
+        toast.error("Could not find location.");
+      } finally {
+        this.quickAddBtn.textContent = origText;
+        this.quickAddBtn.disabled = false;
+      }
+    };
+
+    if (this.quickAddBtn) this.quickAddBtn.addEventListener("click", handleQuickAdd);
+    if (this.quickSearchInput) {
+      this.quickSearchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handleQuickAdd();
+        }
+      });
+    }
+
+    // Export / Print Modal
+    if (this.exportBtn) {
+      this.exportBtn.addEventListener("click", () => {
+        TripExportModal.open();
       });
     }
 
@@ -90,6 +173,11 @@ export class ItineraryView {
     if (!this.stopsList) return;
     this.stopsList.innerHTML = "";
 
+    // Sync title input
+    if (this.tripTitleInput && document.activeElement !== this.tripTitleInput) {
+      this.tripTitleInput.value = tripStore.state.activeTrip.title || "My Travel Journey";
+    }
+
     const allStops = tripStore.state.activeTrip.stops || [];
     const activeDay = tripStore.state.activeDay || 1;
 
@@ -98,12 +186,42 @@ export class ItineraryView {
 
     if (dayStops.length === 0) {
       this.stopsList.innerHTML = `
-        <div style="text-align: center; padding: 40px 10px; color: var(--cga-text-muted);">
-          <div style="font-size: 32px; margin-bottom: 8px;">🎒</div>
-          <div style="font-weight: 600; color: var(--cga-text-primary); margin-bottom: 4px;">No stops planned for Day ${activeDay}</div>
-          <p style="font-size: 12px;">Search a destination above or click on the map to add your first stop!</p>
+        <div style="text-align: center; padding: 28px 12px; color: var(--cga-text-muted);">
+          <div style="font-size: 32px; margin-bottom: 6px;">🎒</div>
+          <div style="font-weight: 700; color: var(--cga-text-primary); margin-bottom: 4px;">No stops planned for Day ${activeDay}</div>
+          <p style="font-size: 12px; margin-bottom: 12px;">Type a place above or click a popular highlight to add:</p>
+          <div class="itinerary-quick-pills" style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;">
+            <button class="cga-itinerary-preset-btn" data-preset="Taj Mahal, Agra">🏛️ Taj Mahal</button>
+            <button class="cga-itinerary-preset-btn" data-preset="Paris, France">🗼 Paris</button>
+            <button class="cga-itinerary-preset-btn" data-preset="Tokyo, Japan">🇯🇵 Tokyo</button>
+            <button class="cga-itinerary-preset-btn" data-preset="Goa, India">🏖️ Goa</button>
+            <button class="cga-itinerary-preset-btn" data-preset="Zermatt, Switzerland">🏔️ Swiss Alps</button>
+          </div>
         </div>
       `;
+
+      // Wire preset clicks
+      this.stopsList.querySelectorAll(".cga-itinerary-preset-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const presetName = btn.getAttribute("data-preset");
+          btn.textContent = "...";
+          try {
+            const found = await searchDestination(presetName);
+            const place = (found && found.length > 0) ? found[0] : {
+              name: presetName,
+              shortName: presetName,
+              latitude: 28.6139,
+              longitude: 77.2090,
+              type: "city"
+            };
+            const weather = await fetchWeather(place.latitude, place.longitude).catch(() => null);
+            tripStore.addStop(place, weather);
+            toast.success(`Added ${place.shortName || place.name} to Day ${activeDay}! 🚗`);
+          } catch (err) {
+            toast.error("Could not add destination.");
+          }
+        });
+      });
       return;
     }
 

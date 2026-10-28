@@ -3,19 +3,20 @@
    Integrates VoyagerGlobe, SeasonEngine, PortalGate, MapManager, and Itinerary
    ========================================================================== */
 
-import { APP_CONSTANTS } from "./config/constants.js?v=4.3";
+import { APP_CONSTANTS } from "./config/constants.js?v=4.4";
 import { tripStore } from "./state/TripStore.js";
-import { SeasonEngine } from "./ui/SeasonEngine.js?v=4.3";
-import { VoyagerGlobe } from "./scenes/VoyagerGlobe.js?v=4.3";
-import { PortalGate } from "./ui/PortalGate.js?v=4.3";
-import { MapManager } from "./ui/MapManager.js?v=4.3";
-import { SearchBar } from "./ui/SearchBar.js?v=4.3";
-import { ItineraryView } from "./ui/ItineraryView.js?v=4.3";
-import { SavedTripsModal } from "./ui/SavedTripsModal.js?v=4.3";
-import { AppRouter } from "./services/Router.js?v=4.3";
-import { DestinationView } from "./ui/DestinationView.js?v=4.3";
-import { FirebaseService } from "./services/FirebaseService.js?v=4.3";
-import { toast } from "./ui/Toast.js?v=4.3";
+import { SeasonEngine } from "./ui/SeasonEngine.js?v=4.4";
+import { VoyagerGlobe } from "./scenes/VoyagerGlobe.js?v=4.4";
+import { PortalGate } from "./ui/PortalGate.js?v=4.4";
+import { MapManager } from "./ui/MapManager.js?v=4.4";
+import { SearchBar } from "./ui/SearchBar.js?v=4.4";
+import { ItineraryView } from "./ui/ItineraryView.js?v=4.4";
+import { SavedTripsModal } from "./ui/SavedTripsModal.js?v=4.4";
+import { AppRouter } from "./services/Router.js?v=4.4";
+import { DestinationView } from "./ui/DestinationView.js?v=4.4";
+import { FirebaseService } from "./services/FirebaseService.js?v=4.4";
+import { toast } from "./ui/Toast.js?v=4.4";
+import { TripExportModal } from "./ui/TripExportModal.js?v=4.4";
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log(`%c${APP_CONSTANTS.APP_NAME} %cInitialized`, "color: #c6924b; font-weight: 800; font-size: 16px;", "color: #0284c7;");
@@ -130,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Bind Export / Print Travel Plan (from Drawer & Navbar)
   const handleExport = () => {
     closeDrawer();
-    window.print();
+    TripExportModal.open();
   };
 
   if (sheetExportBtn) sheetExportBtn.addEventListener("click", handleExport);
